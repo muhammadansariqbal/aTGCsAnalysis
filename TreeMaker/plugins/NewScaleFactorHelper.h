@@ -28,7 +28,7 @@ public:
         return hist;
     }
 
-    virtual int find_bin_num(TAxis * ax, float value, bool oob_throw) {
+    virtual int findBinNum(TAxis * ax, float value, bool oob_throw) {
         // Do FindBin() but can either:
         // - "oob_throw = true" : if out of range throw an exception
         // - "oob_throw = false" : if out of range set to bin 1 or N, as necessary
@@ -50,30 +50,30 @@ public:
     }
 
     virtual float getBinContent(TH1 * h, float xval) {
-        int xbin_num = find_bin_num(h->GetXaxis(), xval, throw_oob_);
+        int xbin_num = findBinNum(h->GetXaxis(), xval, throw_oob_);
         return h->GetBinContent(xbin_num);
     };
 
     virtual float getBinError(TH1 * h, float xval) {
-        int xbin_num = find_bin_num(h->GetXaxis(), xval, throw_oob_);
+        int xbin_num = findBinNum(h->GetXaxis(), xval, throw_oob_);
         return h->GetBinError(xbin_num);
     };
 
     virtual float getBinContent(TH2 * h, float xval, float yval) {
-        int xbin_num = find_bin_num(h->GetXaxis(), xval, throw_oob_);
-        int ybin_num = find_bin_num(h->GetYaxis(), yval, throw_oob_);
+        int xbin_num = findBinNum(h->GetXaxis(), xval, throw_oob_);
+        int ybin_num = findBinNum(h->GetYaxis(), yval, throw_oob_);
         return h->GetBinContent(xbin_num, ybin_num);
     };
 
     virtual float getBinError(TH2 * h, float xval, float yval) {
-        int xbin_num = find_bin_num(h->GetXaxis(), xval, throw_oob_);
-        int ybin_num = find_bin_num(h->GetYaxis(), yval, throw_oob_);
+        int xbin_num = findBinNum(h->GetXaxis(), xval, throw_oob_);
+        int ybin_num = findBinNum(h->GetYaxis(), yval, throw_oob_);
         return h->GetBinError(xbin_num, ybin_num);
     };
 
-    virtual TH1F * histogram_from_graph(TGraphAsymmErrors * g, const std::string & error="up") {
+    virtual TH1F * histogramFromGraph(TGraphAsymmErrors * g, const std::string & error="up") {
         // Convert graph to a histogram. Sets bin errors to either be up or down errors
-        if (error != "up" && error != "down") throw cms::Exception("histogram_from_graph error must be up or down");
+        if (error != "up" && error != "down") throw cms::Exception("histogramFromGraph error must be up or down");
 
         // Setup the binning
         std::vector<float> bins = {};
@@ -138,16 +138,16 @@ public:
         // This is a bit of a hack - to easily retrieve the scale factors & errors, we first convert
         // our graph into a histogram, since TGraph doesn't have a simple FindBin().
         gr_tracking_sf_eta.reset((TGraphAsymmErrors*) getHistFromFile(tracking_sf_filename, "ratio_eff_eta3_dr030e030_corr"));
-        hist_tracking_sf_eta_err_up.reset(histogram_from_graph(gr_tracking_sf_eta.get(), "up"));
-        hist_tracking_sf_eta_err_down.reset(histogram_from_graph(gr_tracking_sf_eta.get(), "down"));
+        hist_tracking_sf_eta_err_up.reset(histogramFromGraph(gr_tracking_sf_eta.get(), "up"));
+        hist_tracking_sf_eta_err_down.reset(histogramFromGraph(gr_tracking_sf_eta.get(), "down"));
 
         gr_tracking_sf_phi.reset((TGraphAsymmErrors*) getHistFromFile(tracking_sf_filename, "ratio_eff_phi_dr030e030_corr"));
-        hist_tracking_sf_phi_err_up.reset(histogram_from_graph(gr_tracking_sf_phi.get(), "up"));
-        hist_tracking_sf_phi_err_down.reset(histogram_from_graph(gr_tracking_sf_phi.get(), "down"));
+        hist_tracking_sf_phi_err_up.reset(histogramFromGraph(gr_tracking_sf_phi.get(), "up"));
+        hist_tracking_sf_phi_err_down.reset(histogramFromGraph(gr_tracking_sf_phi.get(), "down"));
 
         gr_tracking_sf_nPV.reset((TGraphAsymmErrors*) getHistFromFile(tracking_sf_filename, "ratio_eff_vtx_dr030e030_corr"));
-        hist_tracking_sf_nPV_err_up.reset(histogram_from_graph(gr_tracking_sf_nPV.get(), "up"));
-        hist_tracking_sf_nPV_err_down.reset(histogram_from_graph(gr_tracking_sf_nPV.get(), "down"));
+        hist_tracking_sf_nPV_err_up.reset(histogramFromGraph(gr_tracking_sf_nPV.get(), "up"));
+        hist_tracking_sf_nPV_err_down.reset(histogramFromGraph(gr_tracking_sf_nPV.get(), "down"));
 
         hist_id_sf_nPV.reset((TH1F*) getHistFromFile(id_sf_filename, "MC_NUM_"+id+"_DEN_genTracks_PAR_vtx/tag_nVertices_ratio"));
         std::string pt_eta_hist_name = "pt_abseta_ratio";

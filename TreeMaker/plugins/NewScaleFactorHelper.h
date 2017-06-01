@@ -120,6 +120,7 @@ public:
     MuonScaleFactor(const std::string & tracking_sf_filename,
                     const std::string & id_sf_filename,
                     const std::string & iso_sf_filename,
+                    const std::string & trigger_sf_filename,
                     const std::string & id,  // ID and Isolation working point
                     const std::string & iso) {
 
@@ -135,6 +136,7 @@ public:
         if (std::find(iso_options.begin(), iso_options.end(), iso) == iso_options.end()) {
             throw std::runtime_error("MuonScaleFactor iso string must be one of {" + flatten_vector(iso_options, ", ") + "}");
         }
+
         // This is a bit of a hack - to easily retrieve the scale factors & errors, we first convert
         // our graph into a histogram, since TGraph doesn't have a simple FindBin().
         gr_tracking_sf_eta.reset((TGraphAsymmErrors*) getHistFromFile(tracking_sf_filename, "ratio_eff_eta3_dr030e030_corr"));
@@ -160,6 +162,8 @@ public:
         if (iso_id == "HighPtID") iso_id = "highptID"; // since people can't name their TDirectories consistently
         hist_iso_sf_nPV.reset((TH1F*) getHistFromFile(iso_sf_filename, iso+"_"+iso_id+"_vtx/tag_nVertices_ratio"));
         hist_iso_sf_pt_eta.reset((TH2F*) getHistFromFile(iso_sf_filename, iso+"_"+iso_id+"_"+pt_tag+"_eta/"+pt_eta_hist_name));
+
+        hist_trigger_sf_pt_eta.reset((TH2F*) getHistFromFile(trigger_sf_filename, "Mu50_OR_TkMu50_PtEtaBins/pt_abseta_ratio"));
     };
 
     float getTrackingScaleFactor(float eta, float phi, int nVertices) {
@@ -181,8 +185,16 @@ public:
         return npv_sf * pt_eta_sf;
     }
 
+    float getTriggerScaleFactor(float pt, float eta) {
+        float pt_eta_sf = getBinContent(hist_trigger_sf_pt_eta.get(), pt, fabs(eta));
+        return pt_eta_sf;
+    }
+
     float getScaleFactor(float pt, float eta, float phi, int nVertices) {
-        return getTrackingScaleFactor(eta, phi, nVertices) * getIDScaleFactor(pt, eta, nVertices) * getIsoScaleFactor(pt, eta, nVertices);
+        return (getTrackingScaleFactor(eta, phi, nVertices)
+                * getIDScaleFactor(pt, eta, nVertices)
+                * getIsoScaleFactor(pt, eta, nVertices)
+                * getTriggerScaleFactor(pt, eta));
     };
 
     // TODO some variation up/down
@@ -203,6 +215,8 @@ private:
 
     std::unique_ptr<TH1F> hist_iso_sf_nPV;
     std::unique_ptr<TH2F> hist_iso_sf_pt_eta;
+
+    std::unique_ptr<TH2F> hist_trigger_sf_pt_eta;
 };
 
 

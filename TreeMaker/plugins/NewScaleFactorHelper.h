@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iterator>
 #include <vector>
+#include <utility>
 
 /**
   * Abstract base class for dealing with scale factors
@@ -106,6 +107,29 @@ public:
         return s.str();
     }
 
+    virtual float propagateUncert(const std::vector<std::pair<float, float>> & value_unc_pairs) {
+        // Correctly calculate error for A*B*C*... where each has an associated uncertainty.
+        // Input is pairs of {value, uncertainty}
+        float total = 0;
+        for (uint i = 0; i < value_unc_pairs.size(); i++) {
+            float prod = 1.;
+            for (uint j = 0; j < value_unc_pairs.size(); j++) {
+                if (i == j) continue;
+                prod *= value_unc_pairs.at(j).first;
+            }
+            float entry = value_unc_pairs.at(i).second * prod;
+            total += std::pow(entry, 2);
+        }
+        return std::sqrt(total);
+    }
+
+    virtual void printVectorOfPairs(std::vector<std::pair<float, float>> vals) {
+        // Helper method to check contents of vector of pairs of floats
+        for (uint i = 0; i < vals.size(); i++) {
+            std::cout << vals.at(i).first << " : " << vals.at(i).second << std::endl;
+        }
+    }
+
 protected:
     bool throw_oob_;
     int uid; // For creating hists with unique names
@@ -173,10 +197,48 @@ public:
         return eta_sf * phi_sf * npv_sf;
     };
 
+    float getTrackingScaleFactorUncert(float eta, float phi, int nVertices, const std::string & variation) {
+        // Tracking SF are the only ones that come with different up/down errors
+
+        // Central values don't depend on the up/down error so doesn't matter which hist we use
+        float eta_sf = getBinContent(hist_tracking_sf_eta_err_up.get(), eta);
+        float phi_sf = getBinContent(hist_tracking_sf_phi_err_up.get(), phi);
+        float npv_sf = getBinContent(hist_tracking_sf_nPV_err_up.get(), nVertices);
+
+        float eta_sf_uncert(0.), phi_sf_uncert(0.), npv_sf_uncert(0.);
+        if (variation == "up") {
+            eta_sf_uncert = getBinError(hist_tracking_sf_eta_err_up.get(), eta);
+            phi_sf_uncert = getBinError(hist_tracking_sf_phi_err_up.get(), phi);
+            npv_sf_uncert = getBinError(hist_tracking_sf_nPV_err_up.get(), nVertices);
+        } else if (variation == "down") {
+            eta_sf_uncert = getBinError(hist_tracking_sf_eta_err_down.get(), eta);
+            phi_sf_uncert = getBinError(hist_tracking_sf_phi_err_down.get(), phi);
+            npv_sf_uncert = getBinError(hist_tracking_sf_nPV_err_down.get(), nVertices);
+        }
+        std::vector<std::pair<float, float>> vals = {
+            std::make_pair(eta_sf, eta_sf_uncert),
+            std::make_pair(phi_sf, phi_sf_uncert),
+            std::make_pair(npv_sf, npv_sf_uncert),
+        };
+        return propagateUncert(vals);
+    };
+
     float getIDScaleFactor(float pt, float eta, int nVertices) {
         float npv_sf = getBinContent(hist_id_sf_nPV.get(), nVertices);
         float pt_eta_sf = getBinContent(hist_id_sf_pt_eta.get(), pt, fabs(eta));
         return npv_sf * pt_eta_sf;
+    }
+
+    float getIDScaleFactorUncert(float pt, float eta, int nVertices) {
+        float npv_sf = getBinContent(hist_id_sf_nPV.get(), nVertices);
+        float npv_sf_uncert = getBinError(hist_id_sf_nPV.get(), nVertices);
+        float pt_eta_sf = getBinContent(hist_id_sf_pt_eta.get(), pt, fabs(eta));
+        float pt_eta_sf_uncert = getBinError(hist_id_sf_pt_eta.get(), pt, fabs(eta));
+        std::vector<std::pair<float, float>> vals = {
+            std::make_pair(pt_eta_sf, pt_eta_sf_uncert),
+            std::make_pair(npv_sf, npv_sf_uncert),
+        };
+        return propagateUncert(vals);
     }
 
     float getIsoScaleFactor(float pt, float eta, int nVertices) {
@@ -185,19 +247,50 @@ public:
         return npv_sf * pt_eta_sf;
     }
 
+    float getIsoScaleFactorUncert(float pt, float eta, int nVertices) {
+        float npv_sf = getBinContent(hist_iso_sf_nPV.get(), nVertices);
+        float npv_sf_uncert = getBinError(hist_iso_sf_nPV.get(), nVertices);
+        float pt_eta_sf = getBinContent(hist_iso_sf_pt_eta.get(), pt, fabs(eta));
+        float pt_eta_sf_uncert = getBinError(hist_iso_sf_pt_eta.get(), pt, fabs(eta));
+        std::vector<std::pair<float, float>> vals = {
+            std::make_pair(pt_eta_sf, pt_eta_sf_uncert),
+            std::make_pair(npv_sf, npv_sf_uncert),
+        };
+        return propagateUncert(vals);
+    }
+
     float getTriggerScaleFactor(float pt, float eta) {
         float pt_eta_sf = getBinContent(hist_trigger_sf_pt_eta.get(), pt, fabs(eta));
         return pt_eta_sf;
     }
 
-    float getScaleFactor(float pt, float eta, float phi, int nVertices) {
-        return (getTrackingScaleFactor(eta, phi, nVertices)
-                * getIDScaleFactor(pt, eta, nVertices)
-                * getIsoScaleFactor(pt, eta, nVertices)
-                * getTriggerScaleFactor(pt, eta));
-    };
+    float getTriggerScaleFactorUncert(float pt, float eta) {
+        float pt_eta_sf_uncert = getBinError(hist_trigger_sf_pt_eta.get(), pt, fabs(eta));
+        return pt_eta_sf_uncert;
+    }
 
-    // TODO some variation up/down
+    float getScaleFactor(float pt, float eta, float phi, int nVertices, const std::string & variation="") {
+        float tracking_sf = getTrackingScaleFactor(eta, phi, nVertices);
+        float id_sf = getIDScaleFactor(pt, eta, nVertices);
+        float iso_sf = getIsoScaleFactor(pt, eta, nVertices);
+        float trigger_sf = getTriggerScaleFactor(pt, eta);
+        float total_var = 0;
+        if (variation == "up" || variation == "down") {
+            std::vector<std::pair<float, float>> vals = {
+                std::make_pair(tracking_sf, getTrackingScaleFactorUncert(eta, phi, nVertices, variation)),
+                std::make_pair(id_sf, getIDScaleFactorUncert(pt, eta, nVertices)),
+                std::make_pair(iso_sf, getIsoScaleFactorUncert(pt, eta, nVertices)),
+                std::make_pair(trigger_sf, getTriggerScaleFactorUncert(pt, eta))
+            };
+            total_var = propagateUncert(vals);
+            if (variation == "down") {
+                total_var *= -1.;
+            }
+        } else if (variation != "") {
+            throw cms::Exception("variation arg must be \"\", \"up\", or \"down\"");
+        }
+        return (tracking_sf * id_sf * iso_sf * trigger_sf) + total_var;
+    };
 
 private:
     std::unique_ptr<TGraphAsymmErrors> gr_tracking_sf_eta;

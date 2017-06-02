@@ -23,7 +23,7 @@ public:
     TFile file(full_filename.fullPath().c_str());
     TH1 * hist = (TH1*)file.Get(object_name.c_str());
     if (hist == nullptr) {
-      throw std::runtime_error("Cannot get object " + object_name + " from file " + filename);
+      throw cms::Exception("InvalidObject") << "Cannot get object " + object_name + " from file " + filename;
     }
     hist->SetDirectory(0);
     return hist;
@@ -36,13 +36,13 @@ public:
     int bin_num = ax->FindBin(value);
     if (bin_num == 0) {
       if (oob_throw) {
-        throw cms::Exception("Cannot get bin - value below low edge of first bin");
+        throw cms::Exception("IndexError") << "Cannot get bin - value below low edge of first bin";
       } else {
         bin_num = 1;
       }
     } else if (bin_num == ax->GetNbins()+1) {
       if (oob_throw) {
-        throw cms::Exception("Cannot get bin - value above high edge of last bin");
+        throw cms::Exception("IndexError") << "Cannot get bin - value above high edge of last bin";
       } else {
         bin_num = ax->GetNbins();
       }
@@ -74,7 +74,7 @@ public:
 
   virtual TH1F * histogramFromGraph(TGraphAsymmErrors * g, const std::string & error="up") {
     // Convert graph to a histogram. Sets bin errors to either be up or down errors
-    if (error != "up" && error != "down") throw cms::Exception("histogramFromGraph error must be up or down");
+    if (error != "up" && error != "down") throw cms::Exception("InvalidValue") << "histogramFromGraph error must be up or down";
 
     // Setup the binning
     std::vector<float> bins = {};
@@ -287,7 +287,7 @@ public:
         total_var *= -1.;
       }
     } else if (variation != "") {
-      throw cms::Exception("variation arg must be \"\", \"up\", or \"down\"");
+      throw cms::Exception("InvalidValue") << "variation arg must be \"\", \"up\", or \"down\"";
     }
     return (tracking_sf * id_sf * iso_sf * trigger_sf) + total_var;
   };

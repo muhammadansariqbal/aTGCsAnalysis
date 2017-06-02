@@ -173,15 +173,14 @@ public:
 
     hist_id_sf_nPV.reset((TH1F*) getHistFromFile(id_sf_filename, "MC_NUM_"+id+"_DEN_genTracks_PAR_vtx/tag_nVertices_ratio"));
     std::string pt_eta_hist_name = "pt_abseta_ratio";
-    std::string pt_tag = "pt";
-    if (id == "HighPtID") {pt_eta_hist_name = "pair_ne_ratio"; pt_tag = "newpt";}
-    hist_id_sf_pt_eta.reset((TH2F*) getHistFromFile(id_sf_filename, "MC_NUM_"+id+"_DEN_genTracks_PAR_"+pt_tag+"_eta/"+pt_eta_hist_name));
+    if (id == "HighPtID") {pt_eta_hist_name = "pair_ne_ratio";}
+    hist_id_sf_pt_eta.reset((TH2F*) getHistFromFile(id_sf_filename, "MC_NUM_"+id+"_DEN_genTracks_PAR_pt_eta/"+pt_eta_hist_name));
 
     std::string iso_id(id);
     // FIXME: handle non-valid combinations?
     if (iso_id == "HighPtID") iso_id = "highptID"; // since people can't name their TDirectories consistently
     hist_iso_sf_nPV.reset((TH1F*) getHistFromFile(iso_sf_filename, iso+"_"+iso_id+"_vtx/tag_nVertices_ratio"));
-    hist_iso_sf_pt_eta.reset((TH2F*) getHistFromFile(iso_sf_filename, iso+"_"+iso_id+"_"+pt_tag+"_eta/"+pt_eta_hist_name));
+    hist_iso_sf_pt_eta.reset((TH2F*) getHistFromFile(iso_sf_filename, iso+"_"+iso_id+"_pt_eta/"+pt_eta_hist_name));
 
     hist_trigger_sf_pt_eta.reset((TH2F*) getHistFromFile(trigger_sf_filename, "Mu50_OR_TkMu50_PtEtaBins/pt_abseta_ratio"));
   };

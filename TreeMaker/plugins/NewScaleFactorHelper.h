@@ -190,6 +190,13 @@ public:
     hist_trigger_sf_pt_eta.reset((TH2F*) getHistFromFile(trigger_sf_filename, "Mu50_OR_TkMu50_PtEtaBins/pt_abseta_ratio"));
   };
 
+  // These are the recommended systematic uncertainties as *fractions* not %
+  // Update as necessary from: https://twiki.cern.ch/twiki/bin/view/CMS/MuonReferenceEffsRun2#Results_for_2016_data
+  // NB: these are 2015! Still waiting for 2016 recommendations
+  const float systematic_ID = 0.01;
+  const float systematic_Iso = 0.005;
+  const float systematic_Trigger = 0.005;
+
   float getTrackingScaleFactor(float eta, float phi, int nVertices) {
     float eta_sf = getBinContent(hist_tracking_sf_eta_err_up.get(), eta);
     float phi_sf = getBinContent(hist_tracking_sf_phi_err_up.get(), phi);
@@ -198,6 +205,7 @@ public:
   };
 
   float getTrackingScaleFactorUncert(float eta, float phi, int nVertices, const std::string & variation) {
+    // Get statistical + systematic uncertainty on SF
     // Tracking SF are the only ones that come with different up/down errors
 
     // Central values don't depend on the up/down error so doesn't matter which hist we use
@@ -220,7 +228,8 @@ public:
       std::make_pair(phi_sf, phi_sf_uncert),
       std::make_pair(npv_sf, npv_sf_uncert),
     };
-    return propagateUncert(vals);
+    float stat_uncert = propagateUncert(vals);
+    return stat_uncert;
   };
 
   float getIDScaleFactor(float pt, float eta, int nVertices) {
@@ -230,6 +239,7 @@ public:
   }
 
   float getIDScaleFactorUncert(float pt, float eta, int nVertices) {
+    // Get statistical + systematic uncertainty on SF
     float npv_sf = getBinContent(hist_id_sf_nPV.get(), nVertices);
     float npv_sf_uncert = getBinError(hist_id_sf_nPV.get(), nVertices);
     float pt_eta_sf = getBinContent(hist_id_sf_pt_eta.get(), pt, fabs(eta));
@@ -238,7 +248,9 @@ public:
       std::make_pair(pt_eta_sf, pt_eta_sf_uncert),
       std::make_pair(npv_sf, npv_sf_uncert),
     };
-    return propagateUncert(vals);
+    float stat_uncert = propagateUncert(vals);
+    float syst_uncert = systematic_ID * npv_sf * pt_eta_sf;
+    return std::hypot(stat_uncert, syst_uncert);
   }
 
   float getIsoScaleFactor(float pt, float eta, int nVertices) {
@@ -248,6 +260,7 @@ public:
   }
 
   float getIsoScaleFactorUncert(float pt, float eta, int nVertices) {
+    // Get statistical + systematic uncertainty on SF
     float npv_sf = getBinContent(hist_iso_sf_nPV.get(), nVertices);
     float npv_sf_uncert = getBinError(hist_iso_sf_nPV.get(), nVertices);
     float pt_eta_sf = getBinContent(hist_iso_sf_pt_eta.get(), pt, fabs(eta));
@@ -256,7 +269,9 @@ public:
       std::make_pair(pt_eta_sf, pt_eta_sf_uncert),
       std::make_pair(npv_sf, npv_sf_uncert),
     };
-    return propagateUncert(vals);
+    float stat_uncert = propagateUncert(vals);
+    float syst_uncert = systematic_Iso * npv_sf * pt_eta_sf;
+    return std::hypot(stat_uncert, syst_uncert);
   }
 
   float getTriggerScaleFactor(float pt, float eta) {
@@ -265,11 +280,16 @@ public:
   }
 
   float getTriggerScaleFactorUncert(float pt, float eta) {
+    // Get statistical + systematic uncertainty on SF
     float pt_eta_sf_uncert = getBinError(hist_trigger_sf_pt_eta.get(), pt, fabs(eta));
-    return pt_eta_sf_uncert;
+    float syst_uncert = systematic_Trigger * getTriggerScaleFactor(pt, eta);
+    return std::hypot(pt_eta_sf_uncert, syst_uncert);
   }
 
   float getScaleFactor(float pt, float eta, float phi, int nVertices, const std::string & variation="") {
+    // Variation here is SF +/- uncertainty, where uncertainty is BOTH statistical & systematic
+    // Systematic variations may need updating as necessary, see
+    // https://twiki.cern.ch/twiki/bin/view/CMS/MuonReferenceEffsRun2
     float tracking_sf = getTrackingScaleFactor(eta, phi, nVertices);
     float id_sf = getIDScaleFactor(pt, eta, nVertices);
     float iso_sf = getIsoScaleFactor(pt, eta, nVertices);

@@ -43,7 +43,7 @@ void weight_hist_MuonID(){
   for(int i=0;i<ID.size();i++){
 
     if(ID[i]=="HighPtID" ){
-      var={"eta/eta_ratio","newpt/pair_ne_ratio"};
+      var={"eta/eta_ratio","newpt/pair_ne_ratio", "vtx/tag_nVertices_ratio"};
     }
 
     for(int j=0;j<var.size();j++){
@@ -71,7 +71,7 @@ void weight_hist_MuonID(){
       new_MU24_eta_ratio->Sumw2();
       new_MU24_eta_ratio->Scale(1/lumi_tot);
 
-      dir1 =trigger_allRuns ->mkdir("MC_NUM_"+ID[i]+"_DEN_genTracks_PAR_"+var[j]);
+      dir1 =trigger_allRuns->mkdir("MC_NUM_"+ID[i]+"_DEN_genTracks_PAR_"+var[j]);
       dir1->cd();
       new_MU24_eta_ratio->Write();
 
@@ -119,7 +119,7 @@ void weight_hist_MuonID(){
       new_MU24_pt_abseta_ratio->Scale(1/lumi_tot);
 
       /////////////////                 Save new histogramms in new file                ////////////////////////////////////
-      dir2 = trigger_allRuns ->mkdir("MC_NUM_"+ID[i]+"_DEN_genTracks_PAR_pt_eta/abseta_pt_ratio");
+      dir2 = trigger_allRuns->mkdir("MC_NUM_"+ID[i]+"_DEN_genTracks_PAR_pt_eta/abseta_pt_ratio");
       dir2->cd();
       new_MU24_abseta_pt_ratio ->Write();
       new_MU24_pt_abseta_ratio->Write();

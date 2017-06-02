@@ -99,7 +99,7 @@ private:
   double PUweight;
   double btagWeight, btagWeight_BTagUp, btagWeight_BTagDown, btagWeight_MistagUp, btagWeight_MistagDown;
   double genWeight;
-  double LeptonSF_trigger, LeptonSF_ID, LeptonSF_ID_Up, LeptonSF_ID_Down;
+  double LeptonSF, LeptonSF_Up, LeptonSF_Down;
   double rho_;
   double totWeight, totWeight_BTagUp, totWeight_BTagDown, totWeight_MistagUp, totWeight_MistagDown, totWeight_LeptonIDUp, totWeight_LeptonIDDown;
   double VTagSF;
@@ -206,7 +206,7 @@ private:
   edm::EDGetTokenT<LHEEventProduct> LHEEventProductTokenExternal;
   edm::EDGetTokenT<LHERunInfoProduct> lheProducerToken;
   SystematicsHelper SystematicsHelper_;
-  ScaleFactorHelper ScaleFactorHelper_;
+  MuonScaleFactor MuonScaleFactor_;
   JetResolutionSmearer<pat::Jet>JetResolutionSmearer_;
   //for JEC
   boost::shared_ptr<FactorizedJetCorrector> jecAK8MC_L2L3_, jecAK8Data_L2L3_;
@@ -236,7 +236,14 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   isSignal(iConfig.getParameter<bool>("isSignal")),
   channel(iConfig.getParameter<std::string>("channel")),
   SystematicsHelper_(SystematicsHelper()),
-  ScaleFactorHelper_(ScaleFactorHelper(iConfig.getParameter<std::string>("channel"))),
+  MuonScaleFactor_(
+    "aTGCsAnalysis/TreeMaker/data/Muon_TrackingSF_RunBtoH.root",
+    "aTGCsAnalysis/TreeMaker/data/Muon_IDSF_average_RunBtoH.root",
+    "aTGCsAnalysis/TreeMaker/data/Muon_IsoSF_average_RunBtoH.root",
+    "aTGCsAnalysis/TreeMaker/data/Muon_SingleLeptonTriggerSF_average_RunBtoH.root",
+    "HighPtID",
+    "tkLooseISO"
+  ),
   JetResolutionSmearer_(iConfig.getParameter<bool>("isMC")),
   BTagHelper_(iConfig.getParameter<std::string>("BtagEffFile"))
 {
@@ -329,10 +336,9 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
      outTree_->Branch("gnPV", &gnPV, "gnPV/D");
 
      outTree_->Branch("puweight",       &PUweight,     "puweight/D"          );
-     outTree_->Branch("LeptonSF_ID",       &LeptonSF_ID,     "LeptonSF_ID/D"          );
-     outTree_->Branch("LeptonSF_ID_Up",       &LeptonSF_ID_Up,     "LeptonSF_ID_Up/D"          );
-     outTree_->Branch("LeptonSF_ID_Down",       &LeptonSF_ID_Down,     "LeptonSF_ID_Down/D"          );
-     outTree_->Branch("LeptonSF_trigger",       &LeptonSF_trigger,     "LeptonSF_trigger/D"          );
+     outTree_->Branch("LeptonSF",       &LeptonSF,     "LeptonSF/D"          );
+     outTree_->Branch("LeptonSF_Up",       &LeptonSF_Up,     "LeptonSF_Up/D"          );
+     outTree_->Branch("LeptonSF_Down",       &LeptonSF_Down,     "LeptonSF_Down/D"          );
      outTree_->Branch("genweight",       &genWeight,     "genweight/D"          );
      outTree_->Branch("btagWeight",       &btagWeight,     "btagWeight/D"          );
      if(channel == "el")outTree_->Branch("triggerWeightHLTEle27NoER",       &triggerWeightHLTEle27NoER,     "triggerWeightHLTEle27NoER/D"          );
@@ -892,18 +898,14 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
    
    if (channel == "mu"){
-      LeptonSF_ID = ScaleFactorHelper_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), "mu", "ID");
-      LeptonSF_ID_Up = ScaleFactorHelper_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), "mu", "ID", "up");
-      LeptonSF_ID_Down = ScaleFactorHelper_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), "mu", "ID", "down");
-      LeptonSF_trigger = ScaleFactorHelper_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), "mu", "trigger");
-     // LeptonSF_trigger = 1.;
+      LeptonSF = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV);
+      LeptonSF_Up = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV, "up");
+      LeptonSF_Down = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV, "down");
     }
    else if (channel == "el") {
-      LeptonSF_ID = isEB?0.994:0.993;//slide 27: https://indico.cern.ch/event/482671/contributions/2154184/attachments/1268166/1878158/HEEP_ScaleFactor_Study_v4.pdf
-      LeptonSF_ID_Up =  LeptonSF_ID;
-      LeptonSF_ID_Down =  LeptonSF_ID;
-      LeptonSF_trigger = 1.;
-
+      LeptonSF = isEB?0.994:0.993;//slide 27: https://indico.cern.ch/event/482671/contributions/2154184/attachments/1268166/1878158/HEEP_ScaleFactor_Study_v4.pdf
+      LeptonSF_Up =  LeptonSF;
+      LeptonSF_Down =  LeptonSF;
     }
    else  throw cms::Exception("InvalidValue") << "Invalid channel, should be mu or el." << std::endl; 
    //leptonically decaying W
@@ -1471,13 +1473,13 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 
   if (isMC) {
-    totWeight = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_ID*LeptonSF_trigger*btagWeight*VTagSF; 
-    totWeight_BTagUp = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_ID*LeptonSF_trigger*btagWeight_BTagUp*VTagSF;  
-    totWeight_BTagDown = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_ID*LeptonSF_trigger*btagWeight_BTagDown*VTagSF;  
-    totWeight_MistagUp = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_ID*LeptonSF_trigger*btagWeight_MistagUp*VTagSF; 
-    totWeight_MistagDown = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_ID*LeptonSF_trigger*btagWeight_MistagDown*VTagSF; 
-    totWeight_LeptonIDUp = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_ID_Up*LeptonSF_trigger*btagWeight*VTagSF; 
-    totWeight_LeptonIDDown = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_ID_Down*LeptonSF_trigger*btagWeight*VTagSF; 
+    totWeight = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF*btagWeight*VTagSF;
+    totWeight_BTagUp = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF*btagWeight_BTagUp*VTagSF;
+    totWeight_BTagDown = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF*btagWeight_BTagDown*VTagSF;
+    totWeight_MistagUp = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF*btagWeight_MistagUp*VTagSF;
+    totWeight_MistagDown = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF*btagWeight_MistagDown*VTagSF;
+    totWeight_LeptonIDUp = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_Up*btagWeight*VTagSF;
+    totWeight_LeptonIDDown = PUweight*(genWeight/(std::abs(genWeight)))*LeptonSF_Down*btagWeight*VTagSF;
   }
   //probably would leave it like that if we keep reweighting to data trigger efficiency in electron channel. In this case lepton ID & trigger scale factors are set to unity in the electron channel.
   /*if (isMC&&channel=="el"){

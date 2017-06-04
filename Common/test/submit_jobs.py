@@ -219,7 +219,7 @@ DataDictionaryElectronChannel = {
 	'data-RunH_ver2':'/SingleElectron/Run2016H-03Feb2017_ver2-v1/MINIAOD',
 	'data-RunH_ver3':'/SingleElectron/Run2016H-03Feb2017_ver3-v1/MINIAOD'}
 	
-MyJSON = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/Final/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON.txt"
+MyJSON = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
 	
 
 submitJobs(MCBackgroundsSampleDictionary, SignalMCSampleDictionary, DataDictionaryElectronChannel, DataDictionaryMuonChannel, MyJSON,"271036-284044", True)

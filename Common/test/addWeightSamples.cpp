@@ -39,14 +39,14 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   int Nevents_ = Nevents(FileName);
   TFile file(FileName.c_str(), "UPDATE");
   TTree * tree = (TTree*) file.Get("treeDumper/BasicTree");
-  double totWeight,totWeight_BTagUp,totWeight_BTagDown, totWeight_MistagUp, totWeight_MistagDown, triggerWeightHLTEle27NoER ;
+  double totWeight, topPtSF, totWeight_BTagUp, totWeight_BTagDown, totWeight_MistagUp, totWeight_MistagDown, triggerWeightHLTEle27NoER;
   tree -> SetBranchAddress("totWeight", &totWeight);
+  tree -> SetBranchAddress("topPtSF", &topPtSF);
   tree -> SetBranchAddress("totWeight_BTagUp", &totWeight_BTagUp);
   tree -> SetBranchAddress("totWeight_BTagDown", &totWeight_BTagDown);
   tree -> SetBranchAddress("totWeight_MistagUp", &totWeight_MistagUp);
   tree -> SetBranchAddress("totWeight_MistagDown", &totWeight_MistagDown);
   if (channel == "ele") tree -> SetBranchAddress("triggerWeightHLTEle27NoER", &triggerWeightHLTEle27NoER);
-  double weightLumi = (xsection*lumi)/Nevents_;
   double totWeightWithLumi, totWeightWithLumi_MistagUp, totWeightWithLumi_MistagDown, totWeightWithLumi_BTagUp, totWeightWithLumi_BTagDown;
   TBranch * br = tree -> Branch("totEventWeight", &totWeightWithLumi, "totEventWeight/D"); 
   TBranch * br_MistagUp = tree -> Branch("totEventWeight_MistagUp", &totWeightWithLumi_MistagUp, "totEventWeight_MistagUp/D"); 
@@ -55,7 +55,17 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   TBranch * br_BTagDown = tree -> Branch("totEventWeight_BTagDown", &totWeightWithLumi_BTagDown, "totEventWeight_BTagDown/D");
   std::cout << FileName << std::endl;
   std::cout << "Number of events (effective):" << Nevents_ << std::endl;
-  
+
+  // Calculate mean top Pt SF first
+  double meanTopWeight = 0.;
+  for (unsigned int iEntry = 0; iEntry < tree->GetEntries(); iEntry++) {
+    tree->GetEntry(iEntry);
+    meanTopWeight += topPtSF;
+  }
+  meanTopWeight /= tree->GetEntries();
+  // need to divide by mean top Pt weight as it only affects shape, not total # events
+  double weightLumi = (xsection*lumi)/(Nevents_*meanTopWeight);
+
   for (unsigned int iEntry = 0; iEntry < tree -> GetEntries(); iEntry ++)
   {
     tree -> GetEntry(iEntry); 

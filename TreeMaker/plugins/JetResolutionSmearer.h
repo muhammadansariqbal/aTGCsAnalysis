@@ -12,9 +12,9 @@ public:
 	JetResolutionSmearer(bool isMC_){
 		isMC = isMC_;
 		std::string prefix  = "aTGCsAnalysis/TreeMaker/data/";
-		edm::FileInPath ResolutionFile_Pt(prefix + (isMC?"Fall15_25nsV2_MC_PtResolution_AK8PFchs.txt":"Fall15_25nsV2_DATA_PtResolution_AK8PFchs.txt"));
-		edm::FileInPath ResolutionFile_Phi(prefix + (isMC?"Fall15_25nsV2_MC_PhiResolution_AK8PFchs.txt":"Fall15_25nsV2_DATA_PhiResolution_AK8PFchs.txt"));
-		edm::FileInPath SF_File(prefix + (isMC?"Fall15_25nsV2_MC_SF_AK8PFchs.txt":"Fall15_25nsV2_DATA_SF_AK8PFchs.txt"));
+		edm::FileInPath ResolutionFile_Pt(prefix + (isMC?"Spring16_25nsV10_MC/Spring16_25nsV10_MC_PtResolution_AK8PFchs.txt":"Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_PtResolution_AK8PFchs.txt"));
+		edm::FileInPath ResolutionFile_Phi(prefix + (isMC?"Spring16_25nsV10_MC/Spring16_25nsV10_MC_PhiResolution_AK8PFchs.txt":"Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_PtResolution_AK8PFchs.txt"));
+		edm::FileInPath SF_File(prefix + (isMC?"Spring16_25nsV10_MC/Spring16_25nsV10_MC_SF_AK8PFPuppi.txt":"Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_SF_AK8PFchs.txt"));
 		resolution_pt = JME::JetResolution(ResolutionFile_Pt.fullPath());
 		resolution_phi = JME::JetResolution(ResolutionFile_Phi.fullPath());
 		resolution_sf = JME::JetResolutionScaleFactor(SF_File.fullPath());

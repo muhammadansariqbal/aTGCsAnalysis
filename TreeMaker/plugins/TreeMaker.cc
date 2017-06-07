@@ -212,7 +212,7 @@ private:
   BTagHelper BTagHelper_;
   // For PUPPI Softdrop Mass Correction
   TF1 *puppisd_corrGEN, *puppisd_corrRECO_cen, *puppisd_corrRECO_for;
-
+  JetCorrectionUncertainty * jecUnc;
 
 };
 
@@ -268,11 +268,13 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
     if(!isSignal)lheProducerToken = consumes< LHERunInfoProduct, edm::InRun >(edm::InputTag("externalLHEProducer"));
     else lheProducerToken = consumes< LHERunInfoProduct, edm::InRun >(edm::InputTag("source"));
     VTagSF = iConfig.getParameter<double>("VTagSF");
-    
+
    }
 
+   jecUnc = nullptr;
+
    if (channel == "el")TriggerResultsToken = consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("triggers"));
- 
+
   //now do what ever initialization is needed
   edm::Service<TFileService> fs;
   outTree_ = fs->make<TTree>("BasicTree","BasicTree");
@@ -763,30 +765,22 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    Wplus_gen_eta = Wplus_p4.Eta();
    Wplus_gen_phi = Wplus_p4.Phi();
    Wplus_gen_mass = Wplus_p4.M();
-   
+
    Wminus_gen_pt = Wminus_p4.Pt();
    Wminus_gen_eta = Wminus_p4.Eta();
    Wminus_gen_phi = Wminus_p4.Phi();
    Wminus_gen_mass = Wminus_p4.M();
   }
 
-  
-
-
-  edm::ESHandle<JetCorrectorParametersCollection> JetCorParCollAK8;
-  /*if (isMC) {
+  if (isMC && jecUnc == nullptr) {
+    // Only have to initialise once
+    edm::ESHandle<JetCorrectorParametersCollection> JetCorParCollAK8;
     iSetup.get<JetCorrectionsRecord>().get("AK8PFchs",JetCorParCollAK8);
-
     JetCorrectorParameters const & JetCorPar = (*JetCorParCollAK8)["Uncertainty"];
-    JetCorrectionUncertainty *jecUnc = new JetCorrectionUncertainty(JetCorPar);
-
-  
-
-    JECunc = jecUnc->getUncertainty(true);
+    jecUnc = new JetCorrectionUncertainty(JetCorPar);
   }
-  else JECunc = 0.;*/JECunc=0.;
- 
-      
+  JECunc = 0.;
+
    //  Defining decay channel on the gen level
    N_had_Wgen  = 0, N_lep_Wgen = 0 ;
 
@@ -1192,7 +1186,12 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(isMC)
     {
       isMatched_ = isMatchedToGenW(genParticles, fatJet);
+
       //JEC uncertainty
+      jecUnc->setJetEta(jet_eta);
+      jecUnc->setJetPt(jet_pt);  // must be corrected PT
+      JECunc = jecUnc->getUncertainty(true);
+
       jet_pt_JECDown = (1 - JECunc)*jet_pt;
       jet_pt_JECUp   = (1 + JECunc)*jet_pt;
       jet_mass_JECDown = (1 - JECunc)*jet_mass;

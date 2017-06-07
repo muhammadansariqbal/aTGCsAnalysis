@@ -19,9 +19,26 @@ slimmedJetsAK8NewJEC = updatedPatJets.clone(
         jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patAK8JetCorrFactorsReapplyJEC"))
         )
 
+# smear newly corrected jets
+
+slimmedJetsAK8Smeared = cms.EDProducer('SmearedPATJetProducer',
+        src = cms.InputTag('slimmedJetsAK8NewJEC'),
+        enabled = cms.bool(True),
+        rho = cms.InputTag("fixedGridRhoFastjetAll"),
+        algo = cms.string('AK8PFchs'),
+        algopt = cms.string('AK8PFchs_pt'),
+
+        genJets = cms.InputTag('slimmedGenJetsAK8'),
+        dRMax = cms.double(0.4),  # since AK8
+        dPtMaxFactor = cms.double(3),
+
+        debug = cms.untracked.bool(False)
+        )
+
+
 # fat jets
 selectedPatJetsAK8ByPt = cms.EDFilter("PATJetSelector",
-    src = cms.InputTag("slimmedJetsAK8NewJEC"),
+    src = cms.InputTag("slimmedJetsAK8Smeared"),
     cut = cms.string("pt > 170"),
     filter = cms.bool(True)
 )               
@@ -64,10 +81,12 @@ bestJet =cms.EDFilter("LargestPtCandViewSelector",
 
 
 
-fatJetsSequence = cms.Sequence(patAK8JetCorrFactorsReapplyJEC + slimmedJetsAK8NewJEC + selectedPatJetsAK8ByPt + selectedPatJetsAK8 + cleanJets + goodJets + bestJet)
+fatJetsSequence = cms.Sequence(patAK8JetCorrFactorsReapplyJEC + slimmedJetsAK8NewJEC + slimmedJetsAK8Smeared + selectedPatJetsAK8ByPt + selectedPatJetsAK8 + cleanJets + goodJets + bestJet)
 
 
 # Create a different collection of jets which  contains b-tagging information. This is necessary because slimmedJetsAK8 jets don't contain BTagInfo
+
+# Apply JEC
 patAK4JetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
         src = cms.InputTag("slimmedJets"),
         levels = ['L2Relative', 'L3Absolute'],  # no L1FastJet ?
@@ -79,8 +98,23 @@ slimmedJetsAK4NewJEC = updatedPatJets.clone(
         jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patAK4JetCorrFactorsReapplyJEC"))
         )
 
+# Smear newly corrected jets
+slimmedJetsAK4Smeared = cms.EDProducer('SmearedPATJetProducer',
+        src = cms.InputTag('slimmedJetsAK4NewJEC'),
+        enabled = cms.bool(True),
+        rho = cms.InputTag("fixedGridRhoFastjetAll"),
+        algo = cms.string('AK4PFchs'),
+        algopt = cms.string('AK4PFchs_pt'),
+
+        genJets = cms.InputTag('slimmedGenJets'),
+        dRMax = cms.double(0.2),  # since AK4
+        dPtMaxFactor = cms.double(3),
+
+        debug = cms.untracked.bool(False)
+        )
+
 selectedPatJetsAK4 = cms.EDFilter("PATJetSelector",
-    src = cms.InputTag("slimmedJetsAK4NewJEC"),
+    src = cms.InputTag("slimmedJetsAK4Smeared"),
     cut = cms.string("pt > 30 & abs(eta) < 2.4")
 )
 
@@ -121,5 +155,5 @@ goodAK4Jets = cms.EDFilter("jetID",
 
 
 
-AK4JetsSequence = cms.Sequence(patAK4JetCorrFactorsReapplyJEC + slimmedJetsAK4NewJEC + selectedPatJetsAK4 + cleanAK4Jets + goodAK4Jets)
+AK4JetsSequence = cms.Sequence(patAK4JetCorrFactorsReapplyJEC + slimmedJetsAK4NewJEC + slimmedJetsAK4Smeared + selectedPatJetsAK4 + cleanAK4Jets + goodAK4Jets)
 

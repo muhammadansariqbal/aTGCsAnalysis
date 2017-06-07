@@ -1184,29 +1184,29 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     jet_mass_softdrop_PUPPI = puppi_softdrop.M() * puppiCorr;
     jet_tau21_DT = jet_tau21_PUPPI + 0.063*std::log(jet_pt_PUPPI*jet_pt_PUPPI/jet_mass_PUPPI);
 
+    jet_pt = fatJet.pt();
+    jet_eta = fatJet.eta();
+    jet_phi = fatJet.phi();
+    jet_mass = fatJet.mass();
+
     if(isMC)
     {
       isMatched_ = isMatchedToGenW(genParticles, fatJet);
-      smearedJet = JetResolutionSmearer_.LorentzVectorWithSmearedPt(fatJet);
-      jet_pt = smearedJet.Pt();
-      jet_eta = smearedJet.Eta();
-      jet_phi = smearedJet.Phi();
-      jet_mass = smearedJet.M();
       //JEC uncertainty
       jet_pt_JECDown = (1 - JECunc)*jet_pt;
       jet_pt_JECUp   = (1 + JECunc)*jet_pt;
       jet_mass_JECDown = (1 - JECunc)*jet_mass;
       jet_mass_JECUp   = (1 + JECunc)*jet_mass;
-      jet_mass_pruned_JECDown = (1 - JECunc)*jet_mass_pruned; 
-      jet_mass_pruned_JECUp = (1 + JECunc)*jet_mass_pruned; 
-      jet_mass_softdrop_JECDown = (1 - JECunc)*jet_mass_softdrop; 
-      jet_mass_softdrop_JECUp = (1 + JECunc)*jet_mass_softdrop; 
+      jet_mass_pruned_JECDown = (1 - JECunc)*jet_mass_pruned;
+      jet_mass_pruned_JECUp = (1 + JECunc)*jet_mass_pruned;
+      jet_mass_softdrop_JECDown = (1 - JECunc)*jet_mass_softdrop;
+      jet_mass_softdrop_JECUp = (1 + JECunc)*jet_mass_softdrop;
 
       //JER uncertainty
       smearedJetUp = JetResolutionSmearer_.LorentzVectorWithSmearedPt(fatJet,Variation::UP);
       smearedJetDown = JetResolutionSmearer_.LorentzVectorWithSmearedPt(fatJet,Variation::DOWN);
-      double JERUpCorrection = smearedJetUp.Pt()/smearedJet.Pt();
-      double JERDownCorrection = smearedJetDown.Pt()/smearedJet.Pt();
+      double JERUpCorrection = smearedJetUp.Pt()/jet_pt;
+      double JERDownCorrection = smearedJetDown.Pt()/jet_pt;
       jet_pt_JERUp = smearedJetUp.Pt();
       jet_pt_JERDown = smearedJetDown.Pt();
       jet_mass_JERUp = smearedJetUp.M();
@@ -1217,13 +1217,6 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       
       jet_mass_softdrop_JERUp = JERUpCorrection*jet_mass_softdrop;
       jet_mass_softdrop_JERDown = JERDownCorrection*jet_mass_softdrop;
-    }
-    else{
-      jet_pt = fatJet.pt();
-      jet_eta = fatJet.eta();
-      jet_phi = fatJet.phi();
-      jet_mass = fatJet.mass();
-
     }
   }
   

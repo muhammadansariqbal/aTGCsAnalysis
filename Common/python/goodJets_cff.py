@@ -3,9 +3,25 @@ from PhysicsTools.SelectorUtils.pfJetIDSelector_cfi import pfJetIDSelector
 from RecoJets.JetProducers.ak4PFJets_cfi import *
 import PhysicsTools.PatAlgos.cleaningLayer1.jetCleaner_cfi as jetCleaner_cfi
 
+
+# Apply JEC
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJetCorrFactors
+from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
+
+patAK8JetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
+        src = cms.InputTag("slimmedJetsAK8"),
+        levels = ['L2Relative', 'L3Absolute'],  # no L1FastJet ?
+        payload = 'AK8PFchs'
+        )
+
+slimmedJetsAK8NewJEC = updatedPatJets.clone(
+        jetSource = cms.InputTag("slimmedJetsAK8"),
+        jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patAK8JetCorrFactorsReapplyJEC"))
+        )
+
 # fat jets
 selectedPatJetsAK8ByPt = cms.EDFilter("PATJetSelector",
-    src = cms.InputTag("slimmedJetsAK8"),
+    src = cms.InputTag("slimmedJetsAK8NewJEC"),
     cut = cms.string("pt > 170"),
     filter = cms.bool(True)
 )               
@@ -42,13 +58,13 @@ goodJets = cms.EDFilter("jetID",
 
 
 bestJet =cms.EDFilter("LargestPtCandViewSelector",
-    src = cms.InputTag("goodJets"), 
+    src = cms.InputTag("goodJets"),
     maxNumber = cms.uint32(1)
   )
 
 
 
-fatJetsSequence = cms.Sequence( selectedPatJetsAK8ByPt + selectedPatJetsAK8 + cleanJets + goodJets + bestJet)
+fatJetsSequence = cms.Sequence(patAK8JetCorrFactorsReapplyJEC + slimmedJetsAK8NewJEC + selectedPatJetsAK8ByPt + selectedPatJetsAK8 + cleanJets + goodJets + bestJet)
 
 
 # Create a different collection of jets which  contains b-tagging information. This is necessary because slimmedJetsAK8 jets don't contain BTagInfo

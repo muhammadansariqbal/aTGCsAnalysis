@@ -209,8 +209,6 @@ private:
   SystematicsHelper SystematicsHelper_;
   MuonScaleFactor MuonScaleFactor_;
   JetResolutionSmearer<pat::Jet>JetResolutionSmearer_;
-  //for JEC
-  boost::shared_ptr<FactorizedJetCorrector> jecAK8MC_L2L3_, jecAK8Data_L2L3_;
   BTagHelper BTagHelper_;
   // For PUPPI Softdrop Mass Correction
   TF1 *puppisd_corrGEN, *puppisd_corrRECO_cen, *puppisd_corrRECO_for;
@@ -248,23 +246,6 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   JetResolutionSmearer_(iConfig.getParameter<bool>("isMC")),
   BTagHelper_(iConfig.getParameter<std::string>("BtagEffFile"))
 {
-  //loading JEC from text files, this is done because groomed mass should be corrected with L2L3 corrections, if this is temporary, that shouldn't be done, as we take corrections from GT
-  edm::FileInPath L2MC("aTGCsAnalysis/TreeMaker/data/Summer16_23Sep2016V4_MC_L2Relative_AK8PFchs.txt");
-  edm::FileInPath L3MC("aTGCsAnalysis/TreeMaker/data/Summer16_23Sep2016V4_MC_L3Absolute_AK8PFchs.txt");
-  
-
-  edm::FileInPath L1Data("aTGCsAnalysis/TreeMaker/data/Summer16_23Sep2016BCDV4_DATA_L1FastJet_AK8PFchs.txt");
-  edm::FileInPath L2Data("aTGCsAnalysis/TreeMaker/data/Summer16_23Sep2016BCDV4_DATA_L2Relative_AK8PFchs.txt");
-  edm::FileInPath L3Data("aTGCsAnalysis/TreeMaker/data/Summer16_23Sep2016BCDV4_DATA_L3Absolute_AK8PFchs.txt");
-  edm::FileInPath L2L3ResData("aTGCsAnalysis/TreeMaker/data/Summer16_23Sep2016BCDV4_DATA_L2L3Residual_AK8PFchs.txt");
-
-  /*edm::FileInPath L2MC("aTGCsAnalysis/TreeMaker/data/Spring16_25nsV3_MC_L2Relative_AK8PFchs.txt");
-  edm::FileInPath L3MC("aTGCsAnalysis/TreeMaker/data/Spring16_25nsV3_MC_L3Absolute_AK8PFchs.txt");
-
-  edm::FileInPath L1Data("aTGCsAnalysis/TreeMaker/data/Spring16_25nsV3_DATA_L1FastJet_AK8PFchs.txt");
-  edm::FileInPath L2Data("aTGCsAnalysis/TreeMaker/data/Spring16_25nsV3_DATA_L2Relative_AK8PFchs.txt");
-  edm::FileInPath L3Data("aTGCsAnalysis/TreeMaker/data/Spring16_25nsV3_DATA_L3Absolute_AK8PFchs.txt");
-  edm::FileInPath L2L3ResData("aTGCsAnalysis/TreeMaker/data/Spring16_25nsV3_DATA_L2L3Residual_AK8PFchs.txt");*/
 
   // For PUPPI Correction
   edm::FileInPath puppiCorr("aTGCsAnalysis/TreeMaker/data/puppiCorrSummer16.root");
@@ -273,38 +254,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   puppisd_corrRECO_cen = (TF1*)file->Get("puppiJECcorr_reco_0eta1v3");
   puppisd_corrRECO_for = (TF1*)file->Get("puppiJECcorr_reco_1v3eta2v5");
 
-  std::vector<std::string> jecAK8PayloadNamesMC_L2L3_,jecAK8PayloadNamesData_L2L3_;
-  
-  if (isMC){
-
-    jecAK8PayloadNamesMC_L2L3_.push_back(L2MC.fullPath()); 
-    jecAK8PayloadNamesMC_L2L3_.push_back(L3MC.fullPath()); 
-    SystematicsHelper_  = SystematicsHelper(channel, consumesCollector());
-  }
-
-  if(!isMC) {
-    jecAK8PayloadNamesData_L2L3_.push_back(L2Data.fullPath()); 
-    jecAK8PayloadNamesData_L2L3_.push_back(L3Data.fullPath()); 
-    jecAK8PayloadNamesData_L2L3_.push_back(L2L3ResData.fullPath()); 
-  }
-
-  std::vector<JetCorrectorParameters> vParMCL2L3, vParDataL2L3;
-
-  for ( std::vector<std::string>::const_iterator payloadBegin = jecAK8PayloadNamesMC_L2L3_.begin(), payloadEnd = jecAK8PayloadNamesMC_L2L3_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
-    JetCorrectorParameters parsMC(*ipayload);
-    vParMCL2L3.push_back(parsMC);
-  }
-
-  for ( std::vector<std::string>::const_iterator payloadBegin = jecAK8PayloadNamesData_L2L3_.begin(), payloadEnd = jecAK8PayloadNamesData_L2L3_.end(), ipayload = payloadBegin; ipayload != payloadEnd; ++ipayload ) {
-    JetCorrectorParameters parsData(*ipayload);
-    vParDataL2L3.push_back(parsData);
-  }
-  // Make the FactorizedJetCorrector
-  jecAK8MC_L2L3_ = boost::shared_ptr<FactorizedJetCorrector> ( new FactorizedJetCorrector(vParMCL2L3) );
-  jecAK8Data_L2L3_ = boost::shared_ptr<FactorizedJetCorrector> ( new FactorizedJetCorrector(vParDataL2L3) );
-
   //loading PU and generator information for MC
    if (isMC) {
+     SystematicsHelper_  = SystematicsHelper(channel, consumesCollector());
+
      PUInfoToken_ = consumes<std::vector< PileupSummaryInfo > >(iConfig.getParameter<edm::InputTag>("PUInfo"));
 
      //PU-reweighting
@@ -1188,57 +1141,41 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       }
 
     }
-   
-  
+
+
   NAK8jet = jets -> size();
   JetResolutionSmearer_.setRhoAndSeed(rho_, iEvent);
-  math::XYZTLorentzVector smearedJet, smearedJetUp, smearedJetDown; 
+  math::XYZTLorentzVector smearedJet, smearedJetUp, smearedJetDown;
 
    if (jets -> size() > 0)
   {
-   
-    jet_tau2tau1 = ((jets -> at(0)).userFloat("NjettinessAK8:tau2"))/((jets -> at(0)).userFloat("NjettinessAK8:tau1"));
-    jet_tau3tau2 = ((jets -> at(0)).userFloat("NjettinessAK8:tau3"))/((jets -> at(0)).userFloat("NjettinessAK8:tau2"));
-    jet_tau1 = ((jets -> at(0)).userFloat("NjettinessAK8:tau1"));
-    jet_tau2 = ((jets -> at(0)).userFloat("NjettinessAK8:tau2"));
-    jet_tau3 = ((jets -> at(0)).userFloat("NjettinessAK8:tau3"));
-    math::XYZTLorentzVector uncorrJet = (jets -> at(0)).correctedP4(0);
-    double corr;
-    if (isMC){
-      jecAK8MC_L2L3_->setJetEta( uncorrJet.eta() );
-      jecAK8MC_L2L3_->setJetPt ( uncorrJet.pt() );
-      jecAK8MC_L2L3_->setJetE  ( uncorrJet.energy() );
-      jecAK8MC_L2L3_->setJetA  ( (jets -> at(0)).jetArea() );
-      jecAK8MC_L2L3_->setRho   ( rho_ );
-      jecAK8MC_L2L3_->setNPV   (  vertices->size());
-      corr = jecAK8MC_L2L3_->getCorrection();
-    }
-    else {
-      jecAK8Data_L2L3_->setJetEta( uncorrJet.eta() );
-      jecAK8Data_L2L3_->setJetPt ( uncorrJet.pt() );
-      jecAK8Data_L2L3_->setJetE  ( uncorrJet.energy() );
-      jecAK8Data_L2L3_->setJetA  ( (jets -> at(0)).jetArea() );
-      jecAK8Data_L2L3_->setRho   ( rho_ );
-      jecAK8Data_L2L3_->setNPV   (  vertices->size());
-      corr = jecAK8Data_L2L3_->getCorrection();
-    }
-    jet_mass_pruned = corr*(jets -> at(0)).userFloat("ak8PFJetsCHSPrunedMass");
-    jet_mass_softdrop = corr*(jets -> at(0)).userFloat("ak8PFJetsCHSSoftDropMass");
+    const pat::Jet & fatJet = jets->at(0);
+    jet_tau2tau1 = fatJet.userFloat("NjettinessAK8:tau2")/fatJet.userFloat("NjettinessAK8:tau1");
+    jet_tau3tau2 = fatJet.userFloat("NjettinessAK8:tau3")/fatJet.userFloat("NjettinessAK8:tau2");
+    jet_tau1 = fatJet.userFloat("NjettinessAK8:tau1");
+    jet_tau2 = fatJet.userFloat("NjettinessAK8:tau2");
+    jet_tau3 = fatJet.userFloat("NjettinessAK8:tau3");
+    // Need to manually apply correction factor to userFloat values - calcualte by using
+    // ratio of corrected PT to uncorrected pt
+    double corr = fatJet.correctedP4(fatJet.currentJECLevel()).pt() / fatJet.correctedP4("Uncorrected").pt();
+    jet_mass_pruned = corr * fatJet.userFloat("ak8PFJetsCHSPrunedMass");
+    jet_mass_softdrop = corr * fatJet.userFloat("ak8PFJetsCHSSoftDropMass");
 
     //https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD2016#Jets
-    jet_pt_PUPPI = jets->at(0).userFloat("ak8PFJetsPuppiValueMap:pt");
-    jet_eta_PUPPI = jets->at(0).userFloat("ak8PFJetsPuppiValueMap:eta");
-    jet_phi_PUPPI = jets->at(0).userFloat("ak8PFJetsPuppiValueMap:phi");
-    jet_mass_PUPPI = jets->at(0).userFloat("ak8PFJetsPuppiValueMap:mass");
-    jet_tau1_PUPPI = jets->at(0).userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau1");
-    jet_tau2_PUPPI = jets->at(0).userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau2");
-    jet_tau3_PUPPI = jets->at(0).userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau3");
+    // Do these require correction factor?
+    jet_pt_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:pt");
+    jet_eta_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:eta");
+    jet_phi_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:phi");
+    jet_mass_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:mass");
+    jet_tau1_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau1");
+    jet_tau2_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau2");
+    jet_tau3_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau3");
     jet_tau21_PUPPI = jet_tau2_PUPPI/jet_tau1_PUPPI;
 
 
     TLorentzVector puppi_softdrop,puppi_softdrop_subjet;
-    auto const & sdSubjetsPuppi = jets->at(0).subjets("SoftDropPuppi");
-    for ( auto const & it : sdSubjetsPuppi ) 
+    auto const & sdSubjetsPuppi = fatJet.subjets("SoftDropPuppi");
+    for ( auto const & it : sdSubjetsPuppi )
     {
       puppi_softdrop_subjet.SetPtEtaPhiM(it->correctedP4(0).pt(),it->correctedP4(0).eta(),it->correctedP4(0).phi(),it->correctedP4(0).mass());
       puppi_softdrop+=puppi_softdrop_subjet;
@@ -1249,8 +1186,8 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     if(isMC)
     {
-      isMatched_ = isMatchedToGenW(genParticles, jets->at(0));
-      smearedJet = JetResolutionSmearer_.LorentzVectorWithSmearedPt(jets->at(0));
+      isMatched_ = isMatchedToGenW(genParticles, fatJet);
+      smearedJet = JetResolutionSmearer_.LorentzVectorWithSmearedPt(fatJet);
       jet_pt = smearedJet.Pt();
       jet_eta = smearedJet.Eta();
       jet_phi = smearedJet.Phi();
@@ -1266,8 +1203,8 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       jet_mass_softdrop_JECUp = (1 + JECunc)*jet_mass_softdrop; 
 
       //JER uncertainty
-      smearedJetUp = JetResolutionSmearer_.LorentzVectorWithSmearedPt(jets->at(0),Variation::UP);  
-      smearedJetDown = JetResolutionSmearer_.LorentzVectorWithSmearedPt(jets->at(0),Variation::DOWN);  
+      smearedJetUp = JetResolutionSmearer_.LorentzVectorWithSmearedPt(fatJet,Variation::UP);
+      smearedJetDown = JetResolutionSmearer_.LorentzVectorWithSmearedPt(fatJet,Variation::DOWN);
       double JERUpCorrection = smearedJetUp.Pt()/smearedJet.Pt();
       double JERDownCorrection = smearedJetDown.Pt()/smearedJet.Pt();
       jet_pt_JERUp = smearedJetUp.Pt();
@@ -1282,10 +1219,10 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       jet_mass_softdrop_JERDown = JERDownCorrection*jet_mass_softdrop;
     }
     else{
-      jet_pt =  jets->at(0).pt();
-      jet_eta =  jets->at(0).eta();
-      jet_phi =  jets->at(0).phi();
-      jet_mass =  jets->at(0).mass();
+      jet_pt = fatJet.pt();
+      jet_eta = fatJet.eta();
+      jet_phi = fatJet.phi();
+      jet_mass = fatJet.mass();
 
     }
   }

@@ -68,11 +68,21 @@ fatJetsSequence = cms.Sequence(patAK8JetCorrFactorsReapplyJEC + slimmedJetsAK8Ne
 
 
 # Create a different collection of jets which  contains b-tagging information. This is necessary because slimmedJetsAK8 jets don't contain BTagInfo
+patAK4JetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
+        src = cms.InputTag("slimmedJets"),
+        levels = ['L2Relative', 'L3Absolute'],  # no L1FastJet ?
+        payload = 'AK4PFchs'
+        )
+
+slimmedJetsAK4NewJEC = updatedPatJets.clone(
+        jetSource = cms.InputTag("slimmedJets"),
+        jetCorrFactorsSource = cms.VInputTag(cms.InputTag("patAK4JetCorrFactorsReapplyJEC"))
+        )
 
 selectedPatJetsAK4 = cms.EDFilter("PATJetSelector",
-    src = cms.InputTag("slimmedJets"),
+    src = cms.InputTag("slimmedJetsAK4NewJEC"),
     cut = cms.string("pt > 30 & abs(eta) < 2.4")
-)      
+)
 
 cleanAK4Jets = jetCleaner_cfi.cleanPatJets.clone()
 cleanAK4Jets.src = "selectedPatJetsAK4"
@@ -111,5 +121,5 @@ goodAK4Jets = cms.EDFilter("jetID",
 
 
 
-AK4JetsSequence = cms.Sequence(selectedPatJetsAK4 + cleanAK4Jets + goodAK4Jets)
+AK4JetsSequence = cms.Sequence(patAK4JetCorrFactorsReapplyJEC + slimmedJetsAK4NewJEC + selectedPatJetsAK4 + cleanAK4Jets + goodAK4Jets)
 

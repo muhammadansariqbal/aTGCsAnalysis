@@ -72,8 +72,8 @@ process.MuonVeto = cms.EDFilter("LeptonVeto",
 process.leptonSequence = cms.Sequence(process.muSequence + process.eleSequence + process.ElectronVeto + process.MuonVeto +  process.leptonicWtoenuSequenceData )
 
 # Correct JEC levels for data
-process.patAK8JetCorrFactorsReapplyJEC.levels = ['L2Relative', 'L3Absolute', "L2L3Residual"]
-process.patAK4JetCorrFactorsReapplyJEC.levels = ['L2Relative', 'L3Absolute', "L2L3Residual"]
+process.patAK8JetCorrFactorsReapplyJEC.levels.append("L2L3Residual")
+process.patAK4JetCorrFactorsReapplyJEC.levels.append("L2L3Residual")
 
 process.jetFilter = cms.EDFilter("CandViewCountFilter",
                                  src = cms.InputTag("goodJets"),

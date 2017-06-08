@@ -89,7 +89,7 @@ fatJetsSequence = cms.Sequence(patAK8JetCorrFactorsReapplyJEC + slimmedJetsAK8Ne
 # Apply JEC
 patAK4JetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
         src = cms.InputTag("slimmedJets"),
-        levels = ['L2Relative', 'L3Absolute'],  # no L1FastJet ?
+        levels = ['L1FastJet', 'L2Relative', 'L3Absolute'],
         payload = 'AK4PFchs'
         )
 

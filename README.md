@@ -16,6 +16,16 @@ cmsenv
 # Necessary for doing MET corrections, see https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETUncertaintyPrescription
 git cms-merge-topic -u cms-met:METRecipe_8020_for80Xintegration
 
+# HEEP electron ID, see https://twiki.cern.ch/twiki/bin/view/CMS/HEEPElectronIdentificationRun2
+# brings in HEEP V70 into VID:
+git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout
+# for other E/gamma IDs in VID if you wish to have them:
+git cms-merge-topic ikrav:egm_id_80X_v3
+# we need this for the mva weights which runs in VID regardless if you need it or not:
+mkdir -p ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/ 
+# we need this for the mva weights which runs in VID regardless if you need it or not:
+git clone git@github.com:cms-data/RecoEgamma-ElectronIdentification ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/data
+
 # Checkout aTGC analysis code
 git clone -b 80X git@github.com:muhammadansariqbal/aTGCsAnalysis.git
 

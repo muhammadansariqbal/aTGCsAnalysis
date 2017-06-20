@@ -86,6 +86,10 @@ process.jetSequence = cms.Sequence(process.fatJetsSequence +
                                     process.jetFilter+
                                      process.AK4JetsSequence )
 
+# Update the MET for latest JEC etc
+from aTGCsAnalysis.Common.MET_cff import doMetCorrections
+doMetCorrections(process, isData=True)
+
 process.treeDumper = cms.EDAnalyzer("TreeMaker",
                                     rho = cms.InputTag("fixedGridRhoFastjetAll"),
                                     leptonicVSrc = cms.InputTag("Wtomunu"),
@@ -108,7 +112,7 @@ process.treeDumper = cms.EDAnalyzer("TreeMaker",
 process.DecayChannel = cms.EDAnalyzer("DecayChannelAnalyzer")
 
 # PATH
-process.analysis = cms.Path(process.NoiseFilters + process.BadChargedCandidateFilter  + process.BadPFMuonFilter  + process.TriggerMuon + process.METmu +  process.egmGsfElectronIDSequence +  process.leptonSequence +   process.jetSequence +  process.treeDumper)
+process.analysis = cms.Path(process.NoiseFilters + process.BadChargedCandidateFilter  + process.BadPFMuonFilter  + process.TriggerMuon + process.fullPatMetSequence + process.METmu +  process.egmGsfElectronIDSequence +  process.leptonSequence +  process.jetSequence +  process.treeDumper)
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),

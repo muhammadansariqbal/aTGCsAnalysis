@@ -1,19 +1,22 @@
 aTGC Analysis
 ========
 
-```
+
 This is the analysis code for anomalous triple gauge couplings at 13 TeV using CMSSW framework.
 
 Setup Instructions
 ------------------
 
+```
 # Setup CMSSW
-cmsrel CMSSW_8_0_25
-cd CMSSW_8_0_25/src
+cmsrel CMSSW_8_0_28
+cd CMSSW_8_0_28/src
 cmsenv
 
+# Necessary for doing MET corrections, see https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETUncertaintyPrescription
+git cms-merge-topic -u cms-met:METRecipe_8020_for80Xintegration
+
 # Checkout aTGC analysis code
-git cms-merge-topic -u cms-met:CMSSW_8_0_X-METFilterUpdate
 git clone -b 80X git@github.com:muhammadansariqbal/aTGCsAnalysis.git
 
 # Compile
@@ -54,3 +57,4 @@ cd Plotting
 
 An example below makes plots in the ttbar control region in the electron channel with data, Monte-Carlo, signal and no systematics :
 ./draw --CR ttbar --channel ele --output ttbar_CR --input /afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Working/ --withSignal --withMC --withData
+```

@@ -12,4 +12,12 @@ METmu = cms.EDFilter("PATMETSelector",
                          filter = cms.bool(True)
                          )
 
+from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
 
+def doMetCorrections(process, isData):
+    # If you only want to re-correct and get the proper uncertainties
+    # eg do Type-1 corrections due to new JEC
+    runMetCorAndUncFromMiniAOD(process, isData=isData)
+    # Update the main MET selectors
+    process.METmu.src = cms.InputTag("patPFMetT1")
+    process.METele.src = cms.InputTag("patPFMetT1")

@@ -1,19 +1,32 @@
 aTGC Analysis
 ========
 
-```
+
 This is the analysis code for anomalous triple gauge couplings at 13 TeV using CMSSW framework.
 
 Setup Instructions
 ------------------
 
+```
 # Setup CMSSW
-cmsrel CMSSW_8_0_25
-cd CMSSW_8_0_25/src
+cmsrel CMSSW_8_0_28
+cd CMSSW_8_0_28/src
 cmsenv
 
+# Necessary for doing MET corrections, see https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETUncertaintyPrescription
+git cms-merge-topic -u cms-met:METRecipe_8020_for80Xintegration
+
+# HEEP electron ID, see https://twiki.cern.ch/twiki/bin/view/CMS/HEEPElectronIdentificationRun2
+# brings in HEEP V70 into VID:
+git cms-merge-topic Sam-Harper:HEEPV70VID_8010_ReducedCheckout
+# for other E/gamma IDs in VID if you wish to have them:
+git cms-merge-topic ikrav:egm_id_80X_v3
+# we need this for the mva weights which runs in VID regardless if you need it or not:
+mkdir -p ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/ 
+# we need this for the mva weights which runs in VID regardless if you need it or not:
+git clone git@github.com:cms-data/RecoEgamma-ElectronIdentification ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/data
+
 # Checkout aTGC analysis code
-git cms-merge-topic -u cms-met:CMSSW_8_0_X-METFilterUpdate
 git clone -b 80X git@github.com:muhammadansariqbal/aTGCsAnalysis.git
 
 # Compile
@@ -54,3 +67,4 @@ cd Plotting
 
 An example below makes plots in the ttbar control region in the electron channel with data, Monte-Carlo, signal and no systematics :
 ./draw --CR ttbar --channel ele --output ttbar_CR --input /afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Working/ --withSignal --withMC --withData
+```

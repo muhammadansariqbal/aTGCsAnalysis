@@ -247,6 +247,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   BTagHelper_(iConfig.getParameter<std::string>("BtagEffFile"))
 {
 
+  if ((channel != "mu") && (channel != "el")) {
+    throw cms::Exception("InvalidValue") << "Invalid value for channel parameter, should be mu or el." << std::endl;
+  }
+
   // For PUPPI Correction
   edm::FileInPath puppiCorr("aTGCsAnalysis/TreeMaker/data/puppiCorrSummer16.root");
   TFile* file = TFile::Open( puppiCorr.fullPath().c_str(),"READ");
@@ -825,11 +829,7 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       triggerWeightHLTEle27NoER  =  trigEle27NoER::turnOn(sc_et, sc_eta);
 
     }
-    else {
-      std::cerr << "Invalid channel used, use el or mu." << std::endl;
-      exit(0);
-    }
-     if (isMC){
+    if (isMC){
        Lepton.pt_LeptonEnUp = LeptonSystMap.at("LeptonEnUp").Pt();
        Lepton.pt_LeptonEnDown = LeptonSystMap.at("LeptonEnDown").Pt();
        Lepton.pt_LeptonResUp = LeptonSystMap.at("LeptonResUp").Pt();
@@ -857,7 +857,6 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       LeptonSF_Up =  LeptonSF;
       LeptonSF_Down =  LeptonSF;
     }
-   else  throw cms::Exception("InvalidValue") << "Invalid channel, should be mu or el." << std::endl; 
    //leptonically decaying W
    if (leptonicVs -> size() > 0)
    {
@@ -976,10 +975,6 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             MET_LeptonEnDown = metCand.shiftedPt( pat::MET::MuonEnDown, pat::MET::Type1) ;
           }
           
-          else {
-            std::cerr << "Invalid channel used, please use mu or el." << std::endl;
-            exit(0);
-          }  
           //MET phi uncertainties
           //METUncl
           MET_Phi_UnclEnUp = metCand.shiftedPhi( pat::MET::UnclusteredEnUp, pat::MET::Type1) ;
@@ -999,11 +994,7 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             MET_Phi_LeptonEnUp = metCand.shiftedPhi( pat::MET::MuonEnUp, pat::MET::Type1) ;
             MET_Phi_LeptonEnDown = metCand.shiftedPhi( pat::MET::MuonEnDown, pat::MET::Type1) ;
         }
-         else {
-            std::cerr << "Invalid channel used, please use mu or el." << std::endl;
-           exit(0);
-          }  
-      } 
+      }
    }
    
     else

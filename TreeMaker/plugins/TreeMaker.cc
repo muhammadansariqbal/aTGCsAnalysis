@@ -955,7 +955,7 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       METCand.phi = metCand.phi();
       //MET uncertainties
       //METUncl
-      if (isMC){
+      /*if (isMC){
           MET_UnclEnUp = metCand.shiftedPt( pat::MET::UnclusteredEnUp, pat::MET::Type1) ;
           MET_UnclEnDown = metCand.shiftedPt( pat::MET::UnclusteredEnDown, pat::MET::Type1) ;
           //JER
@@ -994,7 +994,7 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             MET_Phi_LeptonEnUp = metCand.shiftedPhi( pat::MET::MuonEnUp, pat::MET::Type1) ;
             MET_Phi_LeptonEnDown = metCand.shiftedPhi( pat::MET::MuonEnDown, pat::MET::Type1) ;
         }
-      }
+      }*/
    }
    
     else

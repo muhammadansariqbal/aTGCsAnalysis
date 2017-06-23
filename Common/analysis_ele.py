@@ -6,7 +6,12 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
-process.options.allowUnscheduled = cms.untracked.bool(False) 
+process.options.allowUnscheduled = cms.untracked.bool(False)
+
+process.source = cms.Source("PoolSource",
+    secondaryFileNames = cms.untracked.vstring(),
+    fileNames = cms.untracked.vstring('/store/data/Run2016B/SingleElectron/MINIAOD/03Feb2017_ver2-v2/110000/FCFF6885-F6EA-E611-B197-0CC47A7C3420.root'),
+)
 
 process.load("aTGCsAnalysis.Common.goodMuons_cff")
 process.load("aTGCsAnalysis.Common.goodElectrons_cff")
@@ -86,7 +91,8 @@ process.jetSequence = cms.Sequence(process.fatJetsSequence +
 
 # Update the MET for latest JEC etc
 from aTGCsAnalysis.Common.MET_cff import doMetCorrections
-doMetCorrections(process, isData=True)
+runBtoF = not any("2016G" in x or "2016H" in x for x in process.source.fileNames)
+doMetCorrections(process, isData=True, runBtoF=runBtoF)
 
 process.treeDumper = cms.EDAnalyzer("TreeMaker",
                                     rho = cms.InputTag("fixedGridRhoFastjetAll"),
@@ -112,13 +118,6 @@ process.DecayChannel = cms.EDAnalyzer("DecayChannelAnalyzer")
 
 # PATH
 process.analysis = cms.Path(process.NoiseFilters + process.BadChargedCandidateFilter  + process.BadPFMuonFilter + process.TriggerElectron + process.fullPatMetSequence + process.METele +  process.egmGsfElectronIDSequence +  process.leptonSequence +   process.jetSequence  + process.treeDumper)
-
-
-
-process.source = cms.Source("PoolSource",
-    secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('file:///afs/cern.ch/user/i/ishvetso/eos/cms/store/data/Run2016B/SingleElectron/MINIAOD/PromptReco-v2/000/273/158/00000/429D71B2-1D1A-E611-A5A9-02163E013926.root'),
-)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000

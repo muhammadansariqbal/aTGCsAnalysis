@@ -10,6 +10,11 @@ process.maxEvents = cms.untracked.PSet(
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.options.allowUnscheduled = cms.untracked.bool(False) 
 
+process.source = cms.Source("PoolSource",
+    secondaryFileNames = cms.untracked.vstring(),
+    fileNames = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/110000/08BA365D-40E5-E611-955F-00266CF89498.root'),
+)
+
 process.load("aTGCsAnalysis.Common.goodMuons_cff")
 process.load("aTGCsAnalysis.Common.goodElectrons_cff")
 process.load("aTGCsAnalysis.Common.MET_cff")
@@ -89,6 +94,10 @@ process.jetSequence = cms.Sequence(process.fatJetsSequence +
                                     process.jetFilter+
                                      process.AK4JetsSequence )
 
+# Update the MET for latest JEC etc
+from aTGCsAnalysis.Common.MET_cff import doMetCorrections
+doMetCorrections(process, isData=False, runBtoF=False)
+
 process.treeDumper = cms.EDAnalyzer("TreeMaker",
                                     PUInfo = cms.InputTag("slimmedAddPileupInfo"),
                                     genInfo = cms.InputTag("generator"),
@@ -117,13 +126,7 @@ process.DecayChannel = cms.EDAnalyzer("DecayChannelAnalyzer")
 process.metSequenceSystematics = CreateWLepWithSystematicsSequence(process, "mu")
 
 # PATH
-process.analysis = cms.Path(process.GenWeights + process.NoiseFilters  + process.BadChargedCandidateFilter  + process.BadPFMuonFilter + process.METmu +  process.egmGsfElectronIDSequence +  process.leptonSequence +   process.jetSequence + process.metSequenceSystematics +  process.treeDumper)
-
-process.source = cms.Source("PoolSource",
-    secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('file:///afs/cern.ch/work/m/maiqbal/private/aTGC/TestSamples/ttbar_mu.root'),
-)
-
+process.analysis = cms.Path(process.GenWeights + process.NoiseFilters  + process.BadChargedCandidateFilter  + process.BadPFMuonFilter + process.fullPatMetSequence + process.METmu +  process.egmGsfElectronIDSequence +  process.leptonSequence +   process.jetSequence + process.metSequenceSystematics +  process.treeDumper)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000

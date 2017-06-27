@@ -24,7 +24,7 @@ def DefineNJobs(sample):
 	return NFilesPerJob
 
 
-def createConfigFile(processName, channel, isMC, isSignal):
+def createConfigFile(processName, channel, isMC, isSignal, runBtoF=True):
 	if not os.path.exists("analysisConfigs"):
 		os.makedirs("analysisConfigs")
 	BTagEfficiencyPattern = "BtagEffFile = cms.string(\"\"),\n"
@@ -73,8 +73,18 @@ def createConfigFile(processName, channel, isMC, isSignal):
    		shutil.copy("../analysis_" + channel + "_MC.py", "analysisConfigs")
    		ConfigFileName = "analysisConfigs/analysis_" + channel + "_MC.py"
    	elif not isMC :
-   		shutil.copy("../analysis_" + channel + ".py", "analysisConfigs")
-   		ConfigFileName = "analysisConfigs/analysis_" + channel + ".py"
+   		# DATA
+   		original_config = "../analysis_" + channel + ".py"
+   		ConfigFileName = "analysisConfigs/analysis_"+channel+"_" + processName + ".py"
+   		shutil.copy(original_config, ConfigFileName)
+   		# specific edits for Runs B-F vs G-H
+   		if not runBtoF:
+			with open(original_config) as inFile, open(ConfigFileName, "w+") as outFile:
+				for line in inFile:
+					if "runBtoF=True" in line:
+						outFile.write(line.replace("runBtoF=True", "runBtoF=False"))
+					else:
+						outFile.write(line)
    	else :
    		raise ValueError('This should not happen!')
    	return os.path.abspath(ConfigFileName)
@@ -148,10 +158,12 @@ def submitJobs(MCBackgroundsSampleDictionary, SignalMCSampleDictionary, DataDict
 #		ConfigFileName = createConfigFile(key, "ele", True, True)
 #		createFileForJob(key, "ele", SignalMCSampleDictionary[key], options.Feature, ConfigFileName, "crabConfigs", JSONFile, YourRunRange, True, True, wantToSubmit)
 #	for key in DataDictionaryElectronChannel:
-#		ConfigFileName = createConfigFile(key, "ele", False, False)
+#		runBtoF = not ("RunG" in key or "RunH" in key)
+#		ConfigFileName = createConfigFile(key, "ele", False, False, runBtoF)
 #		createFileForJob(key, "ele", DataDictionaryElectronChannel[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, False, True, wantToSubmit)
 	for key in DataDictionaryMuonChannel:
-		ConfigFileName = createConfigFile(key, "mu", False, False)
+		runBtoF = not ("RunG" in key or "RunH" in key)
+		ConfigFileName = createConfigFile(key, "mu", False, False, runBtoF)
 		createFileForJob(key, "mu", DataDictionaryMuonChannel[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, False, True, wantToSubmit)
 
 MCBackgroundsSampleDictionaryUnordered =[

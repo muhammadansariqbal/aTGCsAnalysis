@@ -10,11 +10,6 @@ process.maxEvents = cms.untracked.PSet(
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.options.allowUnscheduled = cms.untracked.bool(False) 
 
-process.source = cms.Source("PoolSource",
-    secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/WZToLNuQQ_MWZ-600To800_PtZ-180_aTGC_ShowerReconfig_13TeV-amcatnloFXFX-madspin-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/10241DF4-73EA-E611-B607-0CC47A4D9A10.root'),
-)
-
 process.load("aTGCsAnalysis.Common.goodMuons_cff")
 process.load("aTGCsAnalysis.Common.goodElectrons_cff")
 process.load("aTGCsAnalysis.Common.MET_cff")
@@ -122,6 +117,12 @@ process.metSequenceSystematics = CreateWLepWithSystematicsSequence(process, "mu"
 
 # PATH
 process.analysis = cms.Path(process.GenWeights + process.NoiseFilters + process.TriggerMuon + process.fullPatMetSequence + process.METmu +  process.egmGsfElectronIDSequence +  process.leptonSequence +   process.jetSequence + process.metSequenceSystematics +  process.treeDumper)
+
+process.source = cms.Source("PoolSource",
+    secondaryFileNames = cms.untracked.vstring(),
+    fileNames = cms.untracked.vstring('/store/mc/RunIISummer16MiniAODv2/WZToLNuQQ_MWZ-600To800_PtZ-180_aTGC_ShowerReconfig_13TeV-amcatnloFXFX-madspin-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/10241DF4-73EA-E611-B607-0CC47A4D9A10.root'),
+)
+
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000

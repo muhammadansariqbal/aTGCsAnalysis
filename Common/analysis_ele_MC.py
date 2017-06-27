@@ -8,12 +8,6 @@ process.maxEvents = cms.untracked.PSet(
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.options.allowUnscheduled = cms.untracked.bool(False) 
 
-process.source = cms.Source("PoolSource",
-    secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('file:///afs/cern.ch/user/i/ishvetso/eos/cms/store/mc/RunIISpring16MiniAODv2/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/00000/002825F6-8D1E-E611-8276-002481E94B26.root'),
-
-)
-
 process.load("aTGCsAnalysis.Common.goodMuons_cff")
 process.load("aTGCsAnalysis.Common.goodElectrons_cff")
 process.load("aTGCsAnalysis.Common.MET_cff")
@@ -126,6 +120,13 @@ process.metSequenceSystematics = CreateWLepWithSystematicsSequence(process, "el"
 
 # PATH
 process.analysis = cms.Path(process.GenWeights + process.NoiseFilters  + process.BadChargedCandidateFilter  + process.BadPFMuonFilter + process.fullPatMetSequence + process.METele +  process.egmGsfElectronIDSequence +  process.leptonSequence +   process.jetSequence  + process.metSequenceSystematics  + process.treeDumper)
+
+
+process.source = cms.Source("PoolSource",
+    secondaryFileNames = cms.untracked.vstring(),
+    fileNames = cms.untracked.vstring('file:///afs/cern.ch/user/i/ishvetso/eos/cms/store/mc/RunIISpring16MiniAODv2/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0_ext1-v1/00000/002825F6-8D1E-E611-8276-002481E94B26.root'),
+
+)
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000

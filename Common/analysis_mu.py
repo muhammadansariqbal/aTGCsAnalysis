@@ -116,7 +116,7 @@ process.analysis = cms.Path(process.NoiseFilters + process.BadChargedCandidateFi
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('/store/data/Run2016C/SingleMuon/MINIAOD/03Feb2017-v1/50000/FEDCF559-D4EA-E611-BB48-6CC2173C3DD0.root')
+    fileNames = cms.untracked.vstring('file:///afs/cern.ch/work/m/maiqbal/private/aTGC/TestSamples/data_mu.root')
 )
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")

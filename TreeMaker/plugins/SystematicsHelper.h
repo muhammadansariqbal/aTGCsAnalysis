@@ -44,7 +44,8 @@
 //
 
 class SystematicsHelper {
-	std::vector< edm::EDGetTokenT<std::vector<reco::CompositeCandidate> > > tokens;
+  std::vector< edm::EDGetTokenT<std::vector<reco::CompositeCandidate> > > tokens;
+  std::vector< edm::EDGetTokenT<std::vector<pat::MET> > > metTokens;
   edm::EDGetTokenT<edm::View<reco::LeafCandidate>> TokenResUp;
   edm::EDGetTokenT<edm::View<reco::LeafCandidate>> TokenResDown;
   edm::EDGetTokenT<edm::View<reco::LeafCandidate>> TokenEnUp;
@@ -58,15 +59,20 @@ public:
   ListOfSystematics.push_back("LeptonEn");
   ListOfSystematics.push_back("LeptonRes");
   ListOfSystematics.push_back("JetRes");
-	tokens.resize(2 * ListOfSystematics.size());
+  tokens.resize(2 * ListOfSystematics.size());
+  metTokens.resize(2 * ListOfSystematics.size());
   int iSystUp, iSystDown;
-  
   for (unsigned int iSyst = 0; iSyst < ListOfSystematics.size(); iSyst ++) {	
      	iSystUp = 2*iSyst;
      	iSystDown = 2*iSyst + 1;
       if (ListOfSystematics.at(iSyst) != "LeptonEn" ){
         tokens.at(iSystUp)  =  iC.mayConsume<std::vector<reco::CompositeCandidate>>(edm::InputTag("Wto" + channel + "nu" + ListOfSystematics.at(iSyst) + "Up"));
         tokens.at(iSystDown) = iC.mayConsume<std::vector<reco::CompositeCandidate>>(edm::InputTag("Wto" + channel + "nu" + ListOfSystematics.at(iSyst) + "Down"));
+
+        if (ListOfSystematics.at(iSyst) != "LeptonRes") {
+          metTokens.at(iSystUp)  =  iC.mayConsume<std::vector<pat::MET>>(edm::InputTag("patPFMetT1" + ListOfSystematics.at(iSyst) + "Up"));
+          metTokens.at(iSystDown) = iC.mayConsume<std::vector<pat::MET>>(edm::InputTag("patPFMetT1" + ListOfSystematics.at(iSyst) + "Down"));
+        }
       }
       else if (ListOfSystematics.at(iSyst) == "LeptonEn" ){
           std::string name;
@@ -75,6 +81,9 @@ public:
           else std::cerr << "Invalid channel, use el or mu" <<  std::endl;
           tokens.at(iSystUp)  =  iC.mayConsume<std::vector<reco::CompositeCandidate>>(edm::InputTag("Wto" + channel + "nu" + name + "Up"));
           tokens.at(iSystDown) = iC.mayConsume<std::vector<reco::CompositeCandidate>>(edm::InputTag("Wto" + channel + "nu" + name + "Down"));
+
+          metTokens.at(iSystUp)  =  iC.mayConsume<std::vector<pat::MET>>(edm::InputTag("patPFMetT1" + name + "Up"));
+          metTokens.at(iSystDown) = iC.mayConsume<std::vector<pat::MET>>(edm::InputTag("patPFMetT1" + name + "Down"));
       }
       else {
         std::cerr << "smth is going wrong... stopping ..." << std::endl;
@@ -167,5 +176,34 @@ public:
 
   return LeptonSystMap;
 }
-   
+
+  std::map<std::string, math::XYZTLorentzVector> getMetSystematicsLoretzVectors(const edm::Event& iEvent){
+
+     std::vector<edm::Handle<std::vector<pat::MET> > > mets;
+     mets.resize(2*ListOfSystematics.size());
+
+     std::map<std::string, math::XYZTLorentzVector>  SystMap;
+
+     for (unsigned int iSyst = 0; iSyst < ListOfSystematics.size(); iSyst ++) {
+
+      if (ListOfSystematics.at(iSyst) == "LeptonRes")
+        continue;
+
+      // get shifted MET objects from the event
+      iEvent.getByToken(metTokens.at(2*iSyst), mets.at(2*iSyst));
+      iEvent.getByToken(metTokens.at(2*iSyst + 1), mets.at(2*iSyst + 1));
+
+      // insert shifted MET into map
+      if (mets.at(2*iSyst)->size() > 0 && mets.at(2*iSyst + 1)->size() > 0) {
+        pat::MET metSystUp = (mets.at(2*iSyst))->at(0);
+        pat::MET metSystDown = (mets.at(2*iSyst + 1))->at(0);
+        math::XYZTLorentzVector P4Up = metSystUp.p4();
+        math::XYZTLorentzVector P4Down = metSystDown.p4();
+        SystMap.insert( std::pair<std::string, math::XYZTLorentzVector> (ListOfSystematics.at(iSyst) + "Up", P4Up) );
+        SystMap.insert( std::pair<std::string, math::XYZTLorentzVector> (ListOfSystematics.at(iSyst) + "Down", P4Down) );
+      }
+    }
+
+    return SystMap;
+  }
 };

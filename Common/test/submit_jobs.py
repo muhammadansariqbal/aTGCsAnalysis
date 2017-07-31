@@ -145,8 +145,11 @@ def createFileForJob(processName, channel, sampleName, feature, configFileName, 
 			tempFile.write( line)
 	tempFile.close()
 	if wantToSubmit :
-		os.system("crab submit -c " + os.path.dirname(os.path.abspath(__file__)) + "/" + outDir + "/"  + processName + "-" + channel + ".py")
-		print "\033[0;40;32mtask:", processName + "-" + channel, "was submitted!\033[0m"
+		rtrn = subprocess.call("crab submit -c " + os.path.dirname(os.path.abspath(__file__)) + "/" + outDir + "/"  + processName + "-" + channel + ".py", shell=True)
+		if rtrn == 0:
+			print "\033[0;40;32mtask:", processName + "-" + channel, "was submitted!\033[0m"
+		else:
+			print "\033[0;40;31mtask:", processName + "-" + channel, "was not submitted!\033[0m"
 	return;
 
 

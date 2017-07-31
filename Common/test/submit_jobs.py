@@ -34,75 +34,94 @@ def DefineNJobs(sample):
 	return NFilesPerJob
 
 
-def createConfigFile(processName, channel, isMC, isSignal, runBtoF=True):
-	if not os.path.exists("analysisConfigs"):
-		os.makedirs("analysisConfigs")
-	BTagEfficiencyPattern = "BtagEffFile = cms.string(\"\"),\n"
-	VTagSFPattern = "VTagSF = cms.double(1.03)"
-	ConfigFileName = ""
-   	if isSignal and isMC :
-   		shutil.copy("../analysis_" + channel + "_signal.py", "analysisConfigs")
-   		ConfigFileName = "analysisConfigs/analysis_" + channel + "_signal.py"
-   	elif  processName == "WZ":
-   		shutil.copy("../analysis_" + channel + "_MC.py", "analysisConfigs/analysis_" + channel + "_" + processName + ".py")
-   		ConfigFileName = "analysisConfigs/analysis_" + channel + "_" + processName + ".py"
-   		configFile = open("../analysis_" + channel + "_MC.py")
-   		outFile = open("analysisConfigs/analysis_" + channel + "_" + processName + ".py", "w+")
-   		for line in configFile:
-   			if BTagEfficiencyPattern in line :
-   				replaceWith = "BtagEffFile = cms.string(\"aTGCsAnalysis/TreeMaker/data/eff_" + processName + "_" + channel + ".root\"),\n"
-   				outFile.write(line.replace(BTagEfficiencyPattern, replaceWith ))
-   			else :
-   				outFile.write(line)
-   	elif "ttbar" in processName:
-   		shutil.copy("../analysis_" + channel + "_MC.py", "analysisConfigs/analysis_" + channel + "_" + processName + ".py")
-   		ConfigFileName = "analysisConfigs/analysis_" + channel + "_" + processName + ".py"
-   		configFile = open("../analysis_" + channel + "_MC.py")
-   		outFile = open("analysisConfigs/analysis_" + channel + "_" + processName + ".py", "w+")
-   		for line in configFile:
-   			if BTagEfficiencyPattern in line :
-   				replaceWith = "BtagEffFile = cms.string(\"aTGCsAnalysis/TreeMaker/data/eff_ttbar_" + channel + ".root\"),\n"
-   				outFile.write(line.replace(BTagEfficiencyPattern, replaceWith ))
-   			else :
-   				outFile.write(line)
-   	# don't apply V-tagging scale factor for W+jets or single top t-channel and s-channel
-   	elif "WJets" in processName or "SingleTop-t-channel" in  processName or "SingleTop-s-channel" in processName:
-   		print processName
-   		shutil.copy("../analysis_" + channel + "_MC.py", "analysisConfigs/analysis_" + channel + "_" + processName + ".py")
-   		ConfigFileName = "analysisConfigs/analysis_" + channel + "_" + processName + ".py"
-   		configFile = open("../analysis_" + channel + "_MC.py")
-   		outFile = open("analysisConfigs/analysis_" + channel + "_" + processName + ".py", "w+")
-   		for line in configFile:
-   			if VTagSFPattern in line :
-   				replaceWith = "VTagSF = cms.double(1.0)"
-   				outFile.write(line.replace(VTagSFPattern, replaceWith ))
-   			else :
-   				outFile.write(line)
+def copy_customise_analysis_config(template, output_filename, btag_eff_file=None, vtag_sf=None, runBtoF=None):
+	"""Create a CMSSW config file by copying a template, and customising it.
 
-   	elif isMC :
-   		shutil.copy("../analysis_" + channel + "_MC.py", "analysisConfigs")
-   		ConfigFileName = "analysisConfigs/analysis_" + channel + "_MC.py"
-   	elif not isMC :
-   		# DATA
-   		original_config = "../analysis_" + channel + ".py"
-   		ConfigFileName = "analysisConfigs/analysis_"+channel+"_" + processName + ".py"
-   		shutil.copy(original_config, ConfigFileName)
-   		# specific edits for Runs B-F vs G-H
-   		if not runBtoF:
-			with open(original_config) as inFile, open(ConfigFileName, "w+") as outFile:
-				for line in inFile:
-					if "runBtoF=True" in line:
-						outFile.write(line.replace("runBtoF=True", "runBtoF=False"))
-					else:
-						outFile.write(line)
-   	else :
-   		raise ValueError('This should not happen!')
-   	return os.path.abspath(ConfigFileName)
+	Optional values for BtagEffFile, VTagSF, and runBtoF (in met corrections).
+	Setting any of these to None will use whatever is in the template config.
+
+	For btag_eff_file, the str should be relative to aTGCsAnalysis/TreeMaker/data/
+	"""
+	if not any((btag_eff_file, vtag_sf, (runBtoF is True or runBtoF is False))):
+		shutil.copy(template, output_filename)
+	else:
+		BTagEfficiencyPattern = "BtagEffFile = cms.string("
+		VTagSFPattern = "VTagSF = cms.double("
+		RunPattern = "runBtoF=True"  # hmm be careful with this...what if it changes in the template?
+		with open(template) as configFile, open(output_filename, "w") as outFile:
+			for line in configFile:
+				if btag_eff_file and BTagEfficiencyPattern in line :
+					replaceWith = "                                    BtagEffFile = cms.string(\"aTGCsAnalysis/TreeMaker/data/%s\"),\n" % btag_eff_file
+					outFile.write(replaceWith)
+				elif vtag_sf and VTagSFPattern in line:
+					replaceWith = "                                    VTagSF = cms.double(%f)" % vtag_sf
+					outFile.write(replaceWith)
+				elif (runBtoF is True or runBtoF is False) and RunPattern in line:
+					outFile.write(line.replace(RunPattern, "runBtoF=%s" % runBtoF))
+				else :
+					outFile.write(line)
+
+
+def createConfigFile(processName, channel, isMC, isSignal, runBtoF=True):
+	config_outdir = "analysisConfigs_test"
+	if not os.path.exists(config_outdir):
+		os.makedirs(config_outdir)
+
+	# Some common settings
+	TemplateFileName = "../analysis_" + channel + "_MC.py"
+	ConfigFileName = config_outdir + "/analysis_" + channel + "_" + processName + "_MC.py"
+	VTagSF = 1.03
+	NoVTagSF = 1.0
+	btag_file = "eff_" + processName + "_" + channel + ".root"
+
+	if isSignal and isMC :
+		ConfigFileName = config_outdir + "/analysis_" + channel + "_signal.py"
+		copy_customise_analysis_config("../analysis_" + channel + "_signal.py", ConfigFileName)
+
+	elif "WZ" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=btag_file, vtag_sf=VTagSF)
+
+	elif "WW" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=VTagSF)
+
+	elif "ttbar" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=btag_file, vtag_sf=VTagSF)
+
+	elif "WJets" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+
+	elif "SingleTop-t-channel-top" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+
+	elif "SingleTop-t-channel-antitop" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+
+	elif "SingleTop-tW-channel-top" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+
+	elif "SingleTop-tW-channel-antitop" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+
+	elif "SingleTop-s-channel" in processName:
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+
+	elif isMC :
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=None, vtag_sf=NoVTagSF)
+
+	elif not isMC :
+		# DATA
+		ConfigFileName = config_outdir + "/analysis_" + channel + "_" + processName + ".py"
+		copy_customise_analysis_config("../analysis_" + channel + ".py", ConfigFileName, runBtoF=runBtoF)
+
+	else :
+		raise ValueError('This should not happen!')
+
+	return os.path.abspath(ConfigFileName)
 
 
 def createFileForJob(processName, channel, sampleName, feature, configFileName, outDir, YourJSONFile, RunRange, isMC, isSignal, wantToSubmit=False, fileName='template.txt'):
 	if not os.path.exists(outDir):
-    		os.makedirs(outDir)
+		os.makedirs(outDir)
 
 	patternFeature = "$FEATURE$"
 	patternProcessName = "$PROCESS$"
@@ -159,24 +178,24 @@ parser.add_option('-p', '--Feature', dest="Feature", default='my_feature')
 
 
 def submitJobs(MCBackgroundsSampleDictionary, SignalMCSampleDictionary, DataDictionaryElectronChannel, DataDictionaryMuonChannel, JSONFile, YourRunRange,wantToSubmit=False):
-#	for key in MCBackgroundsSampleDictionary:
-#		ConfigFileName = createConfigFile(key, "mu", True, False)
-#		print key, " ", ConfigFileName
-#		createFileForJob(key, "mu", MCBackgroundsSampleDictionary[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, True, False, wantToSubmit)
-#		ConfigFileName = createConfigFile(key, "ele", True, False)
-#		createFileForJob(key, "ele", MCBackgroundsSampleDictionary[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, True, False, wantToSubmit)
-#	for key in SignalMCSampleDictionary:
-#		ConfigFileName = createConfigFile(key, "mu", True, True)
-#		createFileForJob(key, "mu", SignalMCSampleDictionary[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, True, True, wantToSubmit)
-#		ConfigFileName = createConfigFile(key, "ele", True, True)
-#		createFileForJob(key, "ele", SignalMCSampleDictionary[key], options.Feature, ConfigFileName, "crabConfigs", JSONFile, YourRunRange, True, True, wantToSubmit)
-#	for key in DataDictionaryElectronChannel:
-#		runBtoF = not ("RunG" in key or "RunH" in key)
-#		ConfigFileName = createConfigFile(key, "ele", False, False, runBtoF)
-#		createFileForJob(key, "ele", DataDictionaryElectronChannel[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, False, True, wantToSubmit)
+	# for key in MCBackgroundsSampleDictionary:
+	# 	ConfigFileName = createConfigFile(key, "mu", isMC=True, isSignal=False)
+	# 	print key, " ", ConfigFileName
+	# 	createFileForJob(key, "mu", MCBackgroundsSampleDictionary[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, True, False, wantToSubmit)
+	# 	ConfigFileName = createConfigFile(key, "ele", isMC=True, isSignal=False)
+	# 	createFileForJob(key, "ele", MCBackgroundsSampleDictionary[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, True, False, wantToSubmit)
+	# for key in SignalMCSampleDictionary:
+	# 	ConfigFileName = createConfigFile(key, "mu", isMC=True, isSignal=True)
+	# 	createFileForJob(key, "mu", SignalMCSampleDictionary[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, True, True, wantToSubmit)
+	# 	ConfigFileName = createConfigFile(key, "ele", isMC=True, isSignal=True)
+	# 	createFileForJob(key, "ele", SignalMCSampleDictionary[key], options.Feature, ConfigFileName, "crabConfigs", JSONFile, YourRunRange, True, True, wantToSubmit)
+	# for key in DataDictionaryElectronChannel:
+	# 	runBtoF = not ("RunG" in key or "RunH" in key)
+	# 	ConfigFileName = createConfigFile(key, "ele", isMC=False, isSignal=False, runBtoF=runBtoF)
+	# 	createFileForJob(key, "ele", DataDictionaryElectronChannel[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, False, True, wantToSubmit)
 	for key in DataDictionaryMuonChannel:
 		runBtoF = not ("RunG" in key or "RunH" in key)
-		ConfigFileName = createConfigFile(key, "mu", False, False, runBtoF)
+		ConfigFileName = createConfigFile(key, "mu", isMC=False, isSignal=False, runBtoF=runBtoF)
 		createFileForJob(key, "mu", DataDictionaryMuonChannel[key], options.Feature, ConfigFileName,  "crabConfigs",  JSONFile, YourRunRange, False, True, wantToSubmit)
 
 MCBackgroundsSampleDictionaryUnordered =[

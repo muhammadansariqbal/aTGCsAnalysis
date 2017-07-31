@@ -7,13 +7,23 @@ import shutil
 import subprocess
 import collections
 
+
+# Cached num files per dataset, to avoid unnecessary das_client calls
+CACHED_DATASETS = {}
+
+
 def DefineNJobs(sample): 
-	output = subprocess.check_output(['das_client.py', '--query', "file dataset=" + sample + " | count(file.name)"])
-	for line in output.splitlines():
-		if "count(file.name)=" in line :
-			replacedline = line.replace("count(file.name)=","")
-	N = int(replacedline)
-	
+	N = 0
+	if sample in CACHED_DATASETS:
+		N = CACHED_DATASETS[sample]
+	else:
+		output = subprocess.check_output(['das_client.py', '--query', "file dataset=" + sample + " | count(file.name)"])
+		for line in output.splitlines():
+			if "count(file.name)=" in line :
+				replacedline = line.replace("count(file.name)=","")
+		N = int(replacedline)
+		CACHED_DATASETS[sample] = N
+
 	minNFiles = 100
 	if N < minNFiles :
 		NFilesPerJob = 1

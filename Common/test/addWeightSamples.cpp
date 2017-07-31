@@ -103,7 +103,8 @@ void addWeightSamples()
   /*addWeight(prefix + "WW_ele.root", 49.997, lumi, "ele");
   addWeight(prefix + "WZ_ele.root", 11.46, lumi, "ele");
   addWeight(prefix + "s-ch_ele.root", 10.32*0.33, lumi, "ele");
-  addWeight(prefix + "t-ch_ele.root", 216.99*0.33, lumi, "ele");
+  addWeight(prefix + "t-ch-top_ele.root", 136.02, lumi, "ele");
+  addWeight(prefix + "t-ch-antitop_ele.root", 80.95, lumi, "ele");
   addWeight(prefix + "tW-ch-top_ele.root", 35.6, lumi, "ele");
   addWeight(prefix + "tW-ch-antitop_ele.root", 35.6, lumi, "ele");
   addWeight(prefix + "WJets_Ht100To200_ele.root", 1345.0*1.21, lumi, "ele");

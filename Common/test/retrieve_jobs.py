@@ -75,8 +75,8 @@ TaskDictionaryNameUnordered = [
 
 	("WZ","WZ"),
 
-	("SingleTop-t-channel","t-ch"),
-	("SingleTop-t-channel-ext","t-ch-ext"),
+	("SingleTop-t-channel-top","t-ch-top"),
+	("SingleTop-t-channel-antitop","t-ch-antitop"),
 
 	("SingleTop-s-channel","s-ch"),
 
@@ -108,5 +108,5 @@ def Retrieval(feature, outDir):
 		RetrieveTask(TaskName + "_mu_" + feature, OutName + "_mu", outDir)
 #		RetrieveTask(TaskName + "_ele_" + feature, OutName + "_ele", outDir )
 
-
-Retrieval("my_feature", "/afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Working/" )
+if __name__ == '__main__':
+	Retrieval("my_feature", "/afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Working/" )

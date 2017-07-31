@@ -304,7 +304,8 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	s.SetParameters("Single Top", MCSelection, kBlue);
  	s.SetFileNames(prefix + "tW-ch-top_" + channel + ".root");
  	s.SetFileNames(prefix + "tW-ch-antitop_" + channel + ".root");
- 	s.SetFileNames(prefix + "t-ch_" + channel + ".root");
+ 	s.SetFileNames(prefix + "t-ch-top_" + channel + ".root");
+ 	s.SetFileNames(prefix + "t-ch-antitop_" + channel + ".root");
  	s.SetFileNames(prefix + "s-ch_" + channel + ".root");
 	samples.push_back(s);
 	s.ReSet();

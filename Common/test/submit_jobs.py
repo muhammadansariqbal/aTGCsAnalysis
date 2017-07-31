@@ -197,8 +197,8 @@ MCBackgroundsSampleDictionaryUnordered =[
 
 	('WZ','/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v3/MINIAODSIM'),
 
-	('SingleTop-t-channel','/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-herwigpp_TuneEE5C/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14-v1/MINIAODSIM'),
-	('SingleTop-t-channel-ext','/ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1/RunIISpring16MiniAODv2-premix_withHLT_80X_mcRun2_asymptotic_v14_ext1-v1/MINIAODSIM'),
+	('SingleTop-t-channel-top','/ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM'),
+	('SingleTop-t-channel-antitop','/ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM'),
 
 	('SingleTop-s-channel','/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM'),
 
@@ -244,4 +244,6 @@ SignalMCSampleDictionary=collections.OrderedDict(SignalMCSampleDictionaryUnorder
 DataDictionaryMuonChannel=collections.OrderedDict(DataDictionaryMuonChannelUnordered)
 DataDictionaryElectronChannel=collections.OrderedDict(DataDictionaryElectronChannelUnordered)
 
-submitJobs(MCBackgroundsSampleDictionary, SignalMCSampleDictionary, DataDictionaryElectronChannel, DataDictionaryMuonChannel, MyJSON,"271036-284044", True)
+if __name__ == "__main__":
+	submitJobs(MCBackgroundsSampleDictionary, SignalMCSampleDictionary, DataDictionaryElectronChannel, DataDictionaryMuonChannel, MyJSON,"271036-284044", True)
+

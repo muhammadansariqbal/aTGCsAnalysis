@@ -14,7 +14,8 @@ hadd WJets_Ht1200To2500_mu.root $sourceDir"WJets_Ht1200To2500_mu.root" $sourceDi
 hadd WJets_Ht2500ToInf_mu.root $sourceDir"WJets_Ht2500ToInf_mu.root" $sourceDir"WJets_Ht2500ToInf-ext_mu.root"
 hadd WW_mu.root $sourceDir"WW_mu.root" $sourceDir"WW-ext_mu.root"
 echo "WZ";scp $sourceDir"WZ_mu.root" .
-hadd t-ch_mu.root $sourceDir"t-ch_mu.root" $sourceDir"t-ch-ext_mu.root"
+echo "t-top"; scp $sourceDir"t-ch-top_mu.root" .
+echo "t-antitop"; scp $sourceDir"t-ch-antitop_mu.root" .
 echo "s-channel";scp $sourceDir"s-ch_mu.root" .
 echo "tw-top";scp $sourceDir"tW-ch-top_mu.root" .
 echo "tw-antitop";scp $sourceDir"tW-ch-antitop_mu.root" .
@@ -35,7 +36,8 @@ hadd WJets_Ht1200To2500_ele.root $sourceDir"WJets_Ht1200To2500_ele.root" $source
 hadd WJets_Ht2500ToInf_ele.root $sourceDir"WJets_Ht2500ToInf_ele.root" $sourceDir"WJets_Ht2500ToInf-ext_ele.root"
 hadd WW_ele.root $sourceDir"WW_ele.root" $sourceDir"WW-ext_ele.root"
 echo "WZ";scp $sourceDir"WZ_ele.root" .
-hadd t-ch_ele.root $sourceDir"t-ch_ele.root" $sourceDir"t-ch-ext_ele.root"
+echo "t-top";scp $sourceDir"t-ch-top_ele.root" .
+echo "t-antitop";scp $sourceDir"t-ch-antitop_ele.root" .
 echo "s-channel";scp $sourceDir"s-ch_ele.root" .
 echo "tw-top";scp $sourceDir"tW-ch-top_ele.root" .
 echo "tw-antitop";scp $sourceDir"tW-ch-antitop_ele.root" .

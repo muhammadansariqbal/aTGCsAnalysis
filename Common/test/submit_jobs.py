@@ -97,16 +97,16 @@ def createConfigFile(processName, channel, isMC, isSignal, runBtoF=True):
 		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
 
 	elif "SingleTop-tW-channel-top" in processName:
-		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=VTagSF)
 
 	elif "SingleTop-tW-channel-antitop" in processName:
-		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=VTagSF)
 
 	elif "SingleTop-s-channel" in processName:
 		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)
 
 	elif isMC :
-		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=None, vtag_sf=NoVTagSF)
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=None, vtag_sf=VTagSF)
 
 	elif not isMC :
 		# DATA

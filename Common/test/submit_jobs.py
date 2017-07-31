@@ -8,18 +8,18 @@ import subprocess
 import collections
 
 def DefineNJobs(sample): 
-	ps = subprocess.Popen(['das_client.py', '--query', "file dataset=" + sample + " | count(file.name)"], stdout=subprocess.PIPE)
-	output = ps.communicate()[0]
+	output = subprocess.check_output(['das_client.py', '--query', "file dataset=" + sample + " | count(file.name)"])
 	for line in output.splitlines():
 		if "count(file.name)=" in line :
 			replacedline = line.replace("count(file.name)=","")
 	N = int(replacedline)
 	
-	if N < 100 :
+	minNFiles = 100
+	if N < minNFiles :
 		NFilesPerJob = 1
 	else :
 		# let's roughly assume that number of files is ~1000 in the worst case
-		NFilesPerJob = int(N/100)
+		NFilesPerJob = int(N/minNFiles)
 	print "N of files per job : " , sample , " " , NFilesPerJob	
 	return NFilesPerJob
 

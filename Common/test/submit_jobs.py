@@ -8,7 +8,7 @@ import subprocess
 import collections
 
 def DefineNJobs(sample): 
-	ps = subprocess.Popen(['./das_client.py', '--query', "file dataset=" + sample + " | count(file.name)"], stdout=subprocess.PIPE)
+	ps = subprocess.Popen(['das_client.py', '--query', "file dataset=" + sample + " | count(file.name)"], stdout=subprocess.PIPE)
 	output = ps.communicate()[0]
 	for line in output.splitlines():
 		if "count(file.name)=" in line :

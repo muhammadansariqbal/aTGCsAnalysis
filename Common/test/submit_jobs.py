@@ -79,13 +79,13 @@ def createConfigFile(processName, channel, isMC, isSignal, runBtoF=True):
 		copy_customise_analysis_config("../analysis_" + channel + "_signal.py", ConfigFileName)
 
 	elif "WZ" in processName:
-		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=btag_file, vtag_sf=VTagSF)
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file="eff_WZ_" + channel + ".root", vtag_sf=VTagSF)
 
 	elif "WW" in processName:
 		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=VTagSF)
 
 	elif "ttbar" in processName:
-		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=btag_file, vtag_sf=VTagSF)
+		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file="eff_ttbar_"+channel+".root", vtag_sf=VTagSF)
 
 	elif "WJets" in processName:
 		copy_customise_analysis_config(TemplateFileName, ConfigFileName, vtag_sf=NoVTagSF)

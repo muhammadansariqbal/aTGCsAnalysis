@@ -91,34 +91,6 @@ public:
     return h->GetBinError(xbin_num, ybin_num);
   };
 
-  virtual TH1F * histogramFromGraph(TGraphAsymmErrors * g, const std::string & error="up") {
-    // Convert graph to a histogram. Sets bin errors to either be up or down errors
-    if (error != "up" && error != "down") throw cms::Exception("InvalidValue") << "histogramFromGraph error must be up or down";
-
-    // Setup the binning
-    // IMPORTANT: TGraphs are 0-indexed, whilst TH1s are 1-indexed. Insanity.
-    std::vector<float> bins = {};
-    uint n_bins = g->GetN();
-    double * x = g->GetX();
-    double * ex_low = g->GetEXlow();
-    for (uint i = 0; i < n_bins; i++) {
-      bins.push_back(x[i] - ex_low[i]);
-    }
-    bins.push_back(x[n_bins-1] + g->GetErrorXhigh(n_bins-1)); // get the upper edge of the last bin
-
-    TH1F * h = new TH1F(TString::Format("hist_%s_%s", g->GetName(), error.c_str()), g->GetTitle(), n_bins, &bins[0]);
-    h->SetDirectory(0);
-
-    // Fill the hist
-    double * y = g->GetY();
-    for (uint i=1; i <= n_bins; i++) {
-      h->SetBinContent(i, y[i-1]);
-      if (error == "up") h->SetBinError(i, g->GetErrorYhigh(i-1));
-      else if (error == "down") h->SetBinError(i, g->GetErrorYlow(i-1));
-    }
-    return h;
-  }
-
   // TODO: template this?
   virtual std::string flatten_vector(std::vector<std::string> v, std::string delim) {
     std::stringstream s;
@@ -152,6 +124,68 @@ public:
 protected:
   bool throw_oob_;
   int uid; // For creating hists with unique names
+};
+
+
+/**
+ * Class to handle scale factor from a TGraphAsymmErrors, since it's a pain
+ * as doesn't have convenient FindBin().
+ * Also needs to handle different up & down errors.
+ **/
+class ScaleFactorSourceTGraph : ScaleFactorBase {
+public:
+  ScaleFactorSourceTGraph(const std::string & filename, const std::string & graph_name) {
+    gr_sf.reset((TGraphAsymmErrors*) getObjFromFile(filename, graph_name));
+    hist_sf_err_up.reset(histogramFromGraph(gr_sf.get(), "up"));
+    hist_sf_err_down.reset(histogramFromGraph(gr_sf.get(), "down"));
+  }
+
+  float getScaleFactor(float xval) {
+    return getBinContent(hist_sf_err_up.get(), xval);
+  }
+
+  float getScaleFactorUncert(float xval, std::string variation) {
+    if (variation == "up") {
+      return getBinError(hist_sf_err_up.get(), xval);
+    } else if (variation == "down") {
+      return getBinError(hist_sf_err_down.get(), xval);
+    } else {
+      throw cms::Exception("InvalidArgument") << "getScaleFactorUncert() variation must be up or down";
+    }
+  }
+
+  virtual TH1F * histogramFromGraph(TGraphAsymmErrors * g, const std::string & error="up") {
+    // Convert graph to a histogram. Sets bin errors to either be up or down errors
+    if (error != "up" && error != "down") throw cms::Exception("InvalidValue") << "histogramFromGraph error must be up or down";
+
+    // Setup the binning
+    // IMPORTANT: TGraphs are 0-indexed, whilst TH1s are 1-indexed. Insanity.
+    std::vector<float> bins = {};
+    uint n_bins = g->GetN();
+    double * x = g->GetX();
+    double * ex_low = g->GetEXlow();
+    for (uint i = 0; i < n_bins; i++) {
+      bins.push_back(x[i] - ex_low[i]);
+    }
+    bins.push_back(x[n_bins-1] + g->GetErrorXhigh(n_bins-1)); // get the upper edge of the last bin
+
+    TH1F * h = new TH1F(TString::Format("hist_%s_%s", g->GetName(), error.c_str()), g->GetTitle(), n_bins, &bins[0]);
+    h->SetDirectory(0);
+
+    // Fill the hist
+    double * y = g->GetY();
+    for (uint i=1; i <= n_bins; i++) {
+      h->SetBinContent(i, y[i-1]);
+      if (error == "up") h->SetBinError(i, g->GetErrorYhigh(i-1));
+      else if (error == "down") h->SetBinError(i, g->GetErrorYlow(i-1));
+    }
+    return h;
+  }
+
+private:
+  std::unique_ptr<TGraphAsymmErrors> gr_sf;
+  std::unique_ptr<TH1F> hist_sf_err_up;  // use to hold graph data but with bin error = upwards error
+  std::unique_ptr<TH1F> hist_sf_err_down;  // ditto with bin error = downwards error
 };
 
 /**

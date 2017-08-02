@@ -241,13 +241,13 @@ public:
   const float systematic_Iso = 0.005;
   const float systematic_Trigger = 0.005;
 
-  float getTrackingScaleFactor(float eta, float phi, int nVertices) {
+  float getTrackingScaleFactor(float eta, int nVertices) {
     // NB although lumi and/or phi graphs in ROOT files, only recommended to use eta & nPV
     // (prob wise to check this periodically)
     return tracking_sf_eta->getScaleFactor(eta) * tracking_sf_nPV->getScaleFactor(nVertices);
   };
 
-  float getTrackingScaleFactorUncert(float eta, float phi, int nVertices, const std::string & variation) {
+  float getTrackingScaleFactorUncert(float eta, int nVertices, const std::string & variation) {
     // Get statistical + systematic uncertainty on SF
     // Tracking SF are the only ones that come with different up/down errors
     float eta_sf = tracking_sf_eta->getScaleFactor(eta);
@@ -321,14 +321,14 @@ public:
     // Variation here is SF +/- uncertainty, where uncertainty is BOTH statistical & systematic
     // Systematic variations may need updating as necessary, see
     // https://twiki.cern.ch/twiki/bin/view/CMS/MuonReferenceEffsRun2
-    float tracking_sf = getTrackingScaleFactor(eta, phi, nVertices);
+    float tracking_sf = getTrackingScaleFactor(eta, nVertices);
     float id_sf = getIDScaleFactor(pt, eta, nVertices);
     float iso_sf = getIsoScaleFactor(pt, eta, nVertices);
     float trigger_sf = getTriggerScaleFactor(pt, eta);
     float total_var = 0;
     if (variation == "up" || variation == "down") {
       std::vector<std::pair<float, float>> vals = {
-        std::make_pair(tracking_sf, getTrackingScaleFactorUncert(eta, phi, nVertices, variation)),
+        std::make_pair(tracking_sf, getTrackingScaleFactorUncert(eta, nVertices, variation)),
         std::make_pair(id_sf, getIDScaleFactorUncert(pt, eta, nVertices)),
         std::make_pair(iso_sf, getIsoScaleFactorUncert(pt, eta, nVertices)),
         std::make_pair(trigger_sf, getTriggerScaleFactorUncert(pt, eta))

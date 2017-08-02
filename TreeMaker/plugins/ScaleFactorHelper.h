@@ -216,13 +216,9 @@ public:
 
     // This is a bit of a hack - to easily retrieve the scale factors & errors, we first convert
     // our graph into a histogram, since TGraph doesn't have a simple FindBin().
-    gr_tracking_sf_eta.reset((TGraphAsymmErrors*) getHistFromFile(tracking_sf_filename, "ratio_eff_eta3_dr030e030_corr"));
-    hist_tracking_sf_eta_err_up.reset(histogramFromGraph(gr_tracking_sf_eta.get(), "up"));
-    hist_tracking_sf_eta_err_down.reset(histogramFromGraph(gr_tracking_sf_eta.get(), "down"));
-
-    gr_tracking_sf_nPV.reset((TGraphAsymmErrors*) getHistFromFile(tracking_sf_filename, "ratio_eff_vtx_dr030e030_corr"));
-    hist_tracking_sf_nPV_err_up.reset(histogramFromGraph(gr_tracking_sf_nPV.get(), "up"));
-    hist_tracking_sf_nPV_err_down.reset(histogramFromGraph(gr_tracking_sf_nPV.get(), "down"));
+    // Using getHistFromFile() on a TGraph is a bit of a hack, but casting the ptr seems to work...
+    tracking_sf_eta.reset(new ScaleFactorSourceTGraph(tracking_sf_filename, "ratio_eff_eta3_dr030e030_corr"));
+    tracking_sf_nPV.reset(new ScaleFactorSourceTGraph(tracking_sf_filename, "ratio_eff_vtx_dr030e030_corr"));
 
     hist_id_sf_nPV.reset((TH1F*) getHistFromFile(id_sf_filename, "MC_NUM_"+id+"_DEN_genTracks_PAR_vtx/tag_nVertices_ratio"));
     std::string pt_eta_hist_name = "pt_abseta_ratio";
@@ -248,27 +244,17 @@ public:
   float getTrackingScaleFactor(float eta, float phi, int nVertices) {
     // NB although lumi and/or phi graphs in ROOT files, only recommended to use eta & nPV
     // (prob wise to check this periodically)
-    float eta_sf = getBinContent(hist_tracking_sf_eta_err_up.get(), eta);
-    float npv_sf = getBinContent(hist_tracking_sf_nPV_err_up.get(), nVertices);
-    return eta_sf * npv_sf;
+    return tracking_sf_eta->getScaleFactor(eta) * tracking_sf_nPV->getScaleFactor(nVertices);
   };
 
   float getTrackingScaleFactorUncert(float eta, float phi, int nVertices, const std::string & variation) {
     // Get statistical + systematic uncertainty on SF
     // Tracking SF are the only ones that come with different up/down errors
+    float eta_sf = tracking_sf_eta->getScaleFactor(eta);
+    float npv_sf = tracking_sf_nPV->getScaleFactor(nVertices);
+    float eta_sf_uncert = tracking_sf_eta->getScaleFactorUncert(eta, variation);
+    float npv_sf_uncert = tracking_sf_nPV->getScaleFactorUncert(nVertices, variation);
 
-    // Central values don't depend on the up/down error so doesn't matter which hist we use
-    float eta_sf = getBinContent(hist_tracking_sf_eta_err_up.get(), eta);
-    float npv_sf = getBinContent(hist_tracking_sf_nPV_err_up.get(), nVertices);
-
-    float eta_sf_uncert(0.), npv_sf_uncert(0.);
-    if (variation == "up") {
-      eta_sf_uncert = getBinError(hist_tracking_sf_eta_err_up.get(), eta);
-      npv_sf_uncert = getBinError(hist_tracking_sf_nPV_err_up.get(), nVertices);
-    } else if (variation == "down") {
-      eta_sf_uncert = getBinError(hist_tracking_sf_eta_err_down.get(), eta);
-      npv_sf_uncert = getBinError(hist_tracking_sf_nPV_err_down.get(), nVertices);
-    }
     std::vector<std::pair<float, float>> vals = {
       std::make_pair(eta_sf, eta_sf_uncert),
       std::make_pair(npv_sf, npv_sf_uncert),
@@ -358,12 +344,8 @@ public:
   };
 
 private:
-  std::unique_ptr<TGraphAsymmErrors> gr_tracking_sf_eta;
-  std::unique_ptr<TH1F> hist_tracking_sf_eta_err_up; // used to hold graph data, with bin error = graph up error
-  std::unique_ptr<TH1F> hist_tracking_sf_eta_err_down; // similar but bin error = graph down error
-  std::unique_ptr<TGraphAsymmErrors> gr_tracking_sf_nPV;
-  std::unique_ptr<TH1F> hist_tracking_sf_nPV_err_up;
-  std::unique_ptr<TH1F> hist_tracking_sf_nPV_err_down;
+  std::unique_ptr<ScaleFactorSourceTGraph> tracking_sf_eta;
+  std::unique_ptr<ScaleFactorSourceTGraph> tracking_sf_nPV;
 
   std::unique_ptr<TH1F> hist_id_sf_nPV;
   std::unique_ptr<TH2F> hist_id_sf_pt_eta;

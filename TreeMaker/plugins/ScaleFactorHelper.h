@@ -77,6 +77,7 @@ public:
     if (error != "up" && error != "down") throw cms::Exception("InvalidValue") << "histogramFromGraph error must be up or down";
 
     // Setup the binning
+    // IMPORTANT: TGraphs are 0-indexed, whilst TH1s are 1-indexed. Insanity.
     std::vector<float> bins = {};
     uint n_bins = g->GetN();
     double * x = g->GetX();
@@ -84,18 +85,17 @@ public:
     for (uint i = 0; i < n_bins; i++) {
       bins.push_back(x[i] - ex_low[i]);
     }
-    bins.push_back(x[n_bins-1] + g->GetErrorXhigh(n_bins)); // do the upper edge of the last bin
+    bins.push_back(x[n_bins-1] + g->GetErrorXhigh(n_bins-1)); // get the upper edge of the last bin
 
-    TH1F * h = new TH1F(TString::Format("hist_%d", uid), g->GetTitle(), n_bins, &bins[0]);
-    uid++;
+    TH1F * h = new TH1F(TString::Format("hist_%s_%s", g->GetName(), error.c_str()), g->GetTitle(), n_bins, &bins[0]);
     h->SetDirectory(0);
 
     // Fill the hist
     double * y = g->GetY();
     for (uint i=1; i <= n_bins; i++) {
       h->SetBinContent(i, y[i-1]);
-      if (error == "up") h->SetBinError(i, g->GetErrorYhigh(i));
-      else if (error == "down") h->SetBinError(i, g->GetErrorYhigh(i));
+      if (error == "up") h->SetBinError(i, g->GetErrorYhigh(i-1));
+      else if (error == "down") h->SetBinError(i, g->GetErrorYlow(i-1));
     }
     return h;
   }

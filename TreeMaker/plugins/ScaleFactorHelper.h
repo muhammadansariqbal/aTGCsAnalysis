@@ -357,14 +357,99 @@ private:
 };
 
 
+/**
+ * Specific implementation for Electron SF
+ **/
 class ElectronScaleFactor : ScaleFactorBase {
 public:
-  ElectronScaleFactor() {};
+  ElectronScaleFactor(const std::string & sf_filename) {
+    sf_nPV_barrel.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Nvtx_Barrel"));
+    sf_nPV_endcap.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Nvtx_Endcap"));
 
-  float getScaleFactor();
+    sf_et_barrel.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Et_Barrel"));
+    sf_et_endcap.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Et_Endcap"));
+
+    sf_phi_barrel.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Phi_Barrel"));
+    sf_phi_endcap.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Phi_Endcap"));
+
+    sf_eta.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Eta_Ordered"));
+  };
+
+  float getScaleFactor(float et, float eta, float phi, int nVertices, const std::string & variation="") {
+    // Get total SF, optionally with combined stat and systematic uncert added/subtracted
+    std::vector<std::pair<float, float>> vals;
+    vals.resize(4);
+
+    ScaleFactorSourceTGraph *sfs_nPV, *sfs_et, *sfs_phi;
+    float syst_uncert(0.);
+
+    if (fabs(eta) <= BARREL_ETA_MAX) {
+      sfs_nPV = sf_nPV_barrel.get();
+      sfs_et = sf_et_barrel.get();
+      sfs_phi = sf_phi_barrel.get();
+
+      // HEEP Syst uncert as recommended by EGamma POG:
+      // https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Electron_efficiencies_and_scale
+      if (et < 90) {
+        syst_uncert = 0.01;
+      } else if (et < 1000) {
+        syst_uncert = 0.02;
+      } else {
+        syst_uncert = 0.03;
+      }
+    } else {
+      sfs_nPV = sf_nPV_endcap.get();
+      sfs_et = sf_et_endcap.get();
+      sfs_phi = sf_phi_endcap.get();
+
+      // Syst uncert
+      if (et < 90) {
+        syst_uncert = 0.01;
+      } else if (et < 300) {
+        syst_uncert = 0.02;
+      } else {
+        syst_uncert = 0.04;
+      }
+    }
+
+    float eta_sf = sf_eta->getScaleFactor(eta);
+    float nPV_sf = sfs_nPV->getScaleFactor(nVertices);
+    float et_sf = sfs_et->getScaleFactor(et);
+    float phi_sf = sfs_phi->getScaleFactor(phi);
+
+    float total_sf = eta_sf * nPV_sf * et_sf * phi_sf;
+
+    if (variation == "") {
+      return total_sf;
+    }
+
+    syst_uncert *= total_sf;
+
+    vals.push_back(std::make_pair(eta_sf, sf_eta->getScaleFactorUncert(eta, variation)));
+    vals.push_back(std::make_pair(nPV_sf, sfs_nPV->getScaleFactorUncert(nVertices, variation)));
+    vals.push_back(std::make_pair(et_sf, sfs_et->getScaleFactorUncert(et, variation)));
+    vals.push_back(std::make_pair(phi_sf, sfs_phi->getScaleFactorUncert(phi, variation)));
+
+    float stat_uncert = propagateUncert(vals);
+
+    float total_uncert = std::hypot(stat_uncert, syst_uncert);
+    if (variation == "down") {
+        total_uncert *= -1;
+    }
+    return total_sf + total_uncert;
+  };
 
 private:
-  TH1F * tracking_sf;
-  TH1F * id_sf;
-  TH1F * iso_sf;
+  const float BARREL_ETA_MAX = 1.4442;
+
+  std::unique_ptr<ScaleFactorSourceTGraph> sf_nPV_barrel;
+  std::unique_ptr<ScaleFactorSourceTGraph> sf_nPV_endcap;
+
+  std::unique_ptr<ScaleFactorSourceTGraph> sf_et_barrel;
+  std::unique_ptr<ScaleFactorSourceTGraph> sf_et_endcap;
+
+  std::unique_ptr<ScaleFactorSourceTGraph> sf_phi_barrel;
+  std::unique_ptr<ScaleFactorSourceTGraph> sf_phi_endcap;
+
+  std::unique_ptr<ScaleFactorSourceTGraph> sf_eta;
 };

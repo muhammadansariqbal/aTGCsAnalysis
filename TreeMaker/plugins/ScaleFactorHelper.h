@@ -1,6 +1,7 @@
 #include "TH1.h"
 #include "TH2.h"
 #include "TGraphAsymmErrors.h"
+
 #include <iostream>
 #include <exception>
 #include <sstream>
@@ -18,10 +19,28 @@ class ScaleFactorBase
 public:
   ScaleFactorBase(): throw_oob_(false), uid(0) {}
 
-  virtual TH1 * getHistFromFile(std::string filename, std::string object_name) {
+  virtual TObject * getObjFromFile(std::string filename, std::string object_name) {
     edm::FileInPath full_filename(filename);
     TFile file(full_filename.fullPath().c_str());
-    TH1 * hist = (TH1*)file.Get(object_name.c_str());
+    if (file.IsZombie()) {
+      throw cms::Exception("FileNotFound") << "Cannot open file " + filename;
+    }
+    TObject * obj = (TObject*)file.Get(object_name.c_str());
+    if (obj == nullptr) {
+      throw cms::Exception("InvalidObject") << "Cannot get object " + object_name + " from file " + filename;
+    }
+    return obj;
+  }
+
+  virtual TH1 * getHistFromFile(std::string filename, std::string object_name) {
+    // Ideally I'd like to just use the TObject version of this and dynamic_cast,
+    // but for some reason that seg faults.
+    edm::FileInPath full_filename(filename);
+    TFile file(full_filename.fullPath().c_str());
+    if (file.IsZombie()) {
+      throw cms::Exception("FileNotFound") << "Cannot open file " + filename;
+    }
+    TH1 * hist = (TH1*) file.Get(object_name.c_str());
     if (hist == nullptr) {
       throw cms::Exception("InvalidObject") << "Cannot get object " + object_name + " from file " + filename;
     }

@@ -362,17 +362,14 @@ private:
  **/
 class ElectronScaleFactor : ScaleFactorBase {
 public:
-  ElectronScaleFactor(const std::string & sf_filename) {
-    sf_nPV_barrel.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Nvtx_Barrel"));
-    sf_nPV_endcap.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Nvtx_Endcap"));
-
-    sf_et_barrel.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Et_Barrel"));
-    sf_et_endcap.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Et_Endcap"));
-
-    sf_phi_barrel.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Phi_Barrel"));
-    sf_phi_endcap.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Phi_Endcap"));
-
-    sf_eta.reset(new ScaleFactorSourceTGraph(sf_filename, "SF_Eta_Ordered"));
+  ElectronScaleFactor(const std::string & heep_sf_filename) {
+    heep_sf_nPV_barrel.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Nvtx_Barrel"));
+    heep_sf_nPV_endcap.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Nvtx_Endcap"));
+    heep_sf_et_barrel.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Et_Barrel"));
+    heep_sf_et_endcap.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Et_Endcap"));
+    heep_sf_phi_barrel.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Phi_Barrel"));
+    heep_sf_phi_endcap.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Phi_Endcap"));
+    heep_sf_eta.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Eta_Ordered"));
   };
 
   float getScaleFactor(float et, float eta, float phi, int nVertices, const std::string & variation="") {
@@ -384,9 +381,9 @@ public:
     float syst_uncert(0.);
 
     if (fabs(eta) <= BARREL_ETA_MAX) {
-      sfs_nPV = sf_nPV_barrel.get();
-      sfs_et = sf_et_barrel.get();
-      sfs_phi = sf_phi_barrel.get();
+      sfs_nPV = heep_sf_nPV_barrel.get();
+      sfs_et = heep_sf_et_barrel.get();
+      sfs_phi = heep_sf_phi_barrel.get();
 
       // HEEP Syst uncert as recommended by EGamma POG:
       // https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Electron_efficiencies_and_scale
@@ -398,9 +395,9 @@ public:
         syst_uncert = 0.03;
       }
     } else {
-      sfs_nPV = sf_nPV_endcap.get();
-      sfs_et = sf_et_endcap.get();
-      sfs_phi = sf_phi_endcap.get();
+      sfs_nPV = heep_sf_nPV_endcap.get();
+      sfs_et = heep_sf_et_endcap.get();
+      sfs_phi = heep_sf_phi_endcap.get();
 
       // Syst uncert
       if (et < 90) {
@@ -412,7 +409,7 @@ public:
       }
     }
 
-    float eta_sf = sf_eta->getScaleFactor(eta);
+    float eta_sf = heep_sf_eta->getScaleFactor(eta);
     float nPV_sf = sfs_nPV->getScaleFactor(nVertices);
     float et_sf = sfs_et->getScaleFactor(et);
     float phi_sf = sfs_phi->getScaleFactor(phi);
@@ -425,7 +422,7 @@ public:
 
     syst_uncert *= total_sf;
 
-    vals.push_back(std::make_pair(eta_sf, sf_eta->getScaleFactorUncert(eta, variation)));
+    vals.push_back(std::make_pair(eta_sf, heep_sf_eta->getScaleFactorUncert(eta, variation)));
     vals.push_back(std::make_pair(nPV_sf, sfs_nPV->getScaleFactorUncert(nVertices, variation)));
     vals.push_back(std::make_pair(et_sf, sfs_et->getScaleFactorUncert(et, variation)));
     vals.push_back(std::make_pair(phi_sf, sfs_phi->getScaleFactorUncert(phi, variation)));
@@ -442,14 +439,14 @@ public:
 private:
   const float BARREL_ETA_MAX = 1.4442;
 
-  std::unique_ptr<ScaleFactorSourceTGraph> sf_nPV_barrel;
-  std::unique_ptr<ScaleFactorSourceTGraph> sf_nPV_endcap;
+  std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_nPV_barrel;
+  std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_nPV_endcap;
 
-  std::unique_ptr<ScaleFactorSourceTGraph> sf_et_barrel;
-  std::unique_ptr<ScaleFactorSourceTGraph> sf_et_endcap;
+  std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_et_barrel;
+  std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_et_endcap;
 
-  std::unique_ptr<ScaleFactorSourceTGraph> sf_phi_barrel;
-  std::unique_ptr<ScaleFactorSourceTGraph> sf_phi_endcap;
+  std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_phi_barrel;
+  std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_phi_endcap;
 
-  std::unique_ptr<ScaleFactorSourceTGraph> sf_eta;
+  std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_eta;
 };

@@ -145,6 +145,7 @@ public:
   }
 
   float getScaleFactorUncert(float xval, std::string variation) {
+    // Get error bar on graph point, `variation` can either be up or down.
     if (variation == "up") {
       return getBinError(hist_sf_err_up.get(), xval);
     } else if (variation == "down") {
@@ -362,7 +363,7 @@ private:
  **/
 class ElectronScaleFactor : ScaleFactorBase {
 public:
-  ElectronScaleFactor(const std::string & heep_sf_filename) {
+  ElectronScaleFactor(const std::string & heep_sf_filename, const std::string & reco_sf_filename) {
     heep_sf_nPV_barrel.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Nvtx_Barrel"));
     heep_sf_nPV_endcap.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Nvtx_Endcap"));
     heep_sf_et_barrel.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Et_Barrel"));
@@ -370,15 +371,13 @@ public:
     heep_sf_phi_barrel.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Phi_Barrel"));
     heep_sf_phi_endcap.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Phi_Endcap"));
     heep_sf_eta.reset(new ScaleFactorSourceTGraph(heep_sf_filename, "SF_Eta_Ordered"));
+    reco_sf_eta.reset(new ScaleFactorSourceTGraph(reco_sf_filename, "grSF1D_0_Ordered"));
   };
 
-  float getScaleFactor(float et, float eta, float phi, int nVertices, const std::string & variation="") {
-    // Get total SF, optionally with combined stat and systematic uncert added/subtracted
-    std::vector<std::pair<float, float>> vals;
-    vals.resize(4);
-
+  float getScaleFactor(float et, float eta, float sc_eta, float phi, int nVertices, const std::string & variation="") {
+    // Get total HEEP + RECO SF, optionally with combined stat and systematic uncert added/subtracted
     ScaleFactorSourceTGraph *sfs_nPV, *sfs_et, *sfs_phi;
-    float syst_uncert(0.);
+    float heep_syst_uncert(0.);
 
     if (fabs(eta) <= BARREL_ETA_MAX) {
       sfs_nPV = heep_sf_nPV_barrel.get();
@@ -388,11 +387,11 @@ public:
       // HEEP Syst uncert as recommended by EGamma POG:
       // https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Electron_efficiencies_and_scale
       if (et < 90) {
-        syst_uncert = 0.01;
+        heep_syst_uncert = 0.01;
       } else if (et < 1000) {
-        syst_uncert = 0.02;
+        heep_syst_uncert = 0.02;
       } else {
-        syst_uncert = 0.03;
+        heep_syst_uncert = 0.03;
       }
     } else {
       sfs_nPV = heep_sf_nPV_endcap.get();
@@ -401,11 +400,11 @@ public:
 
       // Syst uncert
       if (et < 90) {
-        syst_uncert = 0.01;
+        heep_syst_uncert = 0.01;
       } else if (et < 300) {
-        syst_uncert = 0.02;
+        heep_syst_uncert = 0.02;
       } else {
-        syst_uncert = 0.04;
+        heep_syst_uncert = 0.04;
       }
     }
 
@@ -413,23 +412,48 @@ public:
     float nPV_sf = sfs_nPV->getScaleFactor(nVertices);
     float et_sf = sfs_et->getScaleFactor(et);
     float phi_sf = sfs_phi->getScaleFactor(phi);
+    float reco_sf = reco_sf_eta->getScaleFactor(sc_eta);
 
-    float total_sf = eta_sf * nPV_sf * et_sf * phi_sf;
+    float total_sf = eta_sf * nPV_sf * et_sf * phi_sf * reco_sf;
 
     if (variation == "") {
       return total_sf;
     }
 
-    syst_uncert *= total_sf;
+    // Stat uncerts:
+    std::vector<std::pair<float, float>> vals = {
+      std::make_pair(eta_sf, heep_sf_eta->getScaleFactorUncert(eta, variation)),
+      std::make_pair(nPV_sf, sfs_nPV->getScaleFactorUncert(nVertices, variation)),
+      std::make_pair(et_sf, sfs_et->getScaleFactorUncert(et, variation)),
+      std::make_pair(phi_sf, sfs_phi->getScaleFactorUncert(phi, variation)),
+    };
 
-    vals.push_back(std::make_pair(eta_sf, heep_sf_eta->getScaleFactorUncert(eta, variation)));
-    vals.push_back(std::make_pair(nPV_sf, sfs_nPV->getScaleFactorUncert(nVertices, variation)));
-    vals.push_back(std::make_pair(et_sf, sfs_et->getScaleFactorUncert(et, variation)));
-    vals.push_back(std::make_pair(phi_sf, sfs_phi->getScaleFactorUncert(phi, variation)));
+    float heep_stat_uncert = propagateUncert(vals);
 
-    float stat_uncert = propagateUncert(vals);
+    float reco_stat_uncert = reco_sf_eta->getScaleFactorUncert(sc_eta, variation);
 
-    float total_uncert = std::hypot(stat_uncert, syst_uncert);
+    // Systematic uncerts:
+    // https://twiki.cern.ch/twiki/bin/view/CMS/EgammaIDRecipesRun2#Electron_efficiencies_and_scale
+    // HEEP SF systematic
+    float heep_sf = (eta_sf * nPV_sf * et_sf * phi_sf);
+    heep_syst_uncert *= heep_sf;
+
+    // RECO SF systematic
+    float reco_syst_uncert = (et>80) ? 0.01 * reco_sf : 0.;
+
+    // Calc total uncert
+    // To do this, we consider the HEEP and RECO SF separately, since each
+    // has its own stat and syst uncertainties
+    // These are each combined in quadrature to give 1 uncertainty to each SF,
+    // and then they are propagated for the final SF.
+    float heep_uncert = std::hypot(heep_stat_uncert, heep_syst_uncert);
+    float reco_uncert = std::hypot(reco_stat_uncert, reco_syst_uncert);
+
+    float total_uncert = propagateUncert(std::vector<std::pair<float, float>> {
+      std::make_pair(heep_sf, heep_uncert),
+      std::make_pair(reco_sf, reco_uncert)
+    });
+
     if (variation == "down") {
         total_uncert *= -1;
     }
@@ -449,4 +473,6 @@ private:
   std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_phi_endcap;
 
   std::unique_ptr<ScaleFactorSourceTGraph> heep_sf_eta;
+
+  std::unique_ptr<ScaleFactorSourceTGraph> reco_sf_eta;
 };

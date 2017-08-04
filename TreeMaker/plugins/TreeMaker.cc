@@ -247,7 +247,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
     "HighPtID",
     "tkLooseISO"
   ),
-  ElectronScaleFactor_("aTGCsAnalysis/TreeMaker/data/HEEP_SF.root"),
+  ElectronScaleFactor_(
+    "aTGCsAnalysis/TreeMaker/data/HEEP_SF.root",
+    "aTGCsAnalysis/TreeMaker/data/egammaEffi.txt_EGM2D.root"
+  ),
   JetResolutionSmearer_(iConfig.getParameter<bool>("isMC")),
   BTagHelper_(iConfig.getParameter<std::string>("BtagEffFile"))
 {
@@ -906,9 +909,9 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       LeptonSF_Down = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV, "down");
     }
    else if (channel == "el") {
-      LeptonSF = ElectronScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV);
-      LeptonSF_Up = ElectronScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV, "up");
-      LeptonSF_Down = ElectronScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV, "down");
+      LeptonSF = ElectronScaleFactor_.getScaleFactor(Lepton.pt, Lepton.eta, sc_eta, Lepton.phi, nPV);
+      LeptonSF_Up = ElectronScaleFactor_.getScaleFactor(Lepton.pt, Lepton.eta, sc_eta, Lepton.phi, nPV, "up");
+      LeptonSF_Down = ElectronScaleFactor_.getScaleFactor(Lepton.pt, Lepton.eta, sc_eta, Lepton.phi, nPV, "down");
     }
    //leptonically decaying W
    if (leptonicVs -> size() > 0)

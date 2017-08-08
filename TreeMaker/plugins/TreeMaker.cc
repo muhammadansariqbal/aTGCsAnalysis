@@ -137,7 +137,7 @@ private:
   int NAK8jet, njets, nbtag;
   double jet_pt, jet_eta, jet_phi, jet_mass, jet_mass_pruned, jet_mass_softdrop, jet_tau2tau1, jet_tau3tau2, jet_tau1, jet_tau2, jet_tau3;
   //PUPPI variables 
-  double jet_pt_PUPPI, jet_eta_PUPPI, jet_phi_PUPPI, jet_mass_PUPPI, jet_tau1_PUPPI, jet_tau2_PUPPI, jet_tau3_PUPPI, jet_tau21_PUPPI, jet_mass_softdrop_PUPPI, jet_tau21_DT;
+  double jet_pt_PUPPI, jet_eta_PUPPI, jet_phi_PUPPI, jet_mass_PUPPI, jet_tau1_PUPPI, jet_tau2_PUPPI, jet_tau3_PUPPI, jet_tau21_PUPPI, jet_tau32_PUPPI, jet_mass_softdrop_PUPPI, jet_tau21_DT;
 
   //gen info
   bool isMatched_;
@@ -531,6 +531,7 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   outTree_->Branch("jet_tau2_PUPPI",    &jet_tau2_PUPPI,    "jet_tau2_PUPPI/D"   );
   outTree_->Branch("jet_tau3_PUPPI",    &jet_tau3_PUPPI,    "jet_tau3_PUPPI/D"   );
   outTree_->Branch("jet_tau21_PUPPI",    &jet_tau21_PUPPI,    "jet_tau21_PUPPI/D"   );
+  outTree_->Branch("jet_tau32_PUPPI",    &jet_tau32_PUPPI,    "jet_tau32_PUPPI/D"   );
   outTree_->Branch("jet_mass_softdrop_PUPPI",    &jet_mass_softdrop_PUPPI,    "jet_mass_softdrop_PUPPI/D"   );
   outTree_->Branch("jet_tau21_DT",    &jet_tau21_DT,    "jet_tau21_DT/D"   );
   
@@ -1188,6 +1189,7 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     jet_tau2_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau2");
     jet_tau3_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau3");
     jet_tau21_PUPPI = jet_tau2_PUPPI/jet_tau1_PUPPI;
+    jet_tau32_PUPPI = jet_tau3_PUPPI/jet_tau2_PUPPI;
 
 
     TLorentzVector puppi_softdrop,puppi_softdrop_subjet;

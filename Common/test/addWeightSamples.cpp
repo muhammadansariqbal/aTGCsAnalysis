@@ -69,20 +69,20 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   for (unsigned int iEntry = 0; iEntry < tree -> GetEntries(); iEntry ++)
   {
     tree -> GetEntry(iEntry); 
-    if (channel == "ele"){
-      totWeightWithLumi = totWeight*weightLumi/triggerWeightHLTEle27NoER;
-      totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi/triggerWeightHLTEle27NoER;
-      totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi/triggerWeightHLTEle27NoER;
-      totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi/triggerWeightHLTEle27NoER;
-      totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi/triggerWeightHLTEle27NoER;
-    }
-    else { 
+    // if (channel == "ele"){
+    //   totWeightWithLumi = totWeight*weightLumi/triggerWeightHLTEle27NoER;
+    //   totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi/triggerWeightHLTEle27NoER;
+    //   totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi/triggerWeightHLTEle27NoER;
+    //   totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi/triggerWeightHLTEle27NoER;
+    //   totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi/triggerWeightHLTEle27NoER;
+    // }
+    // else { 
       totWeightWithLumi = totWeight*weightLumi;
       totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi;
       totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi;
       totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi;
       totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi;
-    }
+    // }
     br -> Fill();
     br_MistagUp -> Fill();
     br_MistagDown -> Fill();

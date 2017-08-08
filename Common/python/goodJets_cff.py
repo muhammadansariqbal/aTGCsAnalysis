@@ -10,7 +10,7 @@ from PhysicsTools.PatAlgos.producersLayer1.jetUpdater_cff import updatedPatJets
 
 patAK8JetCorrFactorsReapplyJEC = updatedPatJetCorrFactors.clone(
         src = cms.InputTag("slimmedJetsAK8"),
-        levels = ['L2Relative', 'L3Absolute'],  # no L1FastJet ?
+        levels = ['L1FastJet', 'L2Relative', 'L3Absolute'],
         payload = 'AK8PFchs'
         )
 

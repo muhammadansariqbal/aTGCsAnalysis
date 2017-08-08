@@ -1,3 +1,11 @@
-*.pyc
+*.d
+*.log
 *.o
-
+*.out
+*.pcm
+*.pdf
+*.pyc
+*.root
+*.so
+__init__.py
+crab_projects/

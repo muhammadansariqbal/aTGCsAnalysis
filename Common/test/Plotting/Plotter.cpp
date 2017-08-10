@@ -861,8 +861,8 @@ void Plotter::Plotting(std::string OutPrefix_)
         	}
     }
     if(withMC){
-      data_dif_MCerr -> SetMaximum(2.);
-      data_dif_MCerr ->  SetMinimum(-2.);
+      data_dif_MCerr -> SetMaximum(.5);
+      data_dif_MCerr ->  SetMinimum(-.5);
       data_dif_MCerr -> GetYaxis() -> SetNdivisions(5);
       data_dif_MCerr -> GetYaxis() -> SetLabelSize(0.15);
       data_dif_MCerr -> GetXaxis() -> SetLabelSize(0.2);

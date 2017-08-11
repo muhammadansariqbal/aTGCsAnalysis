@@ -899,9 +899,17 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
    
    if (channel == "mu"){
-      LeptonSF = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV);
-      LeptonSF_Up = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV, "up");
-      LeptonSF_Down = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, nPV, "down");
+      // Muon scale factors apply cuts on their nVtx
+      int goodNPV = 0;
+      for (const auto & itr : *vertices) {
+        if (fabs(itr.z()) <= 25 && itr.ndof() > 4 && fabs(itr.position().rho()) <= 2 && !itr.isFake()) {
+          goodNPV++;
+        }
+      }
+
+      LeptonSF = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, goodNPV);
+      LeptonSF_Up = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, goodNPV, "up");
+      LeptonSF_Down = MuonScaleFactor_.getScaleFactor(Lepton.pt, std::abs(Lepton.eta), Lepton.phi, goodNPV, "down");
     }
    else if (channel == "el") {
       LeptonSF = isEB?0.994:0.993;//slide 27: https://indico.cern.ch/event/482671/contributions/2154184/attachments/1268166/1878158/HEEP_ScaleFactor_Study_v4.pdf

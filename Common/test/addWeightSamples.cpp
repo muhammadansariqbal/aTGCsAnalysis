@@ -100,7 +100,7 @@ void addWeightSamples()
   std::string prefix = "/afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Working/";
 
   //electron channel
-  /*addWeight(prefix + "WW_ele.root", 49.997, lumi, "ele");
+  addWeight(prefix + "WW_ele.root", 49.997, lumi, "ele");
   addWeight(prefix + "WZ_ele.root", 11.46, lumi, "ele");
   addWeight(prefix + "s-ch_ele.root", 10.32*0.33, lumi, "ele");
   addWeight(prefix + "t-ch-top_ele.root", 136.02, lumi, "ele");
@@ -117,12 +117,12 @@ void addWeightSamples()
   addWeight(prefix + "ttbar_ele.root", 831.76, lumi, "ele");
 
   // The cross sections are from the GenXSecAnalyzer and multiplying factors are required to match the SM yield to the SM samples.
-  addWeight(prefix + "WW-aTGC_MWW-600To800_ele.root", insertXSec, lumi, "ele");
-  addWeight(prefix + "WW-aTGC_MWW-800ToInf_ele.root", insertXSec, lumi, "ele");
-  addWeight(prefix + "WZ-aTGC_MWZ-600To800_ele.root", insertXSec, lumi, "ele");
-  addWeight(prefix + "WZ-aTGC_MWZ-800ToInf_ele.root", insertXSec, lumi, "ele");
-*/
-  
+  // addWeight(prefix + "WW-aTGC_MWW-600To800_ele.root", insertXSec, lumi, "ele");
+  // addWeight(prefix + "WW-aTGC_MWW-800ToInf_ele.root", insertXSec, lumi, "ele");
+  // addWeight(prefix + "WZ-aTGC_MWZ-600To800_ele.root", insertXSec, lumi, "ele");
+  // addWeight(prefix + "WZ-aTGC_MWZ-800ToInf_ele.root", insertXSec, lumi, "ele");
+
+
   //muon channel
   addWeight(prefix + "WW_mu.root", 49.997, lumi, "");
   addWeight(prefix + "WZ_mu.root", 11.46, lumi, "");

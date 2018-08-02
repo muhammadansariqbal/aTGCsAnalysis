@@ -127,6 +127,7 @@ void addWeightSamples()
   addWeight(prefix + "WJets_Ht800To1200_ele.root", 5.501*1.21, lumi, "ele");
   addWeight(prefix + "WJets_Ht1200To2500_ele.root", 1.329*1.21, lumi, "ele"); 
   addWeight(prefix + "WJets_Ht2500ToInf_ele.root", 0.03216*1.21, lumi, "ele"); 
+  //addWeight(prefix + "ZJets_ele.root", 18.36, lumi, "ele");
   addWeight(prefix + "ttbar_ele.root", 831.76, lumi, "ele");
 
   // The cross sections are from the GenXSecAnalyzer and multiplying factors are required to match the SM yield to the SM samples.
@@ -151,6 +152,7 @@ void addWeightSamples()
   addWeight(prefix + "WJets_Ht800To1200_mu.root", 5.501*1.21, lumi,"");
   addWeight(prefix + "WJets_Ht1200To2500_mu.root", 1.329*1.21, lumi,""); 
   addWeight(prefix + "WJets_Ht2500ToInf_mu.root", 0.03216*1.21, lumi,"");
+  //addWeight(prefix + "ZJets_mu.root", 18.36, lumi, "");
   addWeight(prefix + "ttbar_mu.root", 831.76, lumi,"");
 
   // The cross sections are from the GenXSecAnalyzer and multiplying factors are required to match the SM yield to the SM samples.

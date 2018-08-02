@@ -70,6 +70,8 @@ TaskDictionaryNameUnordered = [
 	("WJets_HT-2500ToInf","WJets_Ht2500ToInf"),
 	("WJets_HT-2500ToInf-ext","WJets_Ht2500ToInf-ext"),
 
+#	("ZJets","ZJets"),
+
 	("WW","WW"),
 	("WW-ext","WW-ext"),
 

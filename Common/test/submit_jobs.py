@@ -91,6 +91,9 @@ def createConfigFile(processName, channel, isMC, isSignal, runBtoF=True):
 	elif "WJets" in processName:
 		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=btag_file, vtag_sf=NoVTagSF)
 
+#	elif "ZJets" in processName:
+#		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=btag_file, vtag_sf=NoVTagSF)
+
 	elif "SingleTop-t-channel-top" in processName:
 		copy_customise_analysis_config(TemplateFileName, ConfigFileName, btag_eff_file=btag_file, vtag_sf=NoVTagSF)
 
@@ -224,6 +227,8 @@ MCBackgroundsSampleDictionaryUnordered =[
 
 	('WJets_HT-2500ToInf','/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM'),
 	('WJets_HT-2500ToInf-ext','/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM'),
+
+#	('ZJets','/DYJetsToLL_M-50_Zpt-150toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM')
 
 	('WW','/WWToLNuQQ_13TeV-powheg/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM'),
 	('WW-ext','/WWToLNuQQ_13TeV-powheg/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/MINIAODSIM'),

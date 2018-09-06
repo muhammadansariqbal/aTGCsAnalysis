@@ -93,7 +93,7 @@ SystHelper::SystHelper(std::string selection){
   WeightNameSystematics.push_back("Mistag");
   WeightNameSystematics.push_back("BTag");
   WeightNameSystematics.push_back("LeptonID");
-  //WeightNameSystematics.push_back("PU"); 
+  WeightNameSystematics.push_back("PU"); 
 
   //set up systematically varied selections
   selstring=selection;

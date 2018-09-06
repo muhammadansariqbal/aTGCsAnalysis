@@ -11,9 +11,6 @@ import re
 # 3) merge files and clean the directory
 # 4) move the file the configurable directory
 
-# Author: Ivan Shvetsov, 5 of November 2015
-# Numquam ponenda est pluralitas sine necessitate
-
 def checkTaskStatus(taskName):
 	tmp = os.popen("crab status crabConfigs/crab_projects/crab_" + taskName +  " | grep 'finished'").read()
 	print "\033[0;40;32m checking the status of the task : " + taskName +  "\033[0m"
@@ -37,8 +34,8 @@ def RetrieveTask(taskName, outputFileName, outDir):
  				print "\033[0;40;31mAfter 2 attempts not all of files were retrieved! \033[0m"
  				sys.exit(0)
  		os.chdir("crabConfigs/crab_projects/crab_" + taskName + "/results/")
- 		os.system("hadd " + outputFileName + ".root" + "  tree_*.root")
- 		os.system("rm tree_*.root")
+ 		os.system("hadd " + outputFileName + ".root" + " btag_tree_*.root")
+ 		os.system("rm btag_tree_*.root")
  		os.system("mv " + outputFileName + ".root  " +  outDir )
  		os.chdir("../../../../")
  		print "\033[0;40;32m task : "  +  taskName +  " retrieved successfully. \033[0m"
@@ -53,6 +50,21 @@ TaskDictionaryName = {
 	"WW-signal": "WW-aTGC",
 	"WZ-signal": "WZ-aTGC",
 	"ttbar": "ttbar",
+
+#	"WJets_Pt-100To250":"WJets_Pt-100To250",
+#	"WJets_Pt-100To250-ext1":"WJets_Pt-100To250-ext1",
+#	"WJets_Pt-100To250-ext4":"WJets_Pt-100To250-ext4",
+
+#	"WJets_Pt-250To400":"WJets_Pt-250To400",
+#	"WJets_Pt-250To400-ext1":"WJets_Pt-250To400-ext1",
+#	"WJets_Pt-250To400-ext4":"WJets_Pt-250To400-ext4",
+
+#	"WJets_Pt-400To600":"WJets_Pt-400To600",
+#	"WJets_Pt-400To600-ext1":"WJets_Pt-400To600-ext1",
+
+#	"WJets_Pt-600ToInf":"WJets_Pt-600ToInf",
+#	"WJets_Pt-600ToInf-ext1":"WJets_Pt-600ToInf-ext1",
+
 }
 
 
@@ -61,8 +73,8 @@ def Retrieval(feature, outDir):
 		os.makedirs(outDir)
 
 	for TaskName, OutName in TaskDictionaryName.items():
-		RetrieveTask(TaskName  +  "_" + feature + "_mu", OutName + "_mu", outDir)
-		RetrieveTask(TaskName  +  "_" + feature + "_ele", OutName + "_ele", outDir )
+		RetrieveTask(TaskName  +  "_mu_" + feature, OutName + "_mu", outDir)
+		RetrieveTask(TaskName  +  "_ele_" + feature, OutName + "_ele", outDir )
 
 
-Retrieval("btag_eff", "/afs/cern.ch/work/i/ishvetso/aTGCRun2/btagEff/" )
+Retrieval("btag_eff_withLeptonSF_withCuts", "/afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_BtagEffs" )

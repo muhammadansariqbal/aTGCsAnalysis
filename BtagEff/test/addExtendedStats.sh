@@ -4,7 +4,7 @@
 # and we're not compensating for diff efficiencies etc
 
 # Make sure it ends with a slash
-sourceDir=btag_eff_withLeptonSF_withCuts/
+sourceDir=/afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_BtagEffs/
 
 cpCmd=cp
 
@@ -17,6 +17,10 @@ echo "WJets_HT-600To800";hadd "eff_WJets_HT-600To800_mu.root" $sourceDir"WJets_H
 echo "WJets_HT-800To1200";hadd "eff_WJets_HT-800To1200_mu.root" $sourceDir"WJets_HT-800To1200_mu.root" $sourceDir"WJets_HT-800To1200-ext_mu.root"
 echo "WJets_HT-1200To2500";hadd "eff_WJets_HT-1200To2500_mu.root" $sourceDir"WJets_HT-1200To2500_mu.root" $sourceDir"WJets_HT-1200To2500-ext_mu.root"
 echo "WJets_HT-2500ToInf";hadd "eff_WJets_HT-2500ToInf_mu.root" $sourceDir"WJets_HT-2500ToInf_mu.root" $sourceDir"WJets_HT-2500ToInf-ext_mu.root"
+#echo "WJets_Pt-100To250";hadd "eff_WJets_Pt-100To250_mu.root" $sourceDir"WJets_Pt-100To250_mu.root" $sourceDir"WJets_Pt-100To250-ext1_mu.root" $sourceDir"WJets_Pt-100To250-ext4_mu.root"
+#echo "WJets_Pt-250To400";hadd "eff_WJets_Pt-250To400_mu.root" $sourceDir"WJets_Pt-250To400_mu.root" $sourceDir"WJets_Pt-250To400-ext1_mu.root" $sourceDir"WJets_Pt-250To400-ext4_mu.root"
+#echo "WJets_Pt-400To600";hadd "eff_WJets_Pt-400To600_mu.root" $sourceDir"WJets_Pt-400To600_mu.root" $sourceDir"WJets_Pt-400To600-ext1_mu.root"
+#echo "WJets_Pt-600ToInf";hadd "eff_WJets_Pt-600ToInf_mu.root" $sourceDir"WJets_Pt-600ToInf_mu.root" $sourceDir"WJets_Pt-600ToInf-ext1_mu.root"
 echo "WW";hadd "eff_WW_mu.root" $sourceDir"WW_mu.root" $sourceDir"WW-ext_mu.root"
 echo "WZ";$cpCmd $sourceDir"WZ_mu.root" "eff_WZ_mu.root"
 echo "t-top"; $cpCmd $sourceDir"SingleTop-t-channel-top_mu.root" "eff_SingleTop-t-channel-top_mu.root"
@@ -38,6 +42,10 @@ echo "WJets_HT-600To800";hadd "eff_WJets_HT-600To800_ele.root" $sourceDir"WJets_
 echo "WJets_HT-800To1200";hadd "eff_WJets_HT-800To1200_ele.root" $sourceDir"WJets_HT-800To1200_ele.root" $sourceDir"WJets_HT-800To1200-ext_ele.root"
 echo "WJets_HT-1200To2500";hadd "eff_WJets_HT-1200To2500_ele.root" $sourceDir"WJets_HT-1200To2500_ele.root" $sourceDir"WJets_HT-1200To2500-ext_ele.root"
 echo "WJets_HT-2500ToInf";hadd "eff_WJets_HT-2500ToInf_ele.root" $sourceDir"WJets_HT-2500ToInf_ele.root" $sourceDir"WJets_HT-2500ToInf-ext_ele.root"
+#echo "WJets_Pt-100To250";hadd "eff_WJets_Pt-100To250_ele.root" $sourceDir"WJets_Pt-100To250_ele.root" $sourceDir"WJets_Pt-100To250-ext1_ele.root" $sourceDir"WJets_Pt-100To250-ext4_ele.root"
+#echo "WJets_Pt-250To400";hadd "eff_WJets_Pt-250To400_ele.root" $sourceDir"WJets_Pt-250To400_ele.root" $sourceDir"WJets_Pt-250To400-ext1_ele.root" $sourceDir"WJets_Pt-250To400-ext4_ele.root"
+#echo "WJets_Pt-400To600";hadd "eff_WJets_Pt-400To600_ele.root" $sourceDir"WJets_Pt-400To600_ele.root" $sourceDir"WJets_Pt-400To600-ext1_ele.root"
+#echo "WJets_Pt-600ToInf";hadd "eff_WJets_Pt-600ToInf_ele.root" $sourceDir"WJets_Pt-600ToInf_ele.root" $sourceDir"WJets_Pt-600ToInf-ext1_ele.root"
 echo "WW";hadd "eff_WW_ele.root" $sourceDir"WW_ele.root" $sourceDir"WW-ext_ele.root"
 echo "WZ";$cpCmd $sourceDir"WZ_ele.root" "eff_WZ_ele.root"
 echo "t-top";$cpCmd $sourceDir"SingleTop-t-channel-top_ele.root" "eff_SingleTop-t-channel-top_ele.root"

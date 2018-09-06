@@ -72,6 +72,20 @@ TaskDictionaryNameUnordered = [
 
 #	("ZJets","ZJets"),
 
+#	("WJets_Pt-100To250","WJets_Pt100To250"),
+#	("WJets_Pt-100To250-ext1","WJets_Pt100To250-ext1"),
+#	("WJets_Pt-100To250-ext4","WJets_Pt100To250-ext4"),
+
+#	("WJets_Pt-250To400","WJets_Pt250To400"),
+#	("WJets_Pt-250To400-ext1","WJets_Pt250To400-ext1"),
+#	("WJets_Pt-250To400-ext4","WJets_Pt250To400-ext4"),
+
+#	("WJets_Pt-400To600","WJets_Pt400To600"),
+#	("WJets_Pt-400To600-ext1","WJets_Pt400To600-ext1"),
+
+#	("WJets_Pt-600ToInf","WJets_Pt600ToInf"),
+#	("WJets_Pt-600ToInf-ext1","WJets_Pt600ToInf-ext1"),
+
 	("WW","WW"),
 	("WW-ext","WW-ext"),
 

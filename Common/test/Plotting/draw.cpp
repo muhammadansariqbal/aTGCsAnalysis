@@ -328,12 +328,16 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
  	s.SetFileNames(prefix + "WJets_Ht1200To2500_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht2500ToInf_" + channel + ".root");
  	//rescale W+jets to the normalization from the fit in the pruned jet mass side
- 	if (channel == "ele")s.weight = 0.954;
- 	else if (channel == "mu")s.weight = 0.99;
- 	else {
- 		std::cerr << "Wrong channel, use ele or mu" << std::endl;
- 		exit(0);
- 	}
+ 	//if (channel == "ele")s.weight = 0.954;
+ 	//else if (channel == "mu")s.weight = 0.99;
+ 	//else {
+ 	//	std::cerr << "Wrong channel, use ele or mu" << std::endl;
+ 	//	exit(0);
+ 	//}
+	/*s.SetFileNames(prefix + "WJets_Pt100To250_" + channel + ".root");
+	s.SetFileNames(prefix + "WJets_Pt250To400_" + channel + ".root");
+	s.SetFileNames(prefix + "WJets_Pt400To600_" + channel + ".root");
+	s.SetFileNames(prefix + "WJets_Pt600ToInf_" + channel + ".root");*/
 	samples.push_back(s);
 	s.ReSet();
 

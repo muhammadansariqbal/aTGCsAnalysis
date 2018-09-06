@@ -136,6 +136,10 @@ void addWeightSamples()
   addWeight(prefix + "WZ-aTGC_MWZ-600To800_ele.root", 0.06493 * 7.160, lumi, "ele");
   addWeight(prefix + "WZ-aTGC_MWZ-800ToInf_ele.root", 0.1012 * 3.819, lumi, "ele");
 
+  //addWeight(prefix + "WJets_Pt100To250_ele.root", 689.749632, lumi, "ele");
+  //addWeight(prefix + "WJets_Pt250To400_ele.root", 24.5069015, lumi, "ele");
+  //addWeight(prefix + "WJets_Pt400To600_ele.root", 3.110130566, lumi, "ele");
+  //addWeight(prefix + "WJets_Pt600ToInf_ele.root", 0.4683178368, lumi, "ele");
 
   //muon channel
   addWeight(prefix + "WW_mu.root", 49.997, lumi, "");
@@ -160,5 +164,10 @@ void addWeightSamples()
   addWeight(prefix + "WW-aTGC_MWW-800ToInf_mu.root", 0.2366 * 1.535, lumi, "");
   addWeight(prefix + "WZ-aTGC_MWZ-600To800_mu.root", 0.06493 * 8.732, lumi, "");  
   addWeight(prefix + "WZ-aTGC_MWZ-800ToInf_mu.root", 0.1012 * 4.341, lumi, "");
+
+  //addWeight(prefix + "WJets_Pt100To250_mu.root", 689.749632, lumi, "");
+  //addWeight(prefix + "WJets_Pt250To400_mu.root", 24.5069015, lumi, "");
+  //addWeight(prefix + "WJets_Pt400To600_mu.root", 3.110130566, lumi, "");
+  //addWeight(prefix + "WJets_Pt600ToInf_mu.root", 0.4683178368, lumi, "");
 
 }

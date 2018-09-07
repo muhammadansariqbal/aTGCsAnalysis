@@ -201,7 +201,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 
 	
 	string defaulCuts = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 150. && jet_mass_softdrop_PUPPI > 40. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900.";
-	if (channel == "ele") defaulCuts += " && l_pt > 50. && pfMET > 80. )"; 
+	if (channel == "ele") defaulCuts += " && l_pt > 50. && pfMET > 110. )"; 
 	else if (channel == "mu") defaulCuts += " && l_pt > 50. && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
@@ -211,7 +211,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
         string addOnCutTtbar = defaulCuts +  " * (nbtag > 0 )";
 
 	string signalRegion = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 105. && jet_mass_softdrop_PUPPI > 65. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0";
-	if (channel == "ele") signalRegion += " && l_pt > 50. && pfMET > 80. )"; 
+	if (channel == "ele") signalRegion += " && l_pt > 50. && pfMET > 110. )"; 
 	else if (channel == "mu") signalRegion += " && l_pt > 50. && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
@@ -219,7 +219,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	}
 
 	string signalWWRegion = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 85. && jet_mass_softdrop_PUPPI > 65. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0";
-	if (channel == "ele") signalWWRegion += " && l_pt > 50. && pfMET > 80. )";
+	if (channel == "ele") signalWWRegion += " && l_pt > 50. && pfMET > 110. )";
         else if (channel == "mu") signalWWRegion += " && l_pt > 50. && pfMET > 40. )";
         else {
                 std::cerr << "Invalid channel used, use ele or mu" << std::endl;
@@ -227,7 +227,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
         }
 
 	string signalWZRegion = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 105. && jet_mass_softdrop_PUPPI > 85. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0";
-	if (channel == "ele") signalWZRegion += " && l_pt > 50. && pfMET > 80. )";
+	if (channel == "ele") signalWZRegion += " && l_pt > 50. && pfMET >110. )";
         else if (channel == "mu") signalWZRegion += " && l_pt > 50. && pfMET > 40. )";
         else {
                 std::cerr << "Invalid channel used, use ele or mu" << std::endl;
@@ -235,7 +235,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
         }
 
 	string TTBarEnrichedInclusive = "(jet_pt > 200.  &&  jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 200. && jet_mass_softdrop_PUPPI > 40. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. ";
-	if (channel == "ele") TTBarEnrichedInclusive += " && l_pt > 50. && pfMET > 80. )"; 
+	if (channel == "ele") TTBarEnrichedInclusive += " && l_pt > 50. && pfMET > 110. )"; 
 	else if (channel == "mu") TTBarEnrichedInclusive += " && l_pt > 50. && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
@@ -243,7 +243,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	}
 
 	string TTBarEnrichedBTagVeto = "(jet_pt > 200.  &&  jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 200. && jet_mass_softdrop_PUPPI > 40. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0 ";
-	if (channel == "ele") TTBarEnrichedBTagVeto += " && l_pt > 50. && pfMET > 80. )"; 
+	if (channel == "ele") TTBarEnrichedBTagVeto += " && l_pt > 50. && pfMET > 110. )"; 
 	else if (channel == "mu") TTBarEnrichedBTagVeto += " && l_pt > 50. && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
@@ -320,13 +320,13 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
         s.ReSet();
 
 	s.SetParameters("W+jets", MCSelection, kGreen);
- 	s.SetFileNames(prefix + "WJets_Ht100To200_" + channel + ".root");
+ 	/*s.SetFileNames(prefix + "WJets_Ht100To200_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht200To400_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht400To600_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht600To800_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht800To1200_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht1200To2500_" + channel + ".root");
- 	s.SetFileNames(prefix + "WJets_Ht2500ToInf_" + channel + ".root");
+ 	s.SetFileNames(prefix + "WJets_Ht2500ToInf_" + channel + ".root");*/
  	//rescale W+jets to the normalization from the fit in the pruned jet mass side
  	//if (channel == "ele")s.weight = 0.954;
  	//else if (channel == "mu")s.weight = 0.99;
@@ -334,10 +334,10 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
  	//	std::cerr << "Wrong channel, use ele or mu" << std::endl;
  	//	exit(0);
  	//}
-	/*s.SetFileNames(prefix + "WJets_Pt100To250_" + channel + ".root");
+	s.SetFileNames(prefix + "WJets_Pt100To250_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt250To400_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt400To600_" + channel + ".root");
-	s.SetFileNames(prefix + "WJets_Pt600ToInf_" + channel + ".root");*/
+	s.SetFileNames(prefix + "WJets_Pt600ToInf_" + channel + ".root");
 	samples.push_back(s);
 	s.ReSet();
 

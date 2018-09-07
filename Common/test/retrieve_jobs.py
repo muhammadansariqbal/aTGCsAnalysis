@@ -47,44 +47,44 @@ def RetrieveTask(taskName, outputFileName, outDir):
 TaskDictionaryNameUnordered = [
 	("ttbar-powheg", "ttbar"),
 
-	("WJets_HT-100To200","WJets_Ht100To200"),
-	("WJets_HT-100To200-ext1","WJets_Ht100To200-ext1"),
-	("WJets_HT-100To200-ext2","WJets_Ht100To200-ext2"),
+#	("WJets_HT-100To200","WJets_Ht100To200"),
+#	("WJets_HT-100To200-ext1","WJets_Ht100To200-ext1"),
+#	("WJets_HT-100To200-ext2","WJets_Ht100To200-ext2"),
 
-	("WJets_HT-200To400","WJets_Ht200To400"),
-	("WJets_HT-200To400-ext1","WJets_Ht200To400-ext1"),
-	("WJets_HT-200To400-ext2","WJets_Ht200To400-ext2"),
+#	("WJets_HT-200To400","WJets_Ht200To400"),
+#	("WJets_HT-200To400-ext1","WJets_Ht200To400-ext1"),
+#	("WJets_HT-200To400-ext2","WJets_Ht200To400-ext2"),
 
-	("WJets_HT-400To600","WJets_Ht400To600"),
-	("WJets_HT-400To600-ext","WJets_Ht400To600-ext"),
+#	("WJets_HT-400To600","WJets_Ht400To600"),
+#	("WJets_HT-400To600-ext","WJets_Ht400To600-ext"),
 
-	("WJets_HT-600To800","WJets_Ht600To800"),
-	("WJets_HT-600To800-ext","WJets_Ht600To800-ext"),
+#	("WJets_HT-600To800","WJets_Ht600To800"),
+#	("WJets_HT-600To800-ext","WJets_Ht600To800-ext"),
 
-	("WJets_HT-800To1200","WJets_Ht800To1200"),
-	("WJets_HT-800To1200-ext","WJets_Ht800To1200-ext"),
+#	("WJets_HT-800To1200","WJets_Ht800To1200"),
+#	("WJets_HT-800To1200-ext","WJets_Ht800To1200-ext"),
 
-	("WJets_HT-1200To2500","WJets_Ht1200To2500"),
-	("WJets_HT-1200To2500-ext","WJets_Ht1200To2500-ext"),
+#	("WJets_HT-1200To2500","WJets_Ht1200To2500"),
+#	("WJets_HT-1200To2500-ext","WJets_Ht1200To2500-ext"),
 
-	("WJets_HT-2500ToInf","WJets_Ht2500ToInf"),
-	("WJets_HT-2500ToInf-ext","WJets_Ht2500ToInf-ext"),
+#	("WJets_HT-2500ToInf","WJets_Ht2500ToInf"),
+#	("WJets_HT-2500ToInf-ext","WJets_Ht2500ToInf-ext"),
 
 #	("ZJets","ZJets"),
 
-#	("WJets_Pt-100To250","WJets_Pt100To250"),
-#	("WJets_Pt-100To250-ext1","WJets_Pt100To250-ext1"),
-#	("WJets_Pt-100To250-ext4","WJets_Pt100To250-ext4"),
+	("WJets_Pt-100To250","WJets_Pt100To250"),
+	("WJets_Pt-100To250-ext1","WJets_Pt100To250-ext1"),
+	("WJets_Pt-100To250-ext4","WJets_Pt100To250-ext4"),
 
-#	("WJets_Pt-250To400","WJets_Pt250To400"),
-#	("WJets_Pt-250To400-ext1","WJets_Pt250To400-ext1"),
-#	("WJets_Pt-250To400-ext4","WJets_Pt250To400-ext4"),
+	("WJets_Pt-250To400","WJets_Pt250To400"),
+	("WJets_Pt-250To400-ext1","WJets_Pt250To400-ext1"),
+	("WJets_Pt-250To400-ext4","WJets_Pt250To400-ext4"),
 
-#	("WJets_Pt-400To600","WJets_Pt400To600"),
-#	("WJets_Pt-400To600-ext1","WJets_Pt400To600-ext1"),
+	("WJets_Pt-400To600","WJets_Pt400To600"),
+	("WJets_Pt-400To600-ext1","WJets_Pt400To600-ext1"),
 
-#	("WJets_Pt-600ToInf","WJets_Pt600ToInf"),
-#	("WJets_Pt-600ToInf-ext1","WJets_Pt600ToInf-ext1"),
+	("WJets_Pt-600ToInf","WJets_Pt600ToInf"),
+	("WJets_Pt-600ToInf-ext1","WJets_Pt600ToInf-ext1"),
 
 	("WW","WW"),
 	("WW-ext","WW-ext"),

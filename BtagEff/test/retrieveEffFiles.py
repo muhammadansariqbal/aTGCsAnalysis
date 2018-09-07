@@ -51,19 +51,19 @@ TaskDictionaryName = {
 	"WZ-signal": "WZ-aTGC",
 	"ttbar": "ttbar",
 
-#	"WJets_Pt-100To250":"WJets_Pt-100To250",
-#	"WJets_Pt-100To250-ext1":"WJets_Pt-100To250-ext1",
-#	"WJets_Pt-100To250-ext4":"WJets_Pt-100To250-ext4",
+	"WJets_Pt-100To250":"WJets_Pt-100To250",
+	"WJets_Pt-100To250-ext1":"WJets_Pt-100To250-ext1",
+	"WJets_Pt-100To250-ext4":"WJets_Pt-100To250-ext4",
 
-#	"WJets_Pt-250To400":"WJets_Pt-250To400",
-#	"WJets_Pt-250To400-ext1":"WJets_Pt-250To400-ext1",
-#	"WJets_Pt-250To400-ext4":"WJets_Pt-250To400-ext4",
+	"WJets_Pt-250To400":"WJets_Pt-250To400",
+	"WJets_Pt-250To400-ext1":"WJets_Pt-250To400-ext1",
+	"WJets_Pt-250To400-ext4":"WJets_Pt-250To400-ext4",
 
-#	"WJets_Pt-400To600":"WJets_Pt-400To600",
-#	"WJets_Pt-400To600-ext1":"WJets_Pt-400To600-ext1",
+	"WJets_Pt-400To600":"WJets_Pt-400To600",
+	"WJets_Pt-400To600-ext1":"WJets_Pt-400To600-ext1",
 
-#	"WJets_Pt-600ToInf":"WJets_Pt-600ToInf",
-#	"WJets_Pt-600ToInf-ext1":"WJets_Pt-600ToInf-ext1",
+	"WJets_Pt-600ToInf":"WJets_Pt-600ToInf",
+	"WJets_Pt-600ToInf-ext1":"WJets_Pt-600ToInf-ext1",
 
 }
 

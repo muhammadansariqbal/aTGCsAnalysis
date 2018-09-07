@@ -3,41 +3,41 @@
 
 # DataMC Comparisons
 # MWV and MJ
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/MWW_SD.pdf dataMC/dataMC_WJets_ele_MWV.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/MWW_SD.pdf dataMC/dataMC_WJets_mu_MWV.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/jet_mass_softdrop_PUPPI.pdf dataMC/dataMC_WJets_ele_MJ.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/jet_mass_softdrop_PUPPI.pdf ./dataMC_WJets_mu_MJ.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/MWW_SD.pdf dataMC/dataMC_ttbar_ele_MWV.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/MWW_SD.pdf dataMC/dataMC_ttbar_mu_MWV.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/jet_mass_softdrop_PUPPI.pdf dataMC/dataMC_ttbar_ele_MJ.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/jet_mass_softdrop_PUPPI.pdf dataMC/dataMC_ttbar_mu_MJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/MWW_SD.pdf dataMC/dataMC_WJets_ele_MWV.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/MWW_SD.pdf dataMC/dataMC_WJets_mu_MWV.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/jet_mass_softdrop_PUPPI.pdf dataMC/dataMC_WJets_ele_MJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/jet_mass_softdrop_PUPPI.pdf ./dataMC_WJets_mu_MJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/MWW_SD.pdf dataMC/dataMC_ttbar_ele_MWV.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/MWW_SD.pdf dataMC/dataMC_ttbar_mu_MWV.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/jet_mass_softdrop_PUPPI.pdf dataMC/dataMC_ttbar_ele_MJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/jet_mass_softdrop_PUPPI.pdf dataMC/dataMC_ttbar_mu_MJ.pdf
 # pTLep and MET
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/l_pt.pdf dataMC/dataMC_WJets_ele_pTLep.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/l_pt.pdf dataMC/dataMC_WJets_mu_pTLep.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/pfMET.pdf dataMC/dataMC_WJets_ele_pfMET.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/pfMET.pdf dataMC/dataMC_WJets_mu_pfMET.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/l_pt.pdf dataMC/dataMC_ttbar_ele_pTLep.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/l_pt.pdf dataMC/dataMC_ttbar_mu_pTLep.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/pfMET.pdf dataMC/dataMC_ttbar_ele_pfMET.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/pfMET.pdf dataMC/dataMC_ttbar_mu_pfMET.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/l_pt.pdf dataMC/dataMC_WJets_ele_pTLep.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/l_pt.pdf dataMC/dataMC_WJets_mu_pTLep.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/pfMET.pdf dataMC/dataMC_WJets_ele_pfMET.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/pfMET.pdf dataMC/dataMC_WJets_mu_pfMET.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/l_pt.pdf dataMC/dataMC_ttbar_ele_pTLep.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/l_pt.pdf dataMC/dataMC_ttbar_mu_pTLep.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/pfMET.pdf dataMC/dataMC_ttbar_ele_pfMET.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/pfMET.pdf dataMC/dataMC_ttbar_mu_pfMET.pdf
 # pTLepW and pTHadW
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/W_pt.pdf dataMC/dataMC_WJets_ele_pTLepW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/W_pt.pdf dataMC/dataMC_WJets_mu_pTLepW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/jet_pt.pdf dataMC/dataMC_WJets_ele_pTJ.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/jet_pt.pdf dataMC/dataMC_WJets_mu_pTJ.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/W_pt.pdf dataMC/dataMC_ttbar_ele_pTLepW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/W_pt.pdf dataMC/dataMC_ttbar_mu_pTLepW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/jet_pt.pdf dataMC/dataMC_ttbar_ele_pTJ.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/jet_pt.pdf dataMC/dataMC_ttbar_mu_pTJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/W_pt.pdf dataMC/dataMC_WJets_ele_pTLepW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/W_pt.pdf dataMC/dataMC_WJets_mu_pTLepW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/jet_pt.pdf dataMC/dataMC_WJets_ele_pTJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/jet_pt.pdf dataMC/dataMC_WJets_mu_pTJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/W_pt.pdf dataMC/dataMC_ttbar_ele_pTLepW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/W_pt.pdf dataMC/dataMC_ttbar_mu_pTLepW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/jet_pt.pdf dataMC/dataMC_ttbar_ele_pTJ.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/jet_pt.pdf dataMC/dataMC_ttbar_mu_pTJ.pdf
 # MTW and Tau21
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/W_mt.pdf dataMC/dataMC_WJets_ele_MTW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/W_mt.pdf dataMC/dataMC_WJets_mu_MTW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_WJets_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_WJets_ele_Tau21.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_WJets_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_WJets_mu_Tau21.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/W_mt.pdf dataMC/dataMC_ttbar_ele_MTW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/W_mt.pdf dataMC/dataMC_ttbar_mu_MTW.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_ele_ttbar_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_ttbar_ele_Tau21.pdf
-cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/ResultsAN/plots_25ns_NLO_mu_ttbar_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_ttbar_mu_Tau21.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/W_mt.pdf dataMC/dataMC_WJets_ele_MTW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/W_mt.pdf dataMC/dataMC_WJets_mu_MTW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_WJets_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_WJets_ele_Tau21.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_WJets_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_WJets_mu_Tau21.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/W_mt.pdf dataMC/dataMC_ttbar_ele_MTW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/W_mt.pdf dataMC/dataMC_ttbar_mu_MTW.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_ele_ttbar_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_ttbar_ele_Tau21.pdf
+cp ~/private/aTGC/CMSSW_8_0_28/src/aTGCsAnalysis/Common/test/Plotting/plots_25ns_mu_ttbar_CR/pdf/jet_tau21_PUPPI.pdf dataMC/dataMC_ttbar_mu_Tau21.pdf
 
 # Background
 # MJ

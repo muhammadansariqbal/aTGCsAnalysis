@@ -863,6 +863,9 @@ void Plotter::Plotting(std::string OutPrefix_)
         	  data_dif -> SetBinError(iBin, (data[vname]-> GetBinError(iBin))/(hist_summed[vname] -> GetBinContent(iBin)));
         	}
      }
+     //std::cout<<vname<<std::endl;
+     //std::cout<<"Data Integral: "<<data[vname]->Integral()<<std::endl;
+     //std::cout<<"MC Integral: "<<hist_summed[vname]->Integral()<<std::endl;
     }
     
     

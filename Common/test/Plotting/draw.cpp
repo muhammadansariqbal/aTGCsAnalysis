@@ -117,7 +117,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 
 	var.VarName = "pfMET";
 	var.Title = "MET";
-	var.SetRange(30., 900.);
+	var.SetRange(0., 900.);
 	variables.push_back(var);
 
 	var.VarName = "pfMETPhi";

@@ -142,7 +142,10 @@ process.analysis = cms.Path(
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('file:///afs/cern.ch/work/m/maiqbal/private/aTGC/TestSamples/ttbar_mu.root'),
+    # ttbar MC
+    fileNames = cms.untracked.vstring('file:///eos/cms/store/mc/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/FCB8AF84-A6BE-E611-8C65-0CC47A5FBE25.root'),
+    # WJets MC
+    #fileNames = cms.untracked.vstring('file:///eos/cms/store/mc/RunIISummer16MiniAODv2/WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/A40770A2-1AD0-E611-AF94-A4BADB1C4493.root'),    
 )
 
 

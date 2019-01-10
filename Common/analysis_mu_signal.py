@@ -136,7 +136,8 @@ process.analysis = cms.Path(
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('file:///afs/cern.ch/work/m/maiqbal/private/aTGC/TestSamples/WZ-signal_mu.root'),
+    fileNames = cms.untracked.vstring('file:///eos/cms/store/filePath'),
+
 )
 
 

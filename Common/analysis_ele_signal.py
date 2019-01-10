@@ -133,7 +133,7 @@ process.analysis = cms.Path(
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('/store/mc/RunIIFall15MiniAODv2/WWToLNuQQ_aTGC_13TeV-madgraph-pythia8/MINIAODSIM/PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1/50000/2491B8AF-B5B8-E511-BEFD-00215AAFFBE8.root'),
+    fileNames = cms.untracked.vstring('file:///eos/cms/store/filePath'),
 
 )
 

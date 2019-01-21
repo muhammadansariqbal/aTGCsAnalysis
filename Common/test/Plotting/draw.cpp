@@ -36,9 +36,12 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	variables.push_back(var);
 
 	var.VarName = "MWW_SD";
-	var.Title = "m_{WV}";
+	var.Title = "M_{WV}";
 	var.SetRange(900., 4500.);
+	var.logscale = true;
 	variables.push_back(var);
+
+	var.logscale = false;
 
 	var.VarName = "nPV";
 	var.Title = "n_{PV}";
@@ -126,7 +129,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	variables.push_back(var);
 
 	var.VarName = "jet_mass_softdrop_PUPPI";
-	var.Title = "m_{jet softdrop PUPPI}";
+	var.Title = "M_{PUPPI SD}";
 	var.SetRange(40., 150.);
 	variables.push_back(var);
 
@@ -299,26 +302,6 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	
 	Sample s, dataSample, signalSample;
 	
-	
-	s.SetParameters("WW", MCSelection, kRed);
- 	s.SetFileNames( prefix + "WW_"+ channel + ".root");
-	samples.push_back(s);
-	s.ReSet();
-
-	s.SetParameters("WZ", MCSelection, kRed-7);
- 	s.SetFileNames( prefix + "WZ_"+ channel + ".root");
-	samples.push_back(s);
-	s.ReSet();
-
-	s.SetParameters("Single top", MCSelection, kBlue);
-        s.SetFileNames(prefix + "tW-ch-top_" + channel + ".root");
-        s.SetFileNames(prefix + "tW-ch-antitop_" + channel + ".root");
-        s.SetFileNames(prefix + "t-ch-top_" + channel + ".root");
-        s.SetFileNames(prefix + "t-ch-antitop_" + channel + ".root");
-        s.SetFileNames(prefix + "s-ch_" + channel + ".root");
-        samples.push_back(s);
-        s.ReSet();
-
 	s.SetParameters("W+jets", MCSelection, kGreen);
  	/*s.SetFileNames(prefix + "WJets_Ht100To200_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht200To400_" + channel + ".root");
@@ -345,6 +328,25 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
  	s.SetFileNames(prefix + "ttbar_" + channel + ".root");
 	samples.push_back(s);
 	s.ReSet();
+
+	s.SetParameters("WW", MCSelection, kRed);
+ 	s.SetFileNames( prefix + "WW_"+ channel + ".root");
+	samples.push_back(s);
+	s.ReSet();
+
+	s.SetParameters("WZ", MCSelection, kRed-7);
+ 	s.SetFileNames( prefix + "WZ_"+ channel + ".root");
+	samples.push_back(s);
+	s.ReSet();
+
+	s.SetParameters("Single top", MCSelection, kBlue);
+        s.SetFileNames(prefix + "tW-ch-top_" + channel + ".root");
+        s.SetFileNames(prefix + "tW-ch-antitop_" + channel + ".root");
+        s.SetFileNames(prefix + "t-ch-top_" + channel + ".root");
+        s.SetFileNames(prefix + "t-ch-antitop_" + channel + ".root");
+        s.SetFileNames(prefix + "s-ch_" + channel + ".root");
+        samples.push_back(s);
+        s.ReSet();
 
 	dataSample.SetParameters("data", DataSelection, kBlack);
  	dataSample.SetFileNames(prefix + "data_" + channel + ".root");

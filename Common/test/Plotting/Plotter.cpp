@@ -748,6 +748,8 @@ void Plotter::Plotting(std::string OutPrefix_)
       if (var -> logscale) data[vname]-> GetYaxis() -> SetRangeUser(0.1, (data[vname] -> GetMaximum())*7.);
       else  data[vname]-> GetYaxis() -> SetRangeUser(0., (data[vname] -> GetMaximum())*1.5);
       data[vname]->GetYaxis()->SetTitle("Number of events");
+      data[vname]->GetYaxis()->SetTitleSize(0.075);
+      data[vname]->GetYaxis()->SetTitleOffset(0.75);
       data[vname]->SetMarkerColor(DataSample.color);
       data[vname]->SetMarkerStyle(21);
       data[vname]->GetXaxis() -> SetLabelSize(0.);
@@ -823,12 +825,13 @@ void Plotter::Plotting(std::string OutPrefix_)
 
     }
     c1 -> cd();
-    
+
+    // Channel and CR name
     TPaveText *pt = new TPaveText(0.15,0.82,0.5,0.90, "blNDC");
     pt -> SetFillStyle(0);
     pt -> SetBorderSize(0);
     pt -> SetTextAlign(12);
-    pt -> SetTextSize(0.035);
+    pt -> SetTextSize(0.040);
     if (channel == ELECTRON) pt -> AddText("Electron channel");
     else if (channel == MUON) pt -> AddText("Muon channel");
     else std::cerr << "no channel set..." << std::endl;
@@ -836,6 +839,29 @@ void Plotter::Plotting(std::string OutPrefix_)
     else if (contReg == TTBAR) pt -> AddText("t#bar{t} control region");
     else pt -> AddText("Signal region");
     pt -> Draw("SAME");
+
+    // Chi2 Test
+    if(withMC && withData){
+
+      TH1D* dataForChi2 = (TH1D*) data[vname]->Clone();
+      TH1D* MCForChi2 = (TH1D*) hist_summed[vname]->Clone();
+
+      for(int i=1; i<=dataForChi2->GetNbinsX(); i++)
+        if(MCForChi2->GetBinContent(i)<0.1){
+          MCForChi2->SetBinContent(i,0);
+          dataForChi2->SetBinContent(i,0);
+        }
+
+      double chi2 = dataForChi2->Chi2Test(MCForChi2,"UW P CHI2/NDF");
+      
+      TPaveText *pt2 = new TPaveText(0.52,0.82,0.72,0.90, "blNDC");
+      pt2 -> SetFillStyle(0);
+      pt2 -> SetBorderSize(0);
+      pt2 -> SetTextAlign(32);
+      pt2 -> SetTextSize(0.060);
+      pt2 -> AddText(Form("#chi^{2}_{#nu}=%4.2f",chi2));
+      pt2 -> Draw("SAME");
+    }
     
     pad1 -> SetTopMargin(0.07);
     pad1 -> SetBottomMargin(0.03);
@@ -888,7 +914,8 @@ void Plotter::Plotting(std::string OutPrefix_)
       data_dif_MCerr -> GetXaxis() -> SetLabelSize(0.2);
       data_dif_MCerr -> GetYaxis()->SetTitle("#frac{Data - MC}{MC}");
       data_dif_MCerr -> GetXaxis()->SetTitle((var->Title).c_str());
-      data_dif_MCerr -> GetXaxis()->SetTitleSize(0.2);
+      data_dif_MCerr -> GetXaxis()->SetTitleOffset(0.6);
+      data_dif_MCerr -> GetXaxis()->SetTitleSize(0.3);
       data_dif_MCerr -> GetYaxis()->SetTitleOffset(0.3);
       data_dif_MCerr -> GetYaxis()->SetTitleSize(0.2);
       data_dif_MCerr -> Draw("E2");

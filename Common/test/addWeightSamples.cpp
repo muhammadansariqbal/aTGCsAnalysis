@@ -40,7 +40,7 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   double Nevents_ = Nevents(FileName);
   TFile file(FileName.c_str(), "UPDATE");
   TTree * tree = (TTree*) file.Get("treeDumper/BasicTree");
-  double totWeight, topPtSF, btagWeight, totWeight_BTagUp, totWeight_BTagDown, totWeight_MistagUp, totWeight_MistagDown, totWeight_LeptonIDUp, totWeight_LeptonIDDown, triggerWeightHLTEle27NoER;
+  double totWeight, topPtSF, btagWeight, totWeight_BTagUp, totWeight_BTagDown, totWeight_MistagUp, totWeight_MistagDown, totWeight_LeptonIDUp, totWeight_LeptonIDDown;
   tree -> SetBranchAddress("totWeight", &totWeight);
   tree -> SetBranchAddress("topPtSF", &topPtSF);
   tree -> SetBranchAddress("btagWeight", &btagWeight);
@@ -50,7 +50,6 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   tree -> SetBranchAddress("totWeight_MistagDown", &totWeight_MistagDown);
   tree -> SetBranchAddress("totWeight_LeptonIDUp", &totWeight_LeptonIDUp);
   tree -> SetBranchAddress("totWeight_LeptonIDDown", &totWeight_LeptonIDDown);
-  if (channel == "ele") tree -> SetBranchAddress("triggerWeightHLTEle27NoER", &triggerWeightHLTEle27NoER);
   double totWeightWithLumi, totWeightWithLumiNoBtag, totWeightWithLumi_MistagUp, totWeightWithLumi_MistagDown, totWeightWithLumi_BTagUp, totWeightWithLumi_BTagDown, totWeightWithLumi_LeptonIDUp, totWeightWithLumi_LeptonIDDown;
   TBranch * br = tree -> Branch("totEventWeight", &totWeightWithLumi, "totEventWeight/D"); 
   TBranch * br_NoBtag = tree -> Branch("totEventWeightNoBtag", &totWeightWithLumiNoBtag, "totEventWeightNoBtag/D");
@@ -76,23 +75,14 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   for (unsigned int iEntry = 0; iEntry < tree -> GetEntries(); iEntry ++)
   {
     tree -> GetEntry(iEntry); 
-    // if (channel == "ele"){
-    //   totWeightWithLumi = totWeight*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi/triggerWeightHLTEle27NoER;
-    // }
-    // else { 
-      totWeightWithLumi = totWeight*weightLumi;
-      totWeightWithLumiNoBtag = totWeightWithLumi/btagWeight;
-      totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi;
-      totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi;
-      totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi;
-      totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi;
-      totWeightWithLumi_LeptonIDUp= totWeight_LeptonIDUp*weightLumi;
-      totWeightWithLumi_LeptonIDDown = totWeight_LeptonIDDown*weightLumi;
-    // }
+    totWeightWithLumi = totWeight*weightLumi;
+    totWeightWithLumiNoBtag = totWeightWithLumi/btagWeight;
+    totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi;
+    totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi;
+    totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi;
+    totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi;
+    totWeightWithLumi_LeptonIDUp= totWeight_LeptonIDUp*weightLumi;
+    totWeightWithLumi_LeptonIDDown = totWeight_LeptonIDDown*weightLumi;
     br -> Fill();
     br_NoBtag -> Fill();
     br_MistagUp -> Fill();

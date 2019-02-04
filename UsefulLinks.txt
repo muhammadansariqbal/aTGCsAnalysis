@@ -33,6 +33,9 @@ https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideFrontierConditions#Global_
 https://twiki.cern.ch/twiki/bin/view/CMS/PileupJSONFileforData#2015_Pileup_JSON_Files
 https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2016Analysis
 
+# L1ECAL Prefiring
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1ECALPrefiringWeightRecipe
+
 # Luminosity POG
 https://twiki.cern.ch/twiki/bin/view/CMS/TWikiLUM
 

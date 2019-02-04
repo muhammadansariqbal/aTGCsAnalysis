@@ -230,6 +230,9 @@ private:
   TF1 *puppisd_corrGEN, *puppisd_corrRECO_cen, *puppisd_corrRECO_for;
   JetCorrectionUncertainty * jecUnc;
   double bTagDiscrCut, bTagDiscrCutMedium, bTagDiscrCutLoose;
+  // L1 Prefiring weights
+  //double prefiringWeight;
+  //edm::EDGetTokenT< double > prefweight_token;
 };
 
 //
@@ -308,6 +311,9 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
     else lheProducerToken = consumes< LHERunInfoProduct, edm::InRun >(edm::InputTag("externalLHEProducer"));
     VTagSF = iConfig.getParameter<double>("VTagSF");
 
+    // L1 Prefiring weights
+    //prefweight_token = consumes< double >(edm::InputTag("prefiringweight:NonPrefiringProb"));
+
    }
 
    jecUnc = nullptr;
@@ -373,6 +379,9 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
 
      outTree_->Branch("genPtV", &genPtV, "genPtV/D");
      outTree_->Branch("genMWV", &genMWV, "genMWV/D");
+
+     // Prefiring weight
+     //outTree_->Branch("prefiringWeight", &prefiringWeight, "prefiringWeight/D");
    };
   if (channel == "el") {
     outTree_->Branch("bit_HLT_Ele_105",       &bit_HLT_Ele_105,     "bit_HLT_Ele_105/B"          );
@@ -809,6 +818,11 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     btagWeight_MistagUp = 1.;
     btagWeight_MistagDown = 1.;
    }
+
+   // L1 Prefiring weights
+   //edm::Handle< double > theprefweight;
+   //iEvent.getByToken(prefweight_token, theprefweight ) ;
+   //prefiringWeight =(*theprefweight);
 
    //PDF uncertainties
    edm::Handle<LHEEventProduct> LHEevtProductExternal;

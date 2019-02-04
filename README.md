@@ -26,6 +26,8 @@ mkdir -p ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/
 # we need this for the mva weights which runs in VID regardless if you need it or not:
 git clone git@github.com:cms-data/RecoEgamma-ElectronIdentification ../external/slc6_amd64_gcc530/data/RecoEgamma/ElectronIdentification/data
 
+# Only if we want to include L1ECAL pre-firing, include L1ECALPrefiring from https://github.com/lathomas/cmssw/tree/L1Prefiring_8_0_32/L1Prefiring/EventWeightProducer and uncomment the lines in the analysis code afterwards. Copy the input histogram in files directory to aTGCsAnalysis/TreeMaker/data.
+
 # Checkout aTGC analysis code
 git clone -b 80X git@github.com:muhammadansariqbal/aTGCsAnalysis.git
 

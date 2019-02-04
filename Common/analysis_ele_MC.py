@@ -8,6 +8,7 @@ process.maxEvents = cms.untracked.PSet(
 process.options = cms.untracked.PSet(wantSummary = cms.untracked.bool(True))
 process.options.allowUnscheduled = cms.untracked.bool(False) 
 
+#process.load("aTGCsAnalysis.Common.L1PrefiringWeights_cff")
 process.load("aTGCsAnalysis.Common.goodMuons_cff")
 process.load("aTGCsAnalysis.Common.goodElectrons_cff")
 process.load("aTGCsAnalysis.Common.MET_cff")
@@ -128,6 +129,7 @@ process.analysis = cms.Path(
     process.NoiseFilters +
     process.BadChargedCandidateFilter +
     process.BadPFMuonFilter +
+#   process.prefiringweight +
     process.egmGsfElectronIDSequence +
     process.leptonSequence +
     process.fullPatMetSequence +

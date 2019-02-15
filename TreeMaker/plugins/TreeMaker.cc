@@ -85,7 +85,6 @@ private:
   virtual void endRun(edm::Run const& iEvent, edm::EventSetup const&) override;
   virtual void endJob() override;
 
-  virtual float getElectronTriggerEff(float pt, float eta);
   virtual float getPUPPIweight(float, float); 
   virtual float getSmearingFactor(float sf, float unc, float resolution, const pat::Jet & jet, const edm::View<reco::GenJet> & genJets, int variation, float drMax, float relResMax, bool usePuppiPt);
   // we need all these 3 overloaded methods as we use different 4-vector classes
@@ -198,9 +197,6 @@ private:
   std::vector<double> PDFWeights;
   std::vector<double> ScaleWeights;
   bool bit_HLT_Ele_27_tight, bit_HLT_Ele_45, bit_HLT_Ele_115, bit_HLT_Photon_175, bit_HLT_Ele_27_OR_45_OR_115;
-  double eleTriggerWeight;
-
-  TH2F * eleDataTriggerEffMap;
 
   //Defining Tokens
   edm::EDGetTokenT<std::vector< PileupSummaryInfo > > PUInfoToken_;
@@ -382,8 +378,6 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
     outTree_->Branch("bit_HLT_Ele_115",       &bit_HLT_Ele_115,     "bit_HLT_Ele_115/B"          );
     outTree_->Branch("bit_HLT_Photon_175",       &bit_HLT_Photon_175,     "bit_HLT_Photon_175/B"          );
     outTree_->Branch("bit_HLT_Ele_27_OR_45_OR_115",       &bit_HLT_Ele_27_OR_45_OR_115,     "bit_HLT_Ele_27_OR_45_OR_115/B");
-    outTree_->Branch("eleTriggerWeight",       &eleTriggerWeight,     "eleTriggerWeight/D");
-    eleDataTriggerEffMap = electron_data_eff();
   }
   
   //number of loose leptons
@@ -1627,21 +1621,16 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
 
   edm::Handle<edm::TriggerResults> Triggers;
-  eleTriggerWeight = 1.;
   if (channel == "el") {
     iEvent.getByToken(TriggerResultsToken, Triggers);
     edm::TriggerNames names = iEvent.triggerNames(*Triggers);
     for (unsigned int iTrig = 0; iTrig < Triggers -> size(); iTrig ++)
     {
-        if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele27_WPTight_Gsf_v") )  bit_HLT_Ele_27_tight =  Triggers -> accept(iTrig);
-        if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele45_WPLoose_Gsf_v") )  bit_HLT_Ele_45 =  Triggers -> accept(iTrig);
-        if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele115_CaloIdVT_GsfTrkIdT_v") )  bit_HLT_Ele_115 =  Triggers -> accept(iTrig);
-        if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Photon175_v") )  bit_HLT_Photon_175 =  Triggers -> accept(iTrig);
-        bit_HLT_Ele_27_OR_45_OR_115 = bit_HLT_Ele_27_tight || bit_HLT_Ele_45 || bit_HLT_Ele_115;
-    }
-    if (isMC) {
-      // store equivalent trigger efficiency in data for later weighting
-      eleTriggerWeight = getElectronTriggerEff(Lepton.pt, Lepton.eta);
+      if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele27_WPTight_Gsf_v") )  bit_HLT_Ele_27_tight =  Triggers -> accept(iTrig);
+      if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele45_WPLoose_Gsf_v") )  bit_HLT_Ele_45 =  Triggers -> accept(iTrig);
+      if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele115_CaloIdVT_GsfTrkIdT_v") )  bit_HLT_Ele_115 =  Triggers -> accept(iTrig);
+      if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Photon175_v") )  bit_HLT_Photon_175 =  Triggers -> accept(iTrig);
+      bit_HLT_Ele_27_OR_45_OR_115 = bit_HLT_Ele_27_tight || bit_HLT_Ele_45 || bit_HLT_Ele_115;
     }
   }
 
@@ -1670,13 +1659,13 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   if(isMC && !isSignal) genWeightPosForaTGC=genWeight;
 
   if (isMC) {
-    totWeight = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight*VTagSF*topPtSF*eleTriggerWeight;
-    totWeight_BTagUp = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_BTagUp*VTagSF*topPtSF*eleTriggerWeight;
-    totWeight_BTagDown = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_BTagDown*VTagSF*topPtSF*eleTriggerWeight;
-    totWeight_MistagUp = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_MistagUp*VTagSF*topPtSF*eleTriggerWeight;
-    totWeight_MistagDown = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_MistagDown*VTagSF*topPtSF*eleTriggerWeight;
-    totWeight_LeptonIDUp = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF_Up*btagWeight*VTagSF*topPtSF*eleTriggerWeight;
-    totWeight_LeptonIDDown = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF_Down*btagWeight*VTagSF*topPtSF*eleTriggerWeight;
+    totWeight = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight*VTagSF*topPtSF;
+    totWeight_BTagUp = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_BTagUp*VTagSF*topPtSF;
+    totWeight_BTagDown = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_BTagDown*VTagSF*topPtSF;
+    totWeight_MistagUp = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_MistagUp*VTagSF*topPtSF;
+    totWeight_MistagDown = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF*btagWeight_MistagDown*VTagSF*topPtSF;
+    totWeight_LeptonIDUp = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF_Up*btagWeight*VTagSF*topPtSF;
+    totWeight_LeptonIDDown = PUweight*genWeightPosForaTGC*aTGCWeightUnitConv*LeptonSF_Down*btagWeight*VTagSF*topPtSF;
   }
 
   if(isSignal)
@@ -1690,18 +1679,6 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 }
 
-
-float TreeMaker::getElectronTriggerEff(float pt, float eta) {
-  eta = fabs(eta);
-  int etaBin = eleDataTriggerEffMap->GetXaxis()->FindBin(eta);
-
-  // If we have too high pT, assume its the same as the last pt bin
-  if (pt > eleDataTriggerEffMap->GetYaxis()->GetBinLowEdge(eleDataTriggerEffMap->GetNbinsY()+1)) {
-    pt = eleDataTriggerEffMap->GetYaxis()->GetBinLowEdge(eleDataTriggerEffMap->GetNbinsY()+1) - 0.1;
-  }
-  int ptBin = eleDataTriggerEffMap->GetYaxis()->FindBin(pt);
-  return eleDataTriggerEffMap->GetBinContent(etaBin, ptBin);
-}
 
 float TreeMaker::getPUPPIweight(float puppipt, float puppieta){
 

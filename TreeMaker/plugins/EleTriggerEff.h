@@ -12,7 +12,7 @@ using std::vector;
 // Store the combined electron trigger efficiencies for MC & Data
 // This is taken from B2G-16-029 but their "orthogonal method" plots in backup of preapproval:
 // https://indico.cern.ch/event/616149/contributions/2486779/attachments/1418259/2172181/preapproval_B2G-16-029_Huang_Huang_20170224.pdf
-// And is only applicable for the combo 
+// And is only applicable for the combo
 // HLT_Ele45_WPLoose_Gsf_v* OR HLT_Ele115_CaloIdVT_GsfTrkIdT_v* OR HLT_Ele27_WPTight_Gsf_v*
 // Their main trigger eff plots are for only Ele115
 
@@ -66,7 +66,7 @@ TH2F * electron_data_eff() {
   TH2F * mapEleEffData = new TH2F("mapEleEffData", "Electron trigger efficiency (data);|#eta^{e}|;p_{T}^{e} [GeV]", etaBins.size()-1, &etaBins[0], ptBins.size()-1, &ptBins[0]);
   if (data_eff.size() != ptBins.size()-1) throw std::runtime_error("Wrong pt size");
   if (data_eff_err.size() != ptBins.size()-1) throw std::runtime_error("Wrong pt size");
-  
+
   for (uint ptInd=0; ptInd<ptBins.size()-1; ptInd++) {
     if (data_eff.at(ptInd).size() != etaBins.size()-1) throw std::runtime_error("Wrong eta size");
     if (data_eff_err.at(ptInd).size() != etaBins.size()-1) throw std::runtime_error("Wrong eta size");

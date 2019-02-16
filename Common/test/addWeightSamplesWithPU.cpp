@@ -11,8 +11,7 @@
 #include <TLegend.h>
 #include <TDirectoryFile.h>
 #include <iostream>
-#include <iostream>
-
+#include "../../TreeMaker/plugins/EleTriggerEff.h"
 
 /*
  * Small macro to add weights corresponding to the cross-sections
@@ -35,12 +34,25 @@ double Nevents(std::string filename){
   }
   return sum;
 }
+
+float getElectronTriggerEff(TH2F * eleDataTriggerEffMap, float pt, float eta) {
+  eta = fabs(eta);
+  int etaBin = eleDataTriggerEffMap->GetXaxis()->FindBin(eta);
+
+  // If we have too high pT, assume its the same as the last pt bin
+  if (pt > eleDataTriggerEffMap->GetYaxis()->GetBinLowEdge(eleDataTriggerEffMap->GetNbinsY()+1)) {
+    pt = eleDataTriggerEffMap->GetYaxis()->GetBinLowEdge(eleDataTriggerEffMap->GetNbinsY()+1) - 0.1;
+  }
+  int ptBin = eleDataTriggerEffMap->GetYaxis()->FindBin(pt);
+  return eleDataTriggerEffMap->GetBinContent(etaBin, ptBin);
+}
+
 void addWeight(string FileName, float xsection, float lumi, std::string channel)
 {
   double Nevents_ = Nevents(FileName);
   TFile file(FileName.c_str(), "UPDATE");
   TTree * tree = (TTree*) file.Get("treeDumper/BasicTree");
-  double totWeight, topPtSF, btagWeight, totWeight_BTagUp, totWeight_BTagDown, totWeight_MistagUp, totWeight_MistagDown, totWeight_LeptonIDUp, totWeight_LeptonIDDown, triggerWeightHLTEle27NoER, gnPV;
+  double totWeight, topPtSF, btagWeight, totWeight_BTagUp, totWeight_BTagDown, totWeight_MistagUp, totWeight_MistagDown, totWeight_LeptonIDUp, totWeight_LeptonIDDown, gnPV;
   tree -> SetBranchAddress("totWeight", &totWeight);
   tree -> SetBranchAddress("topPtSF", &topPtSF);
   tree -> SetBranchAddress("btagWeight", &btagWeight);
@@ -50,7 +62,11 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   tree -> SetBranchAddress("totWeight_MistagDown", &totWeight_MistagDown);
   tree -> SetBranchAddress("totWeight_LeptonIDUp", &totWeight_LeptonIDUp);
   tree -> SetBranchAddress("totWeight_LeptonIDDown", &totWeight_LeptonIDDown);
-  if (channel == "ele") tree -> SetBranchAddress("triggerWeightHLTEle27NoER", &triggerWeightHLTEle27NoER);
+  double l_pt, l_eta;
+  if (channel == "ele"){
+    tree -> SetBranchAddress("l_pt", &l_pt);
+    tree -> SetBranchAddress("l_eta", &l_eta);
+  }
   tree -> SetBranchAddress("gnPV", &gnPV);
   double totWeightWithLumi, totWeightWithLumiNoBtag, totWeightWithLumi_MistagUp, totWeightWithLumi_MistagDown, totWeightWithLumi_BTagUp, totWeightWithLumi_BTagDown, totWeightWithLumi_LeptonIDUp, totWeightWithLumi_LeptonIDDown, totWeightWithLumi_PUUp, totWeightWithLumi_PUDown;
   TBranch * br = tree -> Branch("totEventWeight", &totWeightWithLumi, "totEventWeight/D"); 
@@ -65,6 +81,14 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   TBranch * br_PUDown = tree -> Branch("totEventWeight_PUDown", &totWeightWithLumi_PUDown, "totEventWeight_PUDown/D");
   std::cout << FileName << std::endl;
   std::cout << "Number of events (effective):" << Nevents_ << std::endl;
+
+  TH2F * eleDataTriggerEffMap;
+  if (channel == "ele"){
+    eleDataTriggerEffMap = electron_data_eff();
+    if (eleDataTriggerEffMap == nullptr) {
+      throw std::runtime_error("Cannot get electron trigger efficiency map");
+    }
+  }
 
   // Calculate mean top Pt SF first
   double meanTopWeight = 0.;
@@ -234,26 +258,24 @@ void addWeight(string FileName, float xsection, float lumi, std::string channel)
   for (unsigned int iEntry = 0; iEntry < tree -> GetEntries(); iEntry ++)
   {
     tree -> GetEntry(iEntry); 
-    // if (channel == "ele"){
-    //   totWeightWithLumi = totWeight*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi/triggerWeightHLTEle27NoER;
-    //   totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi/triggerWeightHLTEle27NoER;
-    // }
-    // else { 
-      totWeightWithLumi = totWeight*weightLumi;
-      totWeightWithLumiNoBtag = totWeightWithLumi/btagWeight;
-      totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi;
-      totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi;
-      totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi;
-      totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi;
-      totWeightWithLumi_LeptonIDUp= totWeight_LeptonIDUp*weightLumi;
-      totWeightWithLumi_LeptonIDDown = totWeight_LeptonIDDown*weightLumi;
-      if(gnPV>74) gnPV=74;
-      totWeightWithLumi_PUUp = totWeight*weightLumi*SFPUUp[int(gnPV)];
-      totWeightWithLumi_PUDown = totWeight*weightLumi*SFPUDown[int(gnPV)];
-    // }
+
+    float eleTrigEff = 1;
+    if (channel == "ele") {
+      eleTrigEff = getElectronTriggerEff(eleDataTriggerEffMap, l_pt, l_eta);
+    }
+
+    totWeightWithLumi = totWeight*weightLumi*eleTrigEff;
+    totWeightWithLumiNoBtag = totWeightWithLumi/btagWeight;
+    totWeightWithLumi_BTagUp = totWeight_BTagUp*weightLumi;
+    totWeightWithLumi_BTagDown = totWeight_BTagDown*weightLumi;
+    totWeightWithLumi_MistagUp= totWeight_MistagUp*weightLumi;
+    totWeightWithLumi_MistagDown = totWeight_MistagDown*weightLumi;
+    totWeightWithLumi_LeptonIDUp= totWeight_LeptonIDUp*weightLumi;
+    totWeightWithLumi_LeptonIDDown = totWeight_LeptonIDDown*weightLumi;
+    if(gnPV>74) gnPV=74;
+    totWeightWithLumi_PUUp = totWeight*weightLumi*SFPUUp[int(gnPV)];
+    totWeightWithLumi_PUDown = totWeight*weightLumi*SFPUDown[int(gnPV)];
+
     br -> Fill();
     br_NoBtag -> Fill();
     br_MistagUp -> Fill();

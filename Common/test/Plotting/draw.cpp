@@ -255,40 +255,47 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 
 	std::string MCSelection,SignalSelection,DataSelection;
 
+	// Apply trigger bit requirement
+	if (channel == "ele") {
+		DataSelection = "bit_HLT_Ele_27_OR_45_OR_115 && ";
+	} else {
+		DataSelection = "";
+	}
+
 	if (region == "WJets"){
 		MCSelection =  addOnCutWjets ;
 		SignalSelection = "( " + addOnCutWjets + " )";
-		DataSelection = addOnCutWjets;
+		DataSelection += addOnCutWjets;
 	}
 	else if(region == "ttbar"){
 		MCSelection =  addOnCutTtbar;
 		SignalSelection = "( " + addOnCutTtbar + " )";
-		DataSelection = addOnCutTtbar;
+		DataSelection += addOnCutTtbar;
 	}
 	else if(region == "TTBarEnrichedInclusive"){
 		MCSelection =  TTBarEnrichedInclusive;
 		SignalSelection = "( " + TTBarEnrichedInclusive + " )";
-		DataSelection = TTBarEnrichedInclusive;
+		DataSelection += TTBarEnrichedInclusive;
 	}
 	else if(region == "TTBarEnrichedBTagVeto"){
 		MCSelection =  TTBarEnrichedBTagVeto;
 		SignalSelection = "( " + TTBarEnrichedBTagVeto + " )";
-		DataSelection = TTBarEnrichedBTagVeto;
+		DataSelection += TTBarEnrichedBTagVeto;
 	}
 	else if(region == "signal"){
 		MCSelection =  signalRegion;
 		SignalSelection = "( " + signalRegion + " )";
-		DataSelection = signalRegion;
+		DataSelection += signalRegion;
 	}
 	else if(region == "signalWW"){
                 MCSelection =  signalWWRegion;
                 SignalSelection = "( " + signalWWRegion + " )";
-                DataSelection = signalWWRegion;
+                DataSelection += signalWWRegion;
         }
 	else if(region == "signalWZ"){
                 MCSelection =  signalWZRegion;
                 SignalSelection = "( " + signalWZRegion + " )";
-                DataSelection = signalWZRegion;
+                DataSelection += signalWZRegion;
         }
 	else std::cout << "This should not happen ..." << std::endl;
 

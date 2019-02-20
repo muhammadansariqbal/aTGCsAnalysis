@@ -257,46 +257,44 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 
 	// Apply trigger bit requirement
 	if (channel == "ele") {
-		MCSelection = "(bit_HLT_Ele_27 || bit_HLT_Ele_45 || bit_HLT_Ele_115) * ";
-		DataSelection = "(bit_HLT_Ele_27 || bit_HLT_Ele_45 || bit_HLT_Ele_115) * ";
+		DataSelection = "(bit_HLT_Ele_45 || bit_HLT_Ele_115) * ";
 		//DataSelection = "bit_HLT_Ele_27_OR_45_OR_115 && ";
 	} else {
-		MCSelection = "";
 		DataSelection = "";
 	}
 
 	if (region == "WJets"){
-		MCSelection +=  addOnCutWjets ;
+		MCSelection =  addOnCutWjets ;
 		SignalSelection = "( " + addOnCutWjets + " )";
 		DataSelection += addOnCutWjets;
 	}
 	else if(region == "ttbar"){
-		MCSelection +=  addOnCutTtbar;
+		MCSelection =  addOnCutTtbar;
 		SignalSelection = "( " + addOnCutTtbar + " )";
 		DataSelection += addOnCutTtbar;
 	}
 	else if(region == "TTBarEnrichedInclusive"){
-		MCSelection +=  TTBarEnrichedInclusive;
+		MCSelection =  TTBarEnrichedInclusive;
 		SignalSelection = "( " + TTBarEnrichedInclusive + " )";
 		DataSelection += TTBarEnrichedInclusive;
 	}
 	else if(region == "TTBarEnrichedBTagVeto"){
-		MCSelection +=  TTBarEnrichedBTagVeto;
+		MCSelection =  TTBarEnrichedBTagVeto;
 		SignalSelection = "( " + TTBarEnrichedBTagVeto + " )";
 		DataSelection += TTBarEnrichedBTagVeto;
 	}
 	else if(region == "signal"){
-		MCSelection +=  signalRegion;
+		MCSelection =  signalRegion;
 		SignalSelection = "( " + signalRegion + " )";
 		DataSelection += signalRegion;
 	}
 	else if(region == "signalWW"){
-                MCSelection +=  signalWWRegion;
+                MCSelection =  signalWWRegion;
                 SignalSelection = "( " + signalWWRegion + " )";
                 DataSelection += signalWWRegion;
         }
 	else if(region == "signalWZ"){
-                MCSelection +=  signalWZRegion;
+                MCSelection =  signalWZRegion;
                 SignalSelection = "( " + signalWZRegion + " )";
                 DataSelection += signalWZRegion;
         }

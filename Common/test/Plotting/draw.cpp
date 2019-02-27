@@ -36,7 +36,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	variables.push_back(var);
 
 	var.VarName = "MWW_SD";
-	var.Title = "M_{WV}";
+	var.Title = "m_{WV} (GeV)";
 	var.SetRange(900., 4500.);
 	var.logscale = true;
 	variables.push_back(var);
@@ -129,7 +129,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	variables.push_back(var);
 
 	var.VarName = "jet_mass_softdrop_PUPPI";
-	var.Title = "M_{PUPPI SD}";
+	var.Title = "m_{PUPPI SD} (GeV)";
 	var.SetRange(40., 150.);
 	variables.push_back(var);
 
@@ -310,7 +310,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	
 	Sample s, dataSample, signalSample;
 	
-	s.SetParameters("W+jets", MCSelection, kGreen);
+	s.SetParameters("W+jets", MCSelection, kGreen+1);
  	/*s.SetFileNames(prefix + "WJets_Ht100To200_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht200To400_" + channel + ".root");
  	s.SetFileNames(prefix + "WJets_Ht400To600_" + channel + ".root");
@@ -342,7 +342,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	samples.push_back(s);
 	s.ReSet();
 
-	s.SetParameters("WZ", MCSelection, kRed-7);
+	s.SetParameters("WZ", MCSelection, kRed+2);
  	s.SetFileNames( prefix + "WZ_"+ channel + ".root");
 	samples.push_back(s);
 	s.ReSet();

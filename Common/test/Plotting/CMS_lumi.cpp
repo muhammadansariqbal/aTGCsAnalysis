@@ -8,7 +8,8 @@ using namespace std;
 TString cmsText     = "CMS";
 float cmsTextFont   = 61;  // default is helvetic-bold
 
-bool writeExtraText = true;
+//bool writeExtraText = true;
+bool writeExtraText = false;
 TString extraText   = "Preliminary";
 float extraTextFont = 52;  // default is helvetica-italics
 
@@ -115,7 +116,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   latex.SetTextFont(42);
   latex.SetTextAlign(31); 
   latex.SetTextSize(lumiTextSize*t);    
-  latex.DrawLatex(1-r,1-t+lumiTextOffset*t,lumiText);
+  latex.DrawLatex(1-r-0.025,1-t+lumiTextOffset*t,lumiText);
 
   if( outOfFrame )
     {

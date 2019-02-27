@@ -108,7 +108,7 @@ void Plotter::Plotting(std::string OutPrefix_)
 //  std::cout<<variables.at(var_i).VarName<<"  "<<variables.at(var_i).nBins<<std::endl;
 
     std::string vname = variables.at(var_i).VarName;
-    leg[vname] = new TLegend(0.8,0.5,0.98,0.93);
+    leg[vname] = new TLegend(0.7,0.54,0.925,0.94);
     leg[vname] ->  SetFillColor(kWhite);
     
     if(withData){
@@ -743,15 +743,17 @@ void Plotter::Plotting(std::string OutPrefix_)
     std::string vname = var -> VarName;
 
     if(withData){
-      leg[vname]->AddEntry(data[vname], "Data","pad1");
+      leg[vname]->AddEntry(data[vname], "Data","PE");
       data[vname]->SetFillColor(78);
       if (var -> logscale) data[vname]-> GetYaxis() -> SetRangeUser(0.1, (data[vname] -> GetMaximum())*7.);
       else  data[vname]-> GetYaxis() -> SetRangeUser(0., (data[vname] -> GetMaximum())*1.5);
-      data[vname]->GetYaxis()->SetTitle("Number of events");
+      char strBuffer[50];
+      sprintf(strBuffer,"Events / %d GeV",(int)round((var->Range.high-var->Range.low)/var->nBins));
+      data[vname]->GetYaxis()->SetTitle(strBuffer);
       data[vname]->GetYaxis()->SetTitleSize(0.075);
       data[vname]->GetYaxis()->SetTitleOffset(0.75);
       data[vname]->SetMarkerColor(DataSample.color);
-      data[vname]->SetMarkerStyle(21);
+      data[vname]->SetMarkerStyle(20);
       data[vname]->GetXaxis() -> SetLabelSize(0.);
       data[vname]->GetXaxis() -> SetLabelOffset(100000.);
     }
@@ -766,7 +768,7 @@ void Plotter::Plotting(std::string OutPrefix_)
       std::string process = samples[process_i].Processname;
       std::pair<std::string,std::string> key(vname,process);
 
-      hs[vname] -> Add(hist_per_process[key], "bar");
+      hs[vname] -> Add(hist_per_process[key]);
       hist_summed[vname] -> Add(hist_per_process[key]);
       hist_per_process[key] -> SetFillColor(samples.at(process_i).color);
       hist_per_process[key] -> SetLineColor(samples.at(process_i).color);
@@ -787,9 +789,9 @@ void Plotter::Plotting(std::string OutPrefix_)
   {
     std::string vname = var -> VarName;
     if(withSystematics)systematics.eval(&(*var), hist_summed[vname]);
-    c1=  new TCanvas("c1","canvas",1200,800);
-    pad1 = new TPad("pad1","This is pad1",0.0,0.25,0.8,1.0);
-    pad2 = new TPad("pad2","This is pad2",0.0,0.02,0.8,0.25);
+    c1=  new TCanvas("c1","canvas",960,800);
+    pad1 = new TPad("pad1","This is pad1",0.0,0.25,0.995,1.0);
+    pad2 = new TPad("pad2","This is pad2",0.0,0.02,0.995,0.25);
     
     c1 -> cd();
     if(withSignal)leg[vname] -> AddEntry(signalHist[vname], SignalSample.Processname.c_str()); 	  	  	
@@ -799,16 +801,19 @@ void Plotter::Plotting(std::string OutPrefix_)
     pad1 -> cd();
     
     if(withData)
-    {	
-    	 
-       data[vname] -> Draw("E1");
-	     hs[vname]->Draw("hist SAME s(0,0)");
-	     hist_summed[vname] -> SetFillColor(kBlack);
-	     hist_summed[vname] -> SetFillStyle(3018);
-	     hist_summed[vname] -> Draw("E2 SAME");
-	     if(withSignal)signalHist[vname] -> Draw("hist SAME");
-	     data[vname] -> Draw("E1 SAME");
-	     data[vname] -> GetXaxis() -> Draw("SAME");
+    {
+       if(vname=="MWW_SD"){
+          data[vname] -> Sumw2(kFALSE);	
+          data[vname] -> SetBinErrorOption(TH1::kPoisson);
+       }
+       data[vname] -> Draw("E1X0");
+       hs[vname]->Draw("hist SAME s(0,0)");
+       hist_summed[vname] -> SetFillColor(kBlack);
+       hist_summed[vname] -> SetFillStyle(3018);
+       hist_summed[vname] -> Draw("E2 SAME");
+       if(withSignal)signalHist[vname] -> Draw("hist SAME");
+       data[vname] -> Draw("E1X0 SAME");
+       data[vname] -> GetXaxis() -> Draw("SAME");
        if(!withSystematics && withMC)hist_summed[vname] -> GetXaxis() -> SetLabelSize(0.2);
        if(!withSystematics && withMC)hist_summed[vname] -> GetXaxis() -> Draw("SAME");
     } 
@@ -827,7 +832,7 @@ void Plotter::Plotting(std::string OutPrefix_)
     c1 -> cd();
 
     // Channel and CR name
-    TPaveText *pt = new TPaveText(0.15,0.82,0.5,0.90, "blNDC");
+    TPaveText *pt = new TPaveText(0.1875,0.82,0.625,0.90, "blNDC");
     pt -> SetFillStyle(0);
     pt -> SetBorderSize(0);
     pt -> SetTextAlign(12);
@@ -841,7 +846,7 @@ void Plotter::Plotting(std::string OutPrefix_)
     pt -> Draw("SAME");
 
     // Chi2 Test
-    if(withMC && withData){
+    /*if(withMC && withData){
 
       TH1D* dataForChi2 = (TH1D*) data[vname]->Clone();
       TH1D* MCForChi2 = (TH1D*) hist_summed[vname]->Clone();
@@ -861,15 +866,15 @@ void Plotter::Plotting(std::string OutPrefix_)
       pt2 -> SetTextSize(0.060);
       pt2 -> AddText(Form("#chi^{2}_{#nu}=%4.2f",chi2));
       pt2 -> Draw("SAME");
-    }
+    }*/
     
     pad1 -> SetTopMargin(0.07);
     pad1 -> SetBottomMargin(0.03);
     pad1 -> SetRightMargin(0.05);
     if(withMC){
       pad2 -> SetRightMargin(0.05);
-      pad2 -> SetTopMargin(0.05);
-      pad2 -> SetBottomMargin(0.42);
+      pad2 -> SetTopMargin(0);
+      pad2 -> SetBottomMargin(0.5);
       pad2 -> cd();
     }
 
@@ -906,6 +911,7 @@ void Plotter::Plotting(std::string OutPrefix_)
         	  data_dif_MCerr -> SetBinError(iBin, (hist_summed[vname] -> GetBinError(iBin))/hist_summed[vname] -> GetBinContent(iBin) );
         	}
     }
+
     if(withMC){
       data_dif_MCerr -> SetMaximum(1.);
       data_dif_MCerr ->  SetMinimum(-1.);
@@ -914,22 +920,27 @@ void Plotter::Plotting(std::string OutPrefix_)
       data_dif_MCerr -> GetXaxis() -> SetLabelSize(0.2);
       data_dif_MCerr -> GetYaxis()->SetTitle("#frac{Data - MC}{MC}");
       data_dif_MCerr -> GetXaxis()->SetTitle((var->Title).c_str());
-      data_dif_MCerr -> GetXaxis()->SetTitleOffset(0.6);
+      data_dif_MCerr -> GetXaxis()->SetTitleOffset(0.7);
       data_dif_MCerr -> GetXaxis()->SetTitleSize(0.3);
       data_dif_MCerr -> GetYaxis()->SetTitleOffset(0.3);
       data_dif_MCerr -> GetYaxis()->SetTitleSize(0.2);
       data_dif_MCerr -> Draw("E2");
-    } 
-    
+    }
+  
     if(withData){
-      data_dif ->SetMarkerStyle(21);
-      data_dif -> Draw("E1 SAME");
+      data_dif -> SetMarkerStyle(20);
+      if(vname=="MWW_SD"){
+        data_dif -> Sumw2(kFALSE);
+        data_dif -> SetBinErrorOption(TH1::kPoisson);
+      }
+      data_dif -> Draw("E1X0 SAME");
     }
     TLine *line = new TLine(var->Range.low,0.,var->Range.high,0.);
     line -> Draw("SAME");
 
     
-    if(withSystematics)leg[vname] -> AddEntry(data_dif_MCerr, "Syst. unc", "f");
+    //if(withSystematics)leg[vname] -> AddEntry(data_dif_MCerr, "Syst. unc.", "f");
+    if(withSystematics)leg[vname] -> AddEntry(hist_summed[vname], "Syst. unc.", "f");
     c1 -> cd();
     leg[vname]->Draw("SAME");
     

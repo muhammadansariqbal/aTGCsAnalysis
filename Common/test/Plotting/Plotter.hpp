@@ -31,6 +31,9 @@
 #include <boost/progress.hpp>
 #include "SystHelper.hpp"
 #include <TExec.h>
+#include <Math/QuantFuncMathCore.h>
+#include <TMath.h>
+#include <TGraphAsymmErrors.h>
 
 /*
  * Class to make data-MC comparison plots

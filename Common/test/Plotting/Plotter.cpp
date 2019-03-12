@@ -879,37 +879,37 @@ void Plotter::Plotting(std::string OutPrefix_)
     }
 
     
-    TH1D *data_dif = new TH1D((vname + "_dif").c_str(),( vname + "_dif").c_str(), var->nBins,var->Range.low, var->Range.high);
-    data_dif -> Sumw2();
+    //TH1D *data_dif = new TH1D((vname + "_dif").c_str(),( vname + "_dif").c_str(), var->nBins,var->Range.low, var->Range.high);
+    //data_dif -> Sumw2();
     TH1D *data_dif_MCerr = new TH1D((vname + "_dif_MCerror").c_str(),( vname + "_dif_MCerror").c_str(), var->nBins,var->Range.low, var->Range.high);
     data_dif_MCerr -> Sumw2();
     data_dif_MCerr -> SetFillColor(kGray);
     
-    if(withMC && withData){
+    /*if(withMC && withData){
       for (int iBin = 1; iBin <= hist_summed[vname] -> GetNbinsX(); ++iBin)
       {
-	        if (hist_summed[vname] -> GetBinContent(iBin) == 0.) data_dif -> SetBinContent(iBin,10000000.);
-        	else {
-        	  data_dif -> SetBinContent(iBin, ((data[vname] -> GetBinContent(iBin)) - (hist_summed[vname] -> GetBinContent(iBin)))/(hist_summed[vname] -> GetBinContent(iBin)));
-        	  data_dif -> SetBinError(iBin, (data[vname]-> GetBinError(iBin))/(hist_summed[vname] -> GetBinContent(iBin)));
-        	}
+          if (hist_summed[vname] -> GetBinContent(iBin) == 0. || data[vname] -> GetBinContent(iBin) == 0) data_dif -> SetBinContent(iBin,10000000.);
+          else {
+              data_dif -> SetBinContent(iBin, ((data[vname] -> GetBinContent(iBin)) - (hist_summed[vname] -> GetBinContent(iBin)))/(hist_summed[vname] -> GetBinContent(iBin)));
+              data_dif -> SetBinError(iBin, (data[vname]-> GetBinError(iBin))/(hist_summed[vname] -> GetBinContent(iBin)));
+          }
      }
      //std::cout<<vname<<std::endl;
      //std::cout<<"Data Integral: "<<data[vname]->Integral()<<std::endl;
      //std::cout<<"MC Integral: "<<hist_summed[vname]->Integral()<<std::endl;
-    }
+    }*/
     
     
     for (int iBin = 1; iBin <= var->nBins && withMC ; ++iBin)
     {
-	       if (hist_summed[vname] -> GetBinContent(iBin) == 0.) {
+        if (hist_summed[vname] -> GetBinContent(iBin) == 0.) {
 	           data_dif_MCerr -> SetBinContent(iBin, 0.);
 	           data_dif_MCerr -> SetBinError(iBin, 0.);
-	       }
+        }
         else {
         	  data_dif_MCerr -> SetBinContent(iBin, 0.);
         	  data_dif_MCerr -> SetBinError(iBin, (hist_summed[vname] -> GetBinError(iBin))/hist_summed[vname] -> GetBinContent(iBin) );
-        	}
+        }
     }
 
     if(withMC){
@@ -928,12 +928,26 @@ void Plotter::Plotting(std::string OutPrefix_)
     }
   
     if(withData){
-      data_dif -> SetMarkerStyle(20);
-      if(vname=="MWW_SD"){
-        data_dif -> Sumw2(kFALSE);
-        data_dif -> SetBinErrorOption(TH1::kPoisson);
+      //data_dif -> Sumw2(kFALSE);
+      //data_dif -> SetBinErrorOption(TH1::kPoisson);
+      //data_dif -> SetMarkerStyle(20);
+      //data_dif -> Draw("E1X0 SAME");
+      const double alpha = 1 - 0.6827;
+      TGraphAsymmErrors * data_dif_graph = new TGraphAsymmErrors(data[vname]);
+      data_dif_graph -> SetMarkerStyle(20);
+      for (int i = 0; i < data_dif_graph->GetN(); ++i) {
+        int N = data_dif_graph->GetY()[i];
+        double MC = hist_summed[vname] -> GetBinContent(i+1);
+        double L =  (N==0) ? 0  : (ROOT::Math::gamma_quantile(alpha/2,N,1.));
+        double U =  ROOT::Math::gamma_quantile_c(alpha/2,N+1,1);
+        if (N==0 || MC<0.01) data_dif_graph->SetPoint(i, data_dif_graph->GetX()[i], 100000.);
+        else data_dif_graph->SetPoint(i, data_dif_graph->GetX()[i], (N-MC)/MC);
+        data_dif_graph->SetPointEXlow(i, 0);
+        data_dif_graph->SetPointEXhigh(i, 0);
+        data_dif_graph->SetPointEYlow(i, (N-L)/MC);
+        data_dif_graph->SetPointEYhigh(i, (U-N)/MC);
       }
-      data_dif -> Draw("E1X0 SAME");
+      data_dif_graph->Draw("0P SAME");
     }
     TLine *line = new TLine(var->Range.low,0.,var->Range.high,0.);
     line -> Draw("SAME");

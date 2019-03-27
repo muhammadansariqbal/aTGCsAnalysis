@@ -108,7 +108,7 @@ void Plotter::Plotting(std::string OutPrefix_)
 //  std::cout<<variables.at(var_i).VarName<<"  "<<variables.at(var_i).nBins<<std::endl;
 
     std::string vname = variables.at(var_i).VarName;
-    leg[vname] = new TLegend(0.7,0.54,0.925,0.94);
+    leg[vname] = new TLegend(0.68,0.54,0.94,0.94);
     leg[vname] ->  SetFillColor(kWhite);
     
     if(withData){
@@ -954,7 +954,7 @@ void Plotter::Plotting(std::string OutPrefix_)
 
     
     //if(withSystematics)leg[vname] -> AddEntry(data_dif_MCerr, "Syst. unc.", "f");
-    if(withSystematics)leg[vname] -> AddEntry(hist_summed[vname], "Syst. unc.", "f");
+    if(withSystematics)leg[vname] -> AddEntry(hist_summed[vname], "Stat.#oplusSyst.", "f");
     c1 -> cd();
     leg[vname]->Draw("SAME");
     

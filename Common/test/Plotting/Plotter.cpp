@@ -647,9 +647,12 @@ void Plotter::Plotting(std::string OutPrefix_)
                 }  
                 for (uint iScale =1; iScale < ScaleWeights -> size(); iScale ++ )
                 {
-                  TH1D *temp = new TH1D(("Scalehist" + var->VarName+ std::to_string(iScale)).c_str(), ("Scalehist"+  var->VarName + std::to_string(iScale)).c_str(), var->nBins, var ->Range.low, var->Range.high);
-                  temp -> Sumw2();
-                  histsScalePerFile[var->VarName].push_back(temp);
+                  if(iScale!=5 && iScale!=7)
+                  {
+                    TH1D *temp = new TH1D(("Scalehist" + var->VarName+ std::to_string(iScale)).c_str(), ("Scalehist"+  var->VarName + std::to_string(iScale)).c_str(), var->nBins, var ->Range.low, var->Range.high);
+                    temp -> Sumw2();
+                    histsScalePerFile[var->VarName].push_back(temp);
+                  }
                 } 
               }
           }
@@ -674,16 +677,20 @@ void Plotter::Plotting(std::string OutPrefix_)
                   else histsPDFPerFile[var->VarName].at(iPDF) -> Fill(var->value(), (samples.at(process_i).weight)*totEventWeight*PDFWeights->at(iPDF));
                 }
                 else histsPDFPerFile[var->VarName].at(iPDF) -> Fill(var->value(), (samples.at(process_i).weight)*totEventWeight*PDFWeights->at(iPDF));
-              }  
+              }
+              int histsScalePerFileCounter=0;  
               for (uint iScale =1; iScale < ScaleWeights -> size() && withSystematics; iScale ++ )
               {
-                //this is a temporary fix, should be disregarded               
-               if( boost::algorithm::contains((samples.at(process_i)).filenames.at(file_i),"tW" ) ) histsScalePerFile[var->VarName].at(iScale-1) -> Fill(var->value(), (samples.at(process_i).weight)*totEventWeight);
-               else histsScalePerFile[var->VarName].at(iScale-1) -> Fill(var->value(), (samples.at(process_i).weight)*totEventWeight*ScaleWeights->at(iScale));
-               
+                if(iScale!=5 && iScale!=7)
+                {
+                  //this is a temporary fix, should be disregarded               
+                 if( boost::algorithm::contains((samples.at(process_i)).filenames.at(file_i),"tW" ) ) histsScalePerFile[var->VarName].at(histsScalePerFileCounter) -> Fill(var->value(), (samples.at(process_i).weight)*totEventWeight);
+                 else histsScalePerFile[var->VarName].at(histsScalePerFileCounter) -> Fill(var->value(), (samples.at(process_i).weight)*totEventWeight*ScaleWeights->at(iScale));
+                 histsScalePerFileCounter++;
+                }
               }
-	         }
-	       }
+	  }
+	}
        if(withSystematics)systematics.fill(&variables, SystematicsVarMapUp, SystematicsVarMapDown,(samples.at(process_i).weight)*totEventWeight, (samples.at(process_i).weight));
        if(withSystematics && wantToWriteHists)systematics.fillHist(varToWriteObj, SystematicsVarMapUp, SystematicsVarMapDown, hist_per_process_SystUp, hist_per_process_SystDown, (samples.at(process_i).weight)*totEventWeight, (samples.at(process_i).weight));
        PDFWeights->clear();

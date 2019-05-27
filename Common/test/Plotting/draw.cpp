@@ -16,8 +16,8 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	variables.push_back(var);
 
 	var.VarName = "jet_tau21_PUPPI";
-	var.Title = "#tau_{21} PUPPI";
-	var.SetRange(0., 0.7);
+	var.Title = "#tau_{21}";
+	var.SetRange(0., 0.9);
 	variables.push_back(var);
 
 	var.VarName = "jet_tau32_PUPPI";
@@ -325,6 +325,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
  	//	std::cerr << "Wrong channel, use ele or mu" << std::endl;
  	//	exit(0);
  	//}
+ 	//s.weight=1.1;
 	s.SetFileNames(prefix + "WJets_Pt100To250_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt250To400_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt400To600_" + channel + ".root");

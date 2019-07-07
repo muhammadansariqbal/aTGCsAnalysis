@@ -962,7 +962,7 @@ void Plotter::Plotting(std::string OutPrefix_)
 
     
     //if(withSystematics)leg[vname] -> AddEntry(data_dif_MCerr, "Syst. unc.", "f");
-    if(withSystematics)leg[vname] -> AddEntry(hist_summed[vname], "Stat.#oplusSyst.", "f");
+    if(withSystematics)leg[vname] -> AddEntry(hist_summed[vname], "Stat.#oplussyst.", "f");
     c1 -> cd();
     leg[vname]->Draw("SAME");
     

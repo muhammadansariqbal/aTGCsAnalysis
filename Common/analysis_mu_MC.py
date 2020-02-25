@@ -143,9 +143,11 @@ process.analysis = cms.Path(
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
     # ttbar MC
-    fileNames = cms.untracked.vstring('file:///eos/cms/store/mc/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/FCB8AF84-A6BE-E611-8C65-0CC47A5FBE25.root'),
+    #fileNames = cms.untracked.vstring('file:///eos/cms/store/mc/RunIISummer16MiniAODv2/TT_TuneCUETP8M2T4_13TeV-powheg-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/FCB8AF84-A6BE-E611-8C65-0CC47A5FBE25.root'),
     # WJets MC
-    #fileNames = cms.untracked.vstring('file:///eos/cms/store/mc/RunIISummer16MiniAODv2/WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/A40770A2-1AD0-E611-AF94-A4BADB1C4493.root'),    
+    #fileNames = cms.untracked.vstring('file:///eos/cms/store/mc/RunIISummer16MiniAODv2/WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/80000/A40770A2-1AD0-E611-AF94-A4BADB1C4493.root'),
+    # WZ MC
+    fileNames = cms.untracked.vstring('file:///eos/cms/store/mc/RunIISummer16MiniAODv2/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v3/80000/F835AFB9-E6C1-E611-BF62-0025905A608A.root'),
 )
 
 

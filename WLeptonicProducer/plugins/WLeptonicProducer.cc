@@ -207,6 +207,7 @@ WLeptonicProducer::getNeutrinoP4(const reco::Candidate& met, const reco::Candida
   double lepphi = lep.phi();
   double lepeta = lep.eta();
   double lepenergy = lep.energy();
+  //std::cout << "Producer quantities: " << leppt << "   " << lepeta << "   " << lepphi << "   " << lepenergy << "   ";
 
   double metpt = met.pt();
   double metphi = met.phi();
@@ -239,6 +240,7 @@ WLeptonicProducer::getNeutrinoP4(const reco::Candidate& met, const reco::Candida
 
 
   double tmproot = B*B - 4.0*A*C;
+  //std::cout << (-B + sqrt(tmproot))/(2.0*A) << "   " << (-B - sqrt(tmproot))/(2.0*A)   << std::endl;
   
   if (tmproot<0) {
     //std::cout << "Complex root detected, taking real part..." << std::endl;

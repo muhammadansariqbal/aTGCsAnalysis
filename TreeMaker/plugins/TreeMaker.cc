@@ -232,6 +232,8 @@ private:
   // L1 Prefiring weights
   //double prefiringWeight;
   //edm::EDGetTokenT< double > prefweight_token;
+  // Neutrino pz
+  //double nuPzGen, nuPz1, nuPz2;
 };
 
 //
@@ -380,6 +382,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
 
      // Prefiring weight
      //outTree_->Branch("prefiringWeight", &prefiringWeight, "prefiringWeight/D");
+     // Neutrino pz
+     //outTree_->Branch("nuPzGen", &nuPzGen, "nuPzGen/D");
+     //outTree_->Branch("nuPz1", &nuPz1, "nuPz1/D");
+     //outTree_->Branch("nuPz2", &nuPz2, "nuPz2/D");
    };
   if (channel == "el") {
     outTree_->Branch("bit_HLT_Ele_27_tight",       &bit_HLT_Ele_27_tight,     "bit_HLT_Ele_27_tight/B"          );
@@ -1654,6 +1660,7 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   if(isMC)
   {
         for(unsigned int iGen=0; iGen<genParticles->size(); ++iGen)
+	{
                 if((genParticles->at(iGen)).pdgId()==6 && (genParticles->at(iGen)).status()==22)
 		{
 			topInGen=1;
@@ -1664,9 +1671,68 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 			antitopInGen=1;
                         antitopSF=std::exp(0.0615-(0.0005*(genParticles->at(iGen)).pt()));
 		}
+	}
         if(topInGen && antitopInGen)
 		topPtSF=std::sqrt(topSF*antitopSF); 
 //	std::cout<<topSF<<" "<<antitopSF<<" "<<topPtSF<<std::endl;
+
+	/*nuPzGen=0;
+	nuPz1=0;
+	nuPz2=0;
+	for(unsigned int iGen=0; iGen<genParticles->size(); ++iGen)
+	{
+		if((fabs((genParticles->at(iGen)).pdgId())==12 || fabs((genParticles->at(iGen)).pdgId())==14) && (genParticles->at(iGen)).status()==23 )
+		{
+			nuPzGen=(genParticles->at(iGen)).pz();
+			double leppt = Lepton.pt;
+			double lepphi = Lepton.phi;
+			double lepeta = Lepton.eta;
+			double lepmass = Lepton.mass;
+			ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>> lep4vec;
+			lep4vec.SetPt(leppt); lep4vec.SetEta(lepeta); lep4vec.SetPhi(lepphi); lep4vec.SetM(lepmass);
+			double lepenergy = lep4vec.E();
+			double metpt = METCand.pt;
+			double metphi = METCand.phi;
+
+			double MW_ = 80.385;
+			double  px = metpt*cos(metphi);
+			double  py = metpt*sin(metphi);
+			double  pxl= leppt*cos(lepphi);
+			double  pyl= leppt*sin(lepphi);
+			double  pzl= leppt*sinh(lepeta);
+			double  El = lepenergy;
+			double  a = pow(MW_,2) + pow(px+pxl,2) + pow(py+pyl,2) - px*px - py*py - El*El + pzl*pzl;
+			double  b = 2.*pzl;   
+			double  A = b*b -4.*El*El;
+			double  B = 2.*a*b;
+			double  C = a*a-4.*(px*px+py*py)*El*El;
+			
+			double M_mu =  0; 
+
+			a = MW_*MW_ - M_mu*M_mu + 2.0*pxl*px + 2.0*pyl*py;
+			A = 4.0*(El*El - pzl*pzl);
+			B = -4.0*a*pzl;
+			C = 4.0*El*El*(px*px + py*py) - a*a;
+
+			double tmproot = B*B - 4.0*A*C;
+                    
+			if (tmproot<0) {
+				nuPz1 = - B/(2*A); // take real part of complex roots
+				nuPz2 = - B/(2*A);
+			}
+			else{
+				double tmpsol1 = (-B + sqrt(tmproot))/(2.0*A);
+				double tmpsol2 = (-B - sqrt(tmproot))/(2.0*A);
+				if (TMath::Abs(tmpsol1)<TMath::Abs(tmpsol2) ) { nuPz1 = tmpsol1; nuPz2 = tmpsol2;}
+				else { nuPz1 = tmpsol2; nuPz2 = tmpsol1;}
+			}
+			//if(fabs(nuPz1-nuPzGen)>fabs(nuPz2-nuPzGen))
+			//	std::cout << "Analyzer quantities: " << leppt << "   " << lepeta << "   " << lepphi << "   " << lepenergy << "   " << nuPz1 << "   " << nuPz2  << "   " << nuPzGen << std::endl << std::endl;
+			//std::cout<<"Has neutrino "<<(genParticles->at(iGen)).pdgId();
+		}
+		//if( (genParticles->at(iGen)).status()==24 ) std::cout << (genParticles->at(iGen)).pdgId()<< std::endl;
+	}*/
+        //std::cout<<" ... next event." <<std::endl;
   }
 
   double genWeightPosForaTGC=std::abs(genWeight);

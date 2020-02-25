@@ -111,7 +111,7 @@ METSystematicProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup
    edm::Handle<std::vector<pat::MET> > metHandle;
    iEvent.getByToken(metToken_, metHandle);
 
-   std::auto_ptr<std::vector<pat::MET>> outCollection(new std::vector<pat::MET> );
+   std::unique_ptr<std::vector<pat::MET>> outCollection(new std::vector<pat::MET> );
 
    pat::MET METShifted = metHandle->at(0);
    math::XYZTLorentzVector ShiftedP4 = METShifted.p4();
@@ -119,7 +119,7 @@ METSystematicProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup
    METShifted.setP4(ShiftedP4);
 
    outCollection -> push_back(METShifted);
-   iEvent.put(outCollection);
+   iEvent.put(std::move(outCollection));
 }
 
 // ------------ method called once each job just before starting event loop  ------------

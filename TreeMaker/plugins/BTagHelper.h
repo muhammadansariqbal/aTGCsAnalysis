@@ -28,7 +28,7 @@ enum BTagUncertaintyType{
 	std::string BtagEffFileName;
 	bool DONOTHING;
 public:
-	std::auto_ptr<BTagCalibrationReader>  reader, reader_up, reader_down;
+	std::unique_ptr<BTagCalibrationReader>  reader, reader_up, reader_down;
 	BTagHelper(std::string BtagEffFileName_, double BtagDiscrCut):
 		DiscrCut(BtagDiscrCut)
 	{

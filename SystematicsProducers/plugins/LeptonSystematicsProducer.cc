@@ -122,7 +122,7 @@ LeptonSystematicsProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
    iEvent.getByToken(leptonsToken, leptons);
    
    
-   std::auto_ptr<std::vector<reco::LeafCandidate>> outCollection(new std::vector<reco::LeafCandidate> );
+   std::unique_ptr<std::vector<reco::LeafCandidate>> outCollection(new std::vector<reco::LeafCandidate> );
 
    reco::LeafCandidate lepton;
    lepton = (reco::LeafCandidate)leptons->at(0);
@@ -254,7 +254,7 @@ LeptonSystematicsProducer::produce(edm::Event& iEvent, const edm::EventSetup& iS
     else throw cms::Exception("InvalidValue") <<  "Invalid type of uncertainty used, use scale or resolution" << std::endl;
    outCollection -> push_back(lepton);
   
-   iEvent.put(outCollection);
+   iEvent.put(std::move(outCollection));
      
 }
 

@@ -120,7 +120,7 @@ TightMuonSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    Handle <edm::View <pat::Muon> > muons;
    Handle <edm::View <reco::Vertex> > Vertices;
    
-   std::auto_ptr<std::vector<pat::Muon> > OutMuonCollection(new std::vector<pat::Muon>);
+   std::unique_ptr<std::vector<pat::Muon> > OutMuonCollection(new std::vector<pat::Muon>);
      
    iEvent.getByToken(MuonToken_, muons);
    iEvent.getByToken(VertexToken_, Vertices);
@@ -134,7 +134,7 @@ TightMuonSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
    
 //   std::cout << OutMuonCollection -> size() << std::endl;
-   iEvent.put(OutMuonCollection);
+   iEvent.put(std::move(OutMuonCollection));
  //  std::cout << " Vertices : " << Vertices -> at(0) << std::endl;
    //std::cout <<  isTightMuon() << std::endl;
    
@@ -145,7 +145,7 @@ TightMuonSelector::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
    //Use the ExampleData to create an ExampleData2 which 
    // is put into the Event
-   std::auto_ptr<ExampleData2> pOut(new ExampleData2(*pIn));
+   std::unique_ptr<ExampleData2> pOut(new ExampleData2(*pIn));
    iEvent.put(pOut);
 */
 

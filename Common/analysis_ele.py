@@ -121,7 +121,9 @@ process.analysis = cms.Path(process.NoiseFilters + process.BadChargedCandidateFi
 
 process.source = cms.Source("PoolSource",
     secondaryFileNames = cms.untracked.vstring(),
-    fileNames = cms.untracked.vstring('file:///eos/cms/store/data/Run2016C/SingleElectron/MINIAOD/03Feb2017-v1/100000/0244B3B4-78EB-E611-9D42-0CC47A009E24.root'),
+    #fileNames = cms.untracked.vstring('file:///eos/cms/store/data/Run2016C/SingleElectron/MINIAOD/03Feb2017-v1/100000/0244B3B4-78EB-E611-9D42-0CC47A009E24.root'),
+    fileNames = cms.untracked.vstring('file:///eos/cms/store/data/Run2017F/SingleElectron/MINIAOD/31Mar2018-v1/80000/6EAD03F0-5B3C-E811-8E8B-0025905B85EE.root'),
+    #fileNames = cms.untracked.vstring('file:///eos/cms/store/data/Run2018D/SingleMuon/MINIAOD/PromptReco-v2/000/324/021/00000/3E7C86D6-EAA9-254D-A825-F6330B3D2031.root'),
 )
 
 process.load("FWCore.MessageLogger.MessageLogger_cfi")

@@ -104,7 +104,7 @@ bool jetID::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
 
    Handle<edm::View<pat::Jet> > Jets;
      
-    std::auto_ptr<std::vector<pat::Jet> > JetsSelected(new std::vector<pat::Jet>);
+    std::unique_ptr<std::vector<pat::Jet> > JetsSelected(new std::vector<pat::Jet>);
    
    iEvent.getByToken(Jets_, Jets);
    
@@ -138,7 +138,7 @@ bool jetID::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
       else if (ID != "tight" && ID != "loose")std::cout << "Smth is going wrong ... " << std::endl;
    }
   
-   iEvent.put(JetsSelected);
+   iEvent.put(std::move(JetsSelected));
    
 #ifdef THIS_IS_AN_EVENT_EXAMPLE
    Handle<ExampleData> pIn;

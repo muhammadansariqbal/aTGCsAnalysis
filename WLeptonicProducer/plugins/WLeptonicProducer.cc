@@ -124,7 +124,7 @@ WLeptonicProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    const reco::Candidate& METcand = MET_h->at(0);
    reco::CandidateBaseRef METBaseRef = MET_h->refAt(0);
 
-   std::auto_ptr<reco::CompositeCandidateCollection> outCollection(new reco::CompositeCandidateCollection);
+   std::unique_ptr<reco::CompositeCandidateCollection> outCollection(new reco::CompositeCandidateCollection);
    
 
 
@@ -144,7 +144,7 @@ WLeptonicProducer::produce(edm::Event& iEvent, const edm::EventSetup& iSetup)
    }
 
    std::sort(outCollection->begin(), outCollection->end(), byPt);
-   iEvent.put(outCollection);
+   iEvent.put(std::move(outCollection));
 }
 
 // ------------ method called once each job just before starting event loop  ------------

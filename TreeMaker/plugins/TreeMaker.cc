@@ -1292,26 +1292,26 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    if (jets -> size() > 0)
   {
     const pat::Jet & fatJet = jets->at(0);
-    jet_tau2tau1 = fatJet.userFloat("NjettinessAK8:tau2")/fatJet.userFloat("NjettinessAK8:tau1");
-    jet_tau3tau2 = fatJet.userFloat("NjettinessAK8:tau3")/fatJet.userFloat("NjettinessAK8:tau2");
-    jet_tau1 = fatJet.userFloat("NjettinessAK8:tau1");
-    jet_tau2 = fatJet.userFloat("NjettinessAK8:tau2");
-    jet_tau3 = fatJet.userFloat("NjettinessAK8:tau3");
+    jet_tau2tau1 = fatJet.userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau2")/fatJet.userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau1");
+    jet_tau3tau2 = fatJet.userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau3")/fatJet.userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau2");
+    jet_tau1 = fatJet.userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau1");
+    jet_tau2 = fatJet.userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau2");
+    jet_tau3 = fatJet.userFloat("ak8PFJetsCHSValueMap:NjettinessAK8CHSTau3");
     // Need to manually apply correction factor to userFloat values - calculate by using
     // ratio of corrected PT to uncorrected pt
     double corr = fatJet.correctedP4(fatJet.currentJECLevel()).pt() / fatJet.correctedP4("Uncorrected").pt();
-    jet_mass_pruned = corr * fatJet.userFloat("ak8PFJetsCHSPrunedMass");
-    jet_mass_softdrop = corr * fatJet.userFloat("ak8PFJetsCHSSoftDropMass");
+    jet_mass_pruned = corr * fatJet.userFloat("ak8PFJetsCHSValueMap:ak8PFJetsCHSPrunedMass");
+    jet_mass_softdrop = corr * fatJet.userFloat("ak8PFJetsCHSValueMap:ak8PFJetsCHSSoftDropMass");
 
     //https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMiniAOD2016#Jets
     // Do these require correction factor?
-    jet_pt_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:pt");
-    jet_eta_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:eta");
-    jet_phi_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:phi");
-    jet_mass_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:mass");
-    jet_tau1_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau1");
-    jet_tau2_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau2");
-    jet_tau3_PUPPI = fatJet.userFloat("ak8PFJetsPuppiValueMap:NjettinessAK8PuppiTau3");
+    jet_pt_PUPPI = fatJet.userFloat("ak8PFJetsCHSValueMap:pt");
+    jet_eta_PUPPI = fatJet.userFloat("ak8PFJetsCHSValueMap:eta");
+    jet_phi_PUPPI = fatJet.userFloat("ak8PFJetsCHSValueMap:phi");
+    jet_mass_PUPPI = fatJet.userFloat("ak8PFJetsCHSValueMap:mass");
+    jet_tau1_PUPPI = fatJet.userFloat("NjettinessAK8Puppi:tau1");
+    jet_tau2_PUPPI = fatJet.userFloat("NjettinessAK8Puppi:tau2");
+    jet_tau3_PUPPI = fatJet.userFloat("NjettinessAK8Puppi:tau3");
     jet_tau21_PUPPI = jet_tau2_PUPPI/jet_tau1_PUPPI;
     jet_tau32_PUPPI = jet_tau3_PUPPI/jet_tau2_PUPPI;
 
@@ -1325,7 +1325,7 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 
     float puppiCorr= getPUPPIweight( jet_pt_PUPPI, jet_eta_PUPPI );
-    jet_mass_softdrop_PUPPI = puppi_softdrop.M() * puppiCorr;
+    jet_mass_softdrop_PUPPI = fatJet.userFloat("ak8PFJetsPuppiSoftDropMass");
     jet_tau21_DT = jet_tau21_PUPPI + 0.063*std::log(jet_pt_PUPPI*jet_pt_PUPPI/jet_mass_PUPPI);
 
     jet_pt = fatJet.pt();
@@ -1801,7 +1801,7 @@ float TreeMaker::getSmearingFactor(float sf, float unc, float resolution, const 
     throw std::runtime_error("variation must be 0 (nominal) or +/-1");
   }
 
-  float jet_pt = usePuppiPt ? jet.userFloat("ak8PFJetsPuppiValueMap:pt") : jet.pt();
+  float jet_pt = usePuppiPt ? jet.userFloat("ak8PFJetsCHSValueMap:pt") : jet.pt();
 
   // First find if there's a match
   float ptGen = -1.;
@@ -1872,14 +1872,15 @@ bool TreeMaker::decaysHadronic(const reco::Candidate* p)
 void TreeMaker::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup){
 
 
-  edm::Handle<LHERunInfoProduct> run; 
+  //edm::Handle<LHERunInfoProduct> run; 
 
 
-  if(!isSignal && isMC) iRun.getByLabel( "externalLHEProducer", run );
-  else if (isSignal )iRun.getByLabel( "externalLHEProducer", run );
-  else return;
-  std::cout << "Nominal : " << run->heprup().PDFSUP.first << std::endl;
-  NominalPDF = run->heprup().PDFSUP.first;
+  //if(!isSignal && isMC) iRun.getByLabel( "externalLHEProducer", run );
+  //else if (isSignal )iRun.getByLabel( "externalLHEProducer", run );
+  //else return;
+  //std::cout << "Nominal : " << run->heprup().PDFSUP.first << std::endl;
+  //NominalPDF = run->heprup().PDFSUP.first;
+  NominalPDF = 263000;
 
 }
 

@@ -151,8 +151,8 @@ slimmedJetsAK4Smeared = cms.EDProducer('SmearedPATJetProducer',
 selectedPatJetsAK4 = cms.EDFilter("PATJetSelector",
     src = cms.InputTag("slimmedJetsAK4Smeared"),
     cut = cms.string("pt > 30 & abs(eta) < 2.4"),  # only use central jets as only for b-tagging - HF useless
-    addBTagInfo = cms.bool(True),  # definitely need these!
-    addDiscriminators = cms.bool(True)
+    #addBTagInfo = cms.bool(True),  # definitely need these!
+    #addDiscriminators = cms.bool(True)
 )
 
 goodAK4JetsNotUsed = cms.EDFilter("PFJetIDSelectionFunctorFilter",

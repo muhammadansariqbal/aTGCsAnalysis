@@ -104,7 +104,7 @@ bool ElectronID::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
    Handle <edm::ValueMap <bool> > ValueMaps;
    Handle<edm::View<pat::Electron> > Electrons;
      
-    std::auto_ptr<std::vector<pat::Electron> > ElectronsSelected(new std::vector<pat::Electron>);
+    std::unique_ptr<std::vector<pat::Electron> > ElectronsSelected(new std::vector<pat::Electron>);
    
    iEvent.getByToken( ValueMaps_ , ValueMaps);
    iEvent.getByToken(Electrons_, Electrons);
@@ -121,7 +121,7 @@ bool ElectronID::filter(edm::Event& iEvent, const edm::EventSetup& iSetup)
      }
    }
   
-   iEvent.put(ElectronsSelected);
+   iEvent.put(std::move(ElectronsSelected));
    
 #ifdef THIS_IS_AN_EVENT_EXAMPLE
    Handle<ExampleData> pIn;

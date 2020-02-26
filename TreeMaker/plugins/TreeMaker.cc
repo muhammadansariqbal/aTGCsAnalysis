@@ -331,8 +331,8 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   outTree_->Branch("run",	      &run,		  "run/I"  	       );
   
   //number of primary vertices
-  outTree_->Branch("nPV",	      &nPV,		  "nPV/I"  	       );
-  outTree_->Branch("rho",       &rho_,     "rho/D"          );
+//  outTree_->Branch("nPV",	      &nPV,		  "nPV/I"  	       );
+//  outTree_->Branch("rho",       &rho_,     "rho/D"          );
   //PUweight
   if (isMC) {
      outTree_->Branch("gnPV", &gnPV, "gnPV/D");
@@ -388,24 +388,24 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
      //outTree_->Branch("nuPz2", &nuPz2, "nuPz2/D");
    };
   if (channel == "el") {
-    outTree_->Branch("bit_HLT_Ele_27_tight",       &bit_HLT_Ele_27_tight,     "bit_HLT_Ele_27_tight/B"          );
+//    outTree_->Branch("bit_HLT_Ele_27_tight",       &bit_HLT_Ele_27_tight,     "bit_HLT_Ele_27_tight/B"          );
     outTree_->Branch("bit_HLT_Ele_45",       &bit_HLT_Ele_45,     "bit_HLT_Ele_45/B"          );
     outTree_->Branch("bit_HLT_Ele_115",       &bit_HLT_Ele_115,     "bit_HLT_Ele_115/B"          );
-    outTree_->Branch("bit_HLT_Photon_175",       &bit_HLT_Photon_175,     "bit_HLT_Photon_175/B"          );
-    outTree_->Branch("bit_HLT_Ele_27_OR_45_OR_115",       &bit_HLT_Ele_27_OR_45_OR_115,     "bit_HLT_Ele_27_OR_45_OR_115/B");
+//    outTree_->Branch("bit_HLT_Photon_175",       &bit_HLT_Photon_175,     "bit_HLT_Photon_175/B"          );
+//    outTree_->Branch("bit_HLT_Ele_27_OR_45_OR_115",       &bit_HLT_Ele_27_OR_45_OR_115,     "bit_HLT_Ele_27_OR_45_OR_115/B");
   }
   
   //number of loose leptons
-  outTree_->Branch("nLooseEle",      &nLooseEle, 	  "nLooseEle/I"       );
-  outTree_->Branch("nLooseMu",      &nLooseMu, 	  "nLooseMu/I"       );
+//  outTree_->Branch("nLooseEle",      &nLooseEle, 	  "nLooseEle/I"       );
+//  outTree_->Branch("nLooseMu",      &nLooseMu, 	  "nLooseMu/I"       );
   
   // number of leptons for particular mu/ele channel (should be tight lepton)
-  outTree_->Branch("nLep",            &nLep, 	      "nLep/I"       );
+//  outTree_->Branch("nLep",            &nLep, 	      "nLep/I"       );
   
   //leptons (tight, ele or mu depends on the channel)
-  outTree_->Branch("l_pt",	      &Lepton.pt,      "l_pt/D"         	);
-  outTree_->Branch("l_eta",	      &Lepton.eta,     "l_eta/D"        	);
-  outTree_->Branch("l_phi",	      &Lepton.phi,     "l_phi/D"        	);
+//  outTree_->Branch("l_pt",	      &Lepton.pt,      "l_pt/D"         	);
+//  outTree_->Branch("l_eta",	      &Lepton.eta,     "l_eta/D"        	);
+//  outTree_->Branch("l_phi",	      &Lepton.phi,     "l_phi/D"        	);
   //lepton uncertainties
   if (isMC) {
     if(channel == "el"){
@@ -420,10 +420,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   }
   //W leptonic observables
   outTree_->Branch("W_pt",	      &Wboson_lep.pt,     "W_pt/D"         );
-  outTree_->Branch("W_eta",	      &Wboson_lep.eta,    "W_eta/D"        );
-  outTree_->Branch("W_phi",	      &Wboson_lep.phi,    "W_phi/D"        );
-  outTree_->Branch("W_mass",      &Wboson_lep.mass,   "W_mass/D"       );
-  outTree_->Branch("W_mt",	      &Wboson_lep.mt,     "W_mt/D"         );
+//  outTree_->Branch("W_eta",	      &Wboson_lep.eta,    "W_eta/D"        );
+//  outTree_->Branch("W_phi",	      &Wboson_lep.phi,    "W_phi/D"        );
+//  outTree_->Branch("W_mass",      &Wboson_lep.mass,   "W_mass/D"       );
+//  outTree_->Branch("W_mt",	      &Wboson_lep.mt,     "W_mt/D"         );
 
   if (isMC){
     //pt
@@ -468,16 +468,16 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   } 
 
   
-  outTree_->Branch("charge_W_lep",    &Wboson_lep.charge, "charge_W_lep/D"     );
+//  outTree_->Branch("charge_W_lep",    &Wboson_lep.charge, "charge_W_lep/D"     );
     
-  outTree_->Branch("N_lep_W",	      &N_lep_W,		  "N_lep_W/I"          );
+//  outTree_->Branch("N_lep_W",	      &N_lep_W,		  "N_lep_W/I"          );
   
-  outTree_->Branch("N_had_W_gen",     &N_had_Wgen,	  "N_had_W_gen/I"      );
-  outTree_->Branch("N_lep_W_gen",     &N_lep_Wgen, 	  "N_lep_W_gen/I"      );
+//  outTree_->Branch("N_had_W_gen",     &N_had_Wgen,	  "N_had_W_gen/I"      );
+//  outTree_->Branch("N_lep_W_gen",     &N_lep_Wgen, 	  "N_lep_W_gen/I"      );
 
   //MET observables  
   outTree_->Branch("pfMET", 	      &METCand.pt, 	  "pfMET/D"              );
-  outTree_->Branch("pfMETPhi",	      &METCand.phi, 	  "pfMETPhi/D"          );
+//  outTree_->Branch("pfMETPhi",	      &METCand.phi, 	  "pfMETPhi/D"          );
   
 
   if (isMC) {
@@ -512,7 +512,7 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
   }
   /// Other observables
   outTree_->Branch("deltaR_LeptonWJet",  &deltaR_LeptonWJet,	  "deltaR_LeptonWJet/D"   );
-  outTree_->Branch("deltaPhi_LeptonMet", &deltaPhi_LeptonMet,	  "deltaPhi_LeptonMet/D"  );
+//  outTree_->Branch("deltaPhi_LeptonMet", &deltaPhi_LeptonMet,	  "deltaPhi_LeptonMet/D"  );
   outTree_->Branch("deltaPhi_WJetMet",&deltaPhi_WJetMet,  "deltaPhi_WJetMet/D" );
   outTree_->Branch("deltaPhi_WJetWlep",&deltaPhi_WJetWlep,  "deltaPhi_WJetWlep/D" );
   if (isMC){
@@ -553,30 +553,30 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
     outTree_->Branch("deltaPhi_WJetWlep_LeptonEnDown", &deltaPhi_WJetWlep_LeptonEnDown,   "deltaPhi_WJetWlep_LeptonEnDown/D"  );
   }
   //Jet observables
-  outTree_->Branch("NAK8jet",            &NAK8jet,              "NAK8jet/I"   );
+//  outTree_->Branch("NAK8jet",            &NAK8jet,              "NAK8jet/I"   );
   outTree_->Branch("jet_pt",  	      &jet_pt,	  	  "jet_pt/D"   );
-  outTree_->Branch("jet_eta",  	      &jet_eta,	  	  "jet_eta/D"   );
-  outTree_->Branch("jet_phi",  	      &jet_phi,	  	  "jet_phi/D"   );
-  outTree_->Branch("jet_mass",         &jet_mass,       "jet_mass/D"   );
-  outTree_->Branch("Mjpruned", &jet_mass_pruned,	  "Mjpruned/D"   );
-  outTree_->Branch("jet_mass_softdrop",&jet_mass_softdrop,"jet_mass_softdrop/D"   );
-  outTree_->Branch("jet_tau2tau1",    &jet_tau2tau1,	  "jet_tau2tau1/D"   );
-  outTree_->Branch("jet_tau3tau2",    &jet_tau3tau2,    "jet_tau3tau2/D"   );
-  outTree_->Branch("jet_tau1",    &jet_tau1,    "jet_tau1/D"   );
-  outTree_->Branch("jet_tau2",    &jet_tau2,    "jet_tau2/D"   );
-  outTree_->Branch("jet_tau3",    &jet_tau3,    "jet_tau3/D"   );
+//  outTree_->Branch("jet_eta",  	      &jet_eta,	  	  "jet_eta/D"   );
+//  outTree_->Branch("jet_phi",  	      &jet_phi,	  	  "jet_phi/D"   );
+//  outTree_->Branch("jet_mass",         &jet_mass,       "jet_mass/D"   );
+//  outTree_->Branch("Mjpruned", &jet_mass_pruned,	  "Mjpruned/D"   );
+//  outTree_->Branch("jet_mass_softdrop",&jet_mass_softdrop,"jet_mass_softdrop/D"   );
+//  outTree_->Branch("jet_tau2tau1",    &jet_tau2tau1,	  "jet_tau2tau1/D"   );
+//  outTree_->Branch("jet_tau3tau2",    &jet_tau3tau2,    "jet_tau3tau2/D"   );
+//  outTree_->Branch("jet_tau1",    &jet_tau1,    "jet_tau1/D"   );
+//  outTree_->Branch("jet_tau2",    &jet_tau2,    "jet_tau2/D"   );
+//  outTree_->Branch("jet_tau3",    &jet_tau3,    "jet_tau3/D"   );
   //PUPPI variables
-  outTree_->Branch("jet_pt_PUPPI",    &jet_pt_PUPPI,    "jet_pt_PUPPI/D"   );
-  outTree_->Branch("jet_eta_PUPPI",    &jet_eta_PUPPI,    "jet_eta_PUPPI/D"   );
-  outTree_->Branch("jet_phi_PUPPI",    &jet_phi_PUPPI,    "jet_phi_PUPPI/D"   );
-  outTree_->Branch("jet_mass_PUPPI",    &jet_mass_PUPPI,    "jet_mass_PUPPI/D"   );
-  outTree_->Branch("jet_tau1_PUPPI",    &jet_tau1_PUPPI,    "jet_tau1_PUPPI/D"   );
-  outTree_->Branch("jet_tau2_PUPPI",    &jet_tau2_PUPPI,    "jet_tau2_PUPPI/D"   );
-  outTree_->Branch("jet_tau3_PUPPI",    &jet_tau3_PUPPI,    "jet_tau3_PUPPI/D"   );
+//  outTree_->Branch("jet_pt_PUPPI",    &jet_pt_PUPPI,    "jet_pt_PUPPI/D"   );
+//  outTree_->Branch("jet_eta_PUPPI",    &jet_eta_PUPPI,    "jet_eta_PUPPI/D"   );
+//  outTree_->Branch("jet_phi_PUPPI",    &jet_phi_PUPPI,    "jet_phi_PUPPI/D"   );
+//  outTree_->Branch("jet_mass_PUPPI",    &jet_mass_PUPPI,    "jet_mass_PUPPI/D"   );
+//  outTree_->Branch("jet_tau1_PUPPI",    &jet_tau1_PUPPI,    "jet_tau1_PUPPI/D"   );
+//  outTree_->Branch("jet_tau2_PUPPI",    &jet_tau2_PUPPI,    "jet_tau2_PUPPI/D"   );
+//  outTree_->Branch("jet_tau3_PUPPI",    &jet_tau3_PUPPI,    "jet_tau3_PUPPI/D"   );
   outTree_->Branch("jet_tau21_PUPPI",    &jet_tau21_PUPPI,    "jet_tau21_PUPPI/D"   );
-  outTree_->Branch("jet_tau32_PUPPI",    &jet_tau32_PUPPI,    "jet_tau32_PUPPI/D"   );
+//  outTree_->Branch("jet_tau32_PUPPI",    &jet_tau32_PUPPI,    "jet_tau32_PUPPI/D"   );
   outTree_->Branch("jet_mass_softdrop_PUPPI",    &jet_mass_softdrop_PUPPI,    "jet_mass_softdrop_PUPPI/D"   );
-  outTree_->Branch("jet_tau21_DT",    &jet_tau21_DT,    "jet_tau21_DT/D"   );
+//  outTree_->Branch("jet_tau21_DT",    &jet_tau21_DT,    "jet_tau21_DT/D"   );
   
   if (isMC) {
      //JEC uncertainties
@@ -620,10 +620,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
     outTree_ -> Branch("BgenjetStatus43_mass",  &BgenjetStatus43_mass); 
     outTree_ -> Branch("BgenjetStatus43_motherPDGID",  &BgenjetStatus43_motherPDGID); 
   }
-  outTree_->Branch("njets",         &njets,           "njets/I"   );
+//  outTree_->Branch("njets",         &njets,           "njets/I"   );
   outTree_->Branch("nbtag",         &nbtag,           "nbtag/I"   );
-  outTree_->Branch("nbtagMedium",         &nbtagMedium,           "nbtagMedium/I"   );
-  outTree_->Branch("nbtagLoose",         &nbtagLoose,           "nbtagLoose/I"   );
+//  outTree_->Branch("nbtagMedium",         &nbtagMedium,           "nbtagMedium/I"   );
+//  outTree_->Branch("nbtagLoose",         &nbtagLoose,           "nbtagLoose/I"   );
 
   if (isMC) {
     outTree_->Branch("njets_JERUp",         &njets_JERUp,           "njets_JERUp/I"   );
@@ -640,12 +640,12 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
 
   }
   
-  outTree_->Branch("jet2_pt",  	      &jet2_pt,	          "jet2_pt/D"   );
-  outTree_->Branch("jet2_btag",       &jet2_btag,         "jet2_btag/D"   );
-  outTree_->Branch("jet3_pt",  	      &jet3_pt,	          "jet3_pt/D"   );
-  outTree_->Branch("jet3_btag",	      &jet3_btag,         "jet3_btag/D"   );
+//  outTree_->Branch("jet2_pt",  	      &jet2_pt,	          "jet2_pt/D"   );
+//  outTree_->Branch("jet2_btag",       &jet2_btag,         "jet2_btag/D"   );
+//  outTree_->Branch("jet3_pt",  	      &jet3_pt,	          "jet3_pt/D"   );
+//  outTree_->Branch("jet3_btag",	      &jet3_btag,         "jet3_btag/D"   );
   
-  outTree_->Branch("MWW",       &m_lvj,         "MWW/D"   );
+//  outTree_->Branch("MWW",       &m_lvj,         "MWW/D"   );
   outTree_->Branch("MWW_SD",	      &m_lvj_SD,         "MWW_SD/D"   );
   if (isMC) {
     outTree_->Branch("MWW_UnclEnUp",       &m_lvj_UnclEnUp,         "MWW_UnclEnUp/D"   );

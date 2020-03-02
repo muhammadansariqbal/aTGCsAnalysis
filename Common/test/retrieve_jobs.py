@@ -45,7 +45,7 @@ def RetrieveTask(taskName, outputFileName, outDir):
 
 
 TaskDictionaryNameUnordered = [
-	("ttbar-powheg", "ttbar"),
+#	("ttbar-powheg", "ttbar"),
 
 #	("WJets_HT-100To200","WJets_Ht100To200"),
 #	("WJets_HT-100To200-ext1","WJets_Ht100To200-ext1"),
@@ -72,46 +72,52 @@ TaskDictionaryNameUnordered = [
 
 #	("ZJets","ZJets"),
 
-	("WJets_Pt-100To250","WJets_Pt100To250"),
-	("WJets_Pt-100To250-ext1","WJets_Pt100To250-ext1"),
-	("WJets_Pt-100To250-ext4","WJets_Pt100To250-ext4"),
+#	("WJets_Pt-100To250","WJets_Pt100To250"),
+#	("WJets_Pt-100To250-ext1","WJets_Pt100To250-ext1"),
+#	("WJets_Pt-100To250-ext4","WJets_Pt100To250-ext4"),
 
-	("WJets_Pt-250To400","WJets_Pt250To400"),
-	("WJets_Pt-250To400-ext1","WJets_Pt250To400-ext1"),
-	("WJets_Pt-250To400-ext4","WJets_Pt250To400-ext4"),
+#	("WJets_Pt-250To400","WJets_Pt250To400"),
+#	("WJets_Pt-250To400-ext1","WJets_Pt250To400-ext1"),
+#	("WJets_Pt-250To400-ext4","WJets_Pt250To400-ext4"),
 
-	("WJets_Pt-400To600","WJets_Pt400To600"),
-	("WJets_Pt-400To600-ext1","WJets_Pt400To600-ext1"),
+#	("WJets_Pt-400To600","WJets_Pt400To600"),
+#	("WJets_Pt-400To600-ext1","WJets_Pt400To600-ext1"),
 
-	("WJets_Pt-600ToInf","WJets_Pt600ToInf"),
-	("WJets_Pt-600ToInf-ext1","WJets_Pt600ToInf-ext1"),
+#	("WJets_Pt-600ToInf","WJets_Pt600ToInf"),
+#	("WJets_Pt-600ToInf-ext1","WJets_Pt600ToInf-ext1"),
 
-	("WW","WW"),
-	("WW-ext","WW-ext"),
+#	("WW","WW"),
+#	("WW-ext","WW-ext"),
 
-	("WZ","WZ"),
+#	("WZ","WZ"),
 
-	("SingleTop-t-channel-top","t-ch-top"),
-	("SingleTop-t-channel-antitop","t-ch-antitop"),
+#	("SingleTop-t-channel-top","t-ch-top"),
+#	("SingleTop-t-channel-antitop","t-ch-antitop"),
 
-	("SingleTop-s-channel","s-ch"),
+#	("SingleTop-s-channel","s-ch"),
 
-	("SingleTop-tW-channel-top","tW-ch-top"),
-	("SingleTop-tW-channel-antitop","tW-ch-antitop"),
+#	("SingleTop-tW-channel-top","tW-ch-top"),
+#	("SingleTop-tW-channel-antitop","tW-ch-antitop"),
 
-	("WW-signal_MWW-600To800","WW-aTGC_MWW-600To800"),
-	("WW-signal_MWW-800ToInf","WW-aTGC_MWW-800ToInf"),
-	("WZ-signal_MWZ-600To800","WZ-aTGC_MWZ-600To800"),
-	("WZ-signal_MWZ-800ToInf","WZ-aTGC_MWZ-800ToInf"),
+#	("WW-signal_MWW-600To800","WW-aTGC_MWW-600To800"),
+#	("WW-signal_MWW-800ToInf","WW-aTGC_MWW-800ToInf"),
+#	("WZ-signal_MWZ-600To800","WZ-aTGC_MWZ-600To800"),
+#	("WZ-signal_MWZ-800ToInf","WZ-aTGC_MWZ-800ToInf"),
 
-	("data-RunB_ver2","data-RunB_ver2"),
+#	("data-RunB_ver2","data-RunB_ver2"),
+#	("data-RunC","data-RunC"),
+#	("data-RunD","data-RunD"),
+#	("data-RunE","data-RunE"),
+#	("data-RunF","data-RunF"),
+#	("data-RunG","data-RunG"),
+#	("data-RunH_ver2","data-RunH_ver2"),
+#	("data-RunH_ver3","data-RunH_ver3")
+
+	("data-RunB","data-RunB"),
 	("data-RunC","data-RunC"),
 	("data-RunD","data-RunD"),
 	("data-RunE","data-RunE"),
-	("data-RunF","data-RunF"),
-	("data-RunG","data-RunG"),
-	("data-RunH_ver2","data-RunH_ver2"),
-	("data-RunH_ver3","data-RunH_ver3")
+	("data-RunF","data-RunF")
 ]
 
 TaskDictionaryName=collections.OrderedDict(TaskDictionaryNameUnordered)
@@ -125,4 +131,4 @@ def Retrieval(feature, outDir):
 		RetrieveTask(TaskName + "_ele_" + feature, OutName + "_ele", outDir )
 
 if __name__ == '__main__':
-	Retrieval("my_feature", "/afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Working/" )
+	Retrieval("my_feature", "/afs/cern.ch/work/m/maiqbal/private/aTGC/Samples_80X_Data17/" )

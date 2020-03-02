@@ -9,18 +9,20 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	vector <Var> variables;
 	Var var;
 	var.logscale = false;
-	var.VarName = "Mjpruned";
+	var.nBins=30;
+
+	/*var.VarName = "Mjpruned";
 	var.Title = "m_{jet pruned}";
 	var.SetRange(40., 200.);
 	var.nBins=30;
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "jet_tau21_PUPPI";
 	var.Title = "#tau_{21}";
 	var.SetRange(0., 0.9);
 	variables.push_back(var);
 
-	var.VarName = "jet_tau32_PUPPI";
+	/*var.VarName = "jet_tau32_PUPPI";
 	var.Title = "#tau_{32} PUPPI";
 	var.SetRange(0., 1.);
 	variables.push_back(var);
@@ -33,7 +35,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	var.VarName = "jet_tau3tau2";
 	var.Title = "#tau_{32}";
 	var.SetRange(0., 1.);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "MWW_SD";
 	var.Title = "m_{WV} (GeV)";
@@ -43,7 +45,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 
 	var.logscale = false;
 
-	var.VarName = "nPV";
+	/*var.VarName = "nPV";
 	var.Title = "n_{PV}";
 	var.SetRange(0., 75.);
 	var.nBins=25;
@@ -63,14 +65,14 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	var.VarName = "l_phi";
 	var.Title = "#phi_{lepton}";
 	var.SetRange(-3.5, 3.5);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "jet_pt";
 	var.Title = "p_{T, jet}";
 	var.SetRange(200., 1000.);
 	variables.push_back(var);
 
-	var.VarName = "jet2_pt";
+	/*var.VarName = "jet2_pt";
 	var.Title = "p_{T, jet}";
 	var.SetRange(30., 200.);
 	variables.push_back(var);
@@ -88,14 +90,14 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	var.VarName = "jet_phi";
 	var.Title = "#phi_{lepton}";
 	var.SetRange(-3.5, 3.5);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "W_pt";
 	var.Title = "p_{T, W}";
 	var.SetRange(60., 1000.);
 	variables.push_back(var);
 
-	var.VarName = "W_eta";
+	/*var.VarName = "W_eta";
 	var.Title = "#eta_{W}";
 	var.SetRange(-3., 3.);
 	variables.push_back(var);
@@ -116,34 +118,34 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	var.VarName = "W_mt";
 	var.Title = "m_{T, W lep}";
 	var.SetRange(0., 1100.);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "pfMET";
 	var.Title = "MET";
 	var.SetRange(0., 900.);
 	variables.push_back(var);
 
-	var.VarName = "pfMETPhi";
+	/*var.VarName = "pfMETPhi";
 	var.Title = "#phi(MET)";
 	var.SetRange(-3.2, 3.2);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "jet_mass_softdrop_PUPPI";
 	var.Title = "m_{SD} (GeV)";
 	var.SetRange(40., 150.);
 	variables.push_back(var);
 
-	var.VarName = "njets";
+	/*var.VarName = "njets";
 	var.Title = "n_{jets}";
 	var.SetRange(0., 6.);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "nbtag";
 	var.Title = "n_{btag}";
 	var.SetRange(0., 6.);
 	variables.push_back(var);
 
-	var.VarName = "nLooseEle";
+	/*var.VarName = "nLooseEle";
 	var.Title = "nLooseEle";
 	var.SetRange(0., 2.);
 	variables.push_back(var);
@@ -167,17 +169,17 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	var.VarName = "charge_W_lep";
 	var.Title = "charge(W lep)";
 	var.SetRange(-2., 2.);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "deltaR_LeptonWJet";
 	var.Title = "#DeltaR(Lep, WJet)";
 	var.SetRange(0., 7.);
 	variables.push_back(var);
 
-	var.VarName = "deltaPhi_LeptonMet";
+	/*var.VarName = "deltaPhi_LeptonMet";
 	var.Title = "#Delta#phi(Lep, MET)";
 	var.SetRange(-3.2, 3.2);
-	variables.push_back(var);
+	variables.push_back(var);*/
 
 	var.VarName = "deltaPhi_WJetMet";
 	var.Title = "#Delta#phi(WJet, MET)";
@@ -204,8 +206,8 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 
 	
 	string defaulCuts = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 150. && jet_mass_softdrop_PUPPI > 40. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900.";
-	if (channel == "ele") defaulCuts += " && l_pt > 50. && pfMET > 110. )"; 
-	else if (channel == "mu") defaulCuts += " && l_pt > 50. && pfMET > 40. )"; 
+	if (channel == "ele") defaulCuts += " && pfMET > 110. )"; 
+	else if (channel == "mu") defaulCuts += " && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
 		exit(0);
@@ -214,40 +216,40 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
         string addOnCutTtbar = defaulCuts +  " * (nbtag > 0 )";
 
 	string signalRegion = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 105. && jet_mass_softdrop_PUPPI > 65. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0";
-	if (channel == "ele") signalRegion += " && l_pt > 50. && pfMET > 110. )"; 
-	else if (channel == "mu") signalRegion += " && l_pt > 50. && pfMET > 40. )"; 
+	if (channel == "ele") signalRegion += " && pfMET > 110. )"; 
+	else if (channel == "mu") signalRegion += " && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
 		exit(0);
 	}
 
 	string signalWWRegion = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 85. && jet_mass_softdrop_PUPPI > 65. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0";
-	if (channel == "ele") signalWWRegion += " && l_pt > 50. && pfMET > 110. )";
-        else if (channel == "mu") signalWWRegion += " && l_pt > 50. && pfMET > 40. )";
+	if (channel == "ele") signalWWRegion += " && pfMET > 110. )";
+        else if (channel == "mu") signalWWRegion += " && pfMET > 40. )";
         else {
                 std::cerr << "Invalid channel used, use ele or mu" << std::endl;
                 exit(0);
         }
 
 	string signalWZRegion = "(jet_pt > 200. && jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 105. && jet_mass_softdrop_PUPPI > 85. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0";
-	if (channel == "ele") signalWZRegion += " && l_pt > 50. && pfMET >110. )";
-        else if (channel == "mu") signalWZRegion += " && l_pt > 50. && pfMET > 40. )";
+	if (channel == "ele") signalWZRegion += " && pfMET >110. )";
+        else if (channel == "mu") signalWZRegion += " && pfMET > 40. )";
         else {
                 std::cerr << "Invalid channel used, use ele or mu" << std::endl;
                 exit(0);
         }
 
 	string TTBarEnrichedInclusive = "(jet_pt > 200.  &&  jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 200. && jet_mass_softdrop_PUPPI > 40. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. ";
-	if (channel == "ele") TTBarEnrichedInclusive += " && l_pt > 50. && pfMET > 110. )"; 
-	else if (channel == "mu") TTBarEnrichedInclusive += " && l_pt > 50. && pfMET > 40. )"; 
+	if (channel == "ele") TTBarEnrichedInclusive += " && pfMET > 110. )"; 
+	else if (channel == "mu") TTBarEnrichedInclusive += " && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
 		exit(0);
 	}
 
 	string TTBarEnrichedBTagVeto = "(jet_pt > 200.  &&  jet_tau21_PUPPI < 0.55  && jet_mass_softdrop_PUPPI < 200. && jet_mass_softdrop_PUPPI > 40. && W_pt > 200.  && abs(deltaR_LeptonWJet) > pi/2. && abs(deltaPhi_WJetMet) > 2. && abs(deltaPhi_WJetWlep) > 2. && MWW_SD > 900. && nbtag == 0 ";
-	if (channel == "ele") TTBarEnrichedBTagVeto += " && l_pt > 50. && pfMET > 110. )"; 
-	else if (channel == "mu") TTBarEnrichedBTagVeto += " && l_pt > 50. && pfMET > 40. )"; 
+	if (channel == "ele") TTBarEnrichedBTagVeto += " && pfMET > 110. )"; 
+	else if (channel == "mu") TTBarEnrichedBTagVeto += " && pfMET > 40. )"; 
 	else {
 		std::cerr << "Invalid channel used, use ele or mu" << std::endl;
 		exit(0);
@@ -309,6 +311,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	 */
 	
 	Sample s, dataSample, signalSample;
+	double scaleLumi = 41.5 / 35.9;
 	
 	s.SetParameters("W+jets", MCSelection, kGreen+1);
  	/*s.SetFileNames(prefix + "WJets_Ht100To200_" + channel + ".root");
@@ -330,21 +333,25 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	s.SetFileNames(prefix + "WJets_Pt250To400_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt400To600_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt600ToInf_" + channel + ".root");
+	s.weight=scaleLumi;
 	samples.push_back(s);
 	s.ReSet();
 
 	s.SetParameters("t#bar{t}", MCSelection, kOrange);
  	s.SetFileNames(prefix + "ttbar_" + channel + ".root");
+	s.weight=scaleLumi;
 	samples.push_back(s);
 	s.ReSet();
 
 	s.SetParameters("WW", MCSelection, kRed);
  	s.SetFileNames( prefix + "WW_"+ channel + ".root");
+	s.weight=scaleLumi;
 	samples.push_back(s);
 	s.ReSet();
 
 	s.SetParameters("WZ", MCSelection, kRed+2);
  	s.SetFileNames( prefix + "WZ_"+ channel + ".root");
+	s.weight=scaleLumi;
 	samples.push_back(s);
 	s.ReSet();
 
@@ -354,11 +361,12 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
         s.SetFileNames(prefix + "t-ch-top_" + channel + ".root");
         s.SetFileNames(prefix + "t-ch-antitop_" + channel + ".root");
         s.SetFileNames(prefix + "s-ch_" + channel + ".root");
+	s.weight=scaleLumi;
         samples.push_back(s);
         s.ReSet();
 
 	dataSample.SetParameters("data", DataSelection, kBlack);
- 	dataSample.SetFileNames(prefix + "data_" + channel + ".root");
+ 	dataSample.SetFileNames(prefix + "data17_" + channel + ".root");
 
  	signalSample.SetParameters("#splitline{madgraph EWDim6}{c_{WWW} = 12 TeV^{-2}}", SignalSelection, kRed);
  	signalSample.SetFileNames(prefix + "WW-aTGC_"+ channel + ".root");

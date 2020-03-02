@@ -403,7 +403,7 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
 //  outTree_->Branch("nLep",            &nLep, 	      "nLep/I"       );
   
   //leptons (tight, ele or mu depends on the channel)
-//  outTree_->Branch("l_pt",	      &Lepton.pt,      "l_pt/D"         	);
+    outTree_->Branch("l_pt",	      &Lepton.pt,      "l_pt/D"         	);
 //  outTree_->Branch("l_eta",	      &Lepton.eta,     "l_eta/D"        	);
 //  outTree_->Branch("l_phi",	      &Lepton.phi,     "l_phi/D"        	);
   //lepton uncertainties

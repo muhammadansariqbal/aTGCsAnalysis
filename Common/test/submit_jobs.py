@@ -265,6 +265,8 @@ SignalMCSampleDictionaryUnordered =[
 	('WZ-signal_MWZ-800ToInf','/WZToLNuQQ_MWZ-800_PtZ-180_aTGC_ShowerReconfig_13TeV-amcatnloFXFX-madspin-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/MINIAODSIM')
 ]
 
+# 2016
+
 #DataDictionaryMuonChannelUnordered = [
 #	('data-RunB_ver1','/SingleMuon/Run2016B-03Feb2017_ver1-v1/MINIAOD'),
 #	('data-RunB_ver2','/SingleMuon/Run2016B-03Feb2017_ver2-v2/MINIAOD'),
@@ -289,39 +291,43 @@ SignalMCSampleDictionaryUnordered =[
 #	('data-RunH_ver3','/SingleElectron/Run2016H-03Feb2017_ver3-v1/MINIAOD')
 #]
 
-DataDictionaryMuonChannelUnordered = [
-	('data-RunB','/SingleMuon/Run2017B-17Nov2017-v1/MINIAOD'),
-        ('data-RunC','/SingleMuon/Run2017C-17Nov2017-v1/MINIAOD'),
-        ('data-RunD','/SingleMuon/Run2017D-17Nov2017-v1/MINIAOD'),
-        ('data-RunE','/SingleMuon/Run2017E-17Nov2017-v1/MINIAOD'),
-        ('data-RunF','/SingleMuon/Run2017F-17Nov2017-v1/MINIAOD')
-]
-
-DataDictionaryElectronChannelUnordered = [
-        ('data-RunB','/SingleElectron/Run2017B-17Nov2017-v1/MINIAOD'),
-        ('data-RunC','/SingleElectron/Run2017C-17Nov2017-v1/MINIAOD'),
-        ('data-RunD','/SingleElectron/Run2017D-17Nov2017-v1/MINIAOD'),
-        ('data-RunE','/SingleElectron/Run2017E-17Nov2017-v1/MINIAOD'),
-        ('data-RunF','/SingleElectron/Run2017F-17Nov2017-v1/MINIAOD')
-]
+# 2017
 
 #DataDictionaryMuonChannelUnordered = [
-#        ('data-RunA','/SingleMuon/Run2018A-17Sep2018-v2/MINIAOD'),
-#        ('data-RunB','/SingleMuon/Run2018B-17Sep2018-v1/MINIAOD'),
-#        ('data-RunC','/SingleMuon/Run2018C-17Sep2018-v1/MINIAOD'),
-#        ('data-RunD','/SingleMuon/Run2018D-PromptReco-v2/MINIAOD'),
+#	('data-RunB','/SingleMuon/Run2017B-17Nov2017-v1/MINIAOD'),
+#	('data-RunC','/SingleMuon/Run2017C-17Nov2017-v1/MINIAOD'),
+#	('data-RunD','/SingleMuon/Run2017D-17Nov2017-v1/MINIAOD'),
+#	('data-RunE','/SingleMuon/Run2017E-17Nov2017-v1/MINIAOD'),
+#	('data-RunF','/SingleMuon/Run2017F-17Nov2017-v1/MINIAOD')
 #]
 
 #DataDictionaryElectronChannelUnordered = [
-#        ('data-RunA','/EGamma/Run2018A-17Sep2018-v2/MINIAOD'),
-#        ('data-RunB','/EGamma/Run2018B-17Sep2018-v1/MINIAOD'),
-#        ('data-RunC','/EGamma/Run2018C-17Sep2018-v1/MINIAOD'),
-#        ('data-RunD','/EGamma/Run2018D-PromptReco-v2/MINIAOD'),
+#	('data-RunB','/SingleElectron/Run2017B-17Nov2017-v1/MINIAOD'),
+#	('data-RunC','/SingleElectron/Run2017C-17Nov2017-v1/MINIAOD'),
+#	('data-RunD','/SingleElectron/Run2017D-17Nov2017-v1/MINIAOD'),
+#	('data-RunE','/SingleElectron/Run2017E-17Nov2017-v1/MINIAOD'),
+#	('data-RunF','/SingleElectron/Run2017F-17Nov2017-v1/MINIAOD')
 #]
+
+# 2018
+
+DataDictionaryMuonChannelUnordered = [
+	('data-RunA','/SingleMuon/Run2018A-17Sep2018-v2/MINIAOD'),
+	('data-RunB','/SingleMuon/Run2018B-17Sep2018-v1/MINIAOD'),
+	('data-RunC','/SingleMuon/Run2018C-17Sep2018-v1/MINIAOD'),
+	('data-RunD','/SingleMuon/Run2018D-PromptReco-v2/MINIAOD'),
+]
+
+DataDictionaryElectronChannelUnordered = [
+	('data-RunA','/EGamma/Run2018A-17Sep2018-v2/MINIAOD'),
+	('data-RunB','/EGamma/Run2018B-17Sep2018-v1/MINIAOD'),
+	('data-RunC','/EGamma/Run2018C-17Sep2018-v1/MINIAOD'),
+	('data-RunD','/EGamma/Run2018D-PromptReco-v2/MINIAOD'),
+]
 	
 #MyJSON = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt"
-MyJSON = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"
-#MyJSON = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"
+#MyJSON = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions17/13TeV/ReReco/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON.txt"
+MyJSON = "https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions18/13TeV/ReReco/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt"
 	
 MCBackgroundsSampleDictionary=collections.OrderedDict(MCBackgroundsSampleDictionaryUnordered)
 SignalMCSampleDictionary=collections.OrderedDict(SignalMCSampleDictionaryUnordered)

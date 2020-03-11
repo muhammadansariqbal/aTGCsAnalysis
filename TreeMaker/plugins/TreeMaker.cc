@@ -196,7 +196,7 @@ private:
 
   std::vector<double> PDFWeights;
   std::vector<double> ScaleWeights;
-  bool bit_HLT_Ele_27_tight, bit_HLT_Ele_45, bit_HLT_Ele_115, bit_HLT_Photon_175, bit_HLT_Ele_27_OR_45_OR_115;
+  bool bit_HLT_Ele_40_tight, bit_HLT_Ele_45, bit_HLT_Ele_115, bit_HLT_Photon_175, bit_HLT_Ele_27_OR_45_OR_115;
 
   //Defining Tokens
   edm::EDGetTokenT<std::vector< PileupSummaryInfo > > PUInfoToken_;
@@ -388,10 +388,10 @@ TreeMaker::TreeMaker(const edm::ParameterSet& iConfig):
      //outTree_->Branch("nuPz2", &nuPz2, "nuPz2/D");
    };
   if (channel == "el") {
-//    outTree_->Branch("bit_HLT_Ele_27_tight",       &bit_HLT_Ele_27_tight,     "bit_HLT_Ele_27_tight/B"          );
-    outTree_->Branch("bit_HLT_Ele_45",       &bit_HLT_Ele_45,     "bit_HLT_Ele_45/B"          );
+    outTree_->Branch("bit_HLT_Ele_40_tight",       &bit_HLT_Ele_40_tight,     "bit_HLT_Ele_40_tight/B"          );
+//  outTree_->Branch("bit_HLT_Ele_45",       &bit_HLT_Ele_45,     "bit_HLT_Ele_45/B"          );
     outTree_->Branch("bit_HLT_Ele_115",       &bit_HLT_Ele_115,     "bit_HLT_Ele_115/B"          );
-//    outTree_->Branch("bit_HLT_Photon_175",       &bit_HLT_Photon_175,     "bit_HLT_Photon_175/B"          );
+    outTree_->Branch("bit_HLT_Photon_175",       &bit_HLT_Photon_175,     "bit_HLT_Photon_175/B"          );
 //    outTree_->Branch("bit_HLT_Ele_27_OR_45_OR_115",       &bit_HLT_Ele_27_OR_45_OR_115,     "bit_HLT_Ele_27_OR_45_OR_115/B");
   }
   
@@ -1646,11 +1646,11 @@ TreeMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     edm::TriggerNames names = iEvent.triggerNames(*Triggers);
     for (unsigned int iTrig = 0; iTrig < Triggers -> size(); iTrig ++)
     {
-      if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele27_WPTight_Gsf_v") )  bit_HLT_Ele_27_tight =  Triggers -> accept(iTrig);
-      if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele45_WPLoose_Gsf_v") )  bit_HLT_Ele_45 =  Triggers -> accept(iTrig);
+      if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele40_WPTight_Gsf_v") )  bit_HLT_Ele_40_tight =  Triggers -> accept(iTrig);
+//    if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele45_WPLoose_Gsf_v") )  bit_HLT_Ele_45 =  Triggers -> accept(iTrig);
       if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Ele115_CaloIdVT_GsfTrkIdT_v") )  bit_HLT_Ele_115 =  Triggers -> accept(iTrig);
       if( boost::algorithm::contains(names.triggerName(iTrig), "HLT_Photon175_v") )  bit_HLT_Photon_175 =  Triggers -> accept(iTrig);
-      bit_HLT_Ele_27_OR_45_OR_115 = bit_HLT_Ele_27_tight || bit_HLT_Ele_45 || bit_HLT_Ele_115;
+//    bit_HLT_Ele_27_OR_45_OR_115 = bit_HLT_Ele_27_tight || bit_HLT_Ele_45 || bit_HLT_Ele_115;
     }
   }
 

@@ -8,7 +8,7 @@ TriggerMuon = cms.EDFilter("HLTHighLevel",
 				 )
 
 TriggerElectron = cms.EDFilter("HLTHighLevel",
-				  HLTPaths = cms.vstring("HLT_Ele45_WPLoose_Gsf_v*", "HLT_Ele115_CaloIdVT_GsfTrkIdT_v*", "HLT_Ele27_WPTight_Gsf_v*", "HLT_Photon175_v*"),
+				  HLTPaths = cms.vstring("HLT_Ele115_CaloIdVT_GsfTrkIdT_v*", "HLT_Ele40_WPTight_Gsf_v*", "HLT_Photon175_v*"),
 				  throw = cms.bool(False),
 				  TriggerResultsTag = cms.InputTag("TriggerResults", "", "HLT"),
 				  andOr = cms.bool(True), eventSetupPathsKey = cms.string("")#false = and-mode (all requested triggers), true = or-mode (at least one) 

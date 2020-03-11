@@ -15,4 +15,4 @@ $IsData$
 config.Data.publication = False
 config.section_("Site")
 #config.User.voGroup = 'dcms'
-config.Site.storageSite = 'T2_DE_DESY'
+config.Site.storageSite = 'T2_DE_RWTH'

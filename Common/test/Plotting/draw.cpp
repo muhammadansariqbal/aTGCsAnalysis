@@ -44,9 +44,9 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	var.logscale = false;
 
 	var.VarName = "nPV";
-	var.Title = "n_{PV}";
-	var.SetRange(0., 75.);
-	var.nBins=25;
+	var.Title = "Number of pileup interactions";
+	var.SetRange(0., 60.);
+	var.nBins=30;
 	variables.push_back(var);
 	var.nBins=30;
 	
@@ -309,6 +309,11 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	 */
 	
 	Sample s, dataSample, signalSample;
+	bool usePostfitSFWJets = true;
+	bool usePostfitSFOthers = true;
+	double eleSF[4] = {1.25, 0.76, 0.85, 0.89};
+	double muSF[4] = {1.08, 0.75, 0.84, 0.88};
+	
 	
 	s.SetParameters("W+jets", MCSelection, kGreen+1);
  	/*s.SetFileNames(prefix + "WJets_Ht100To200_" + channel + ".root");
@@ -325,7 +330,8 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
  	//	std::cerr << "Wrong channel, use ele or mu" << std::endl;
  	//	exit(0);
  	//}
- 	//s.weight=1.1;
+ 	if (usePostfitSFWJets && channel == "ele") s.weight = eleSF[0];
+	else if (usePostfitSFWJets && channel == "mu") s.weight = muSF[0];
 	s.SetFileNames(prefix + "WJets_Pt100To250_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt250To400_" + channel + ".root");
 	s.SetFileNames(prefix + "WJets_Pt400To600_" + channel + ".root");
@@ -334,21 +340,29 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	s.ReSet();
 
 	s.SetParameters("t#bar{t}", MCSelection, kOrange);
+	if (usePostfitSFOthers && channel == "ele") s.weight = eleSF[1];
+        else if (usePostfitSFOthers && channel == "mu") s.weight = muSF[1];
  	s.SetFileNames(prefix + "ttbar_" + channel + ".root");
 	samples.push_back(s);
 	s.ReSet();
 
 	s.SetParameters("WW", MCSelection, kRed);
+	if (usePostfitSFOthers && channel == "ele") s.weight = eleSF[2];
+        else if (usePostfitSFOthers && channel == "mu") s.weight = muSF[2];
  	s.SetFileNames( prefix + "WW_"+ channel + ".root");
 	samples.push_back(s);
 	s.ReSet();
 
 	s.SetParameters("WZ", MCSelection, kRed+2);
+	if (usePostfitSFOthers && channel == "ele") s.weight = eleSF[2];
+        else if (usePostfitSFOthers && channel == "mu") s.weight = muSF[2];
  	s.SetFileNames( prefix + "WZ_"+ channel + ".root");
 	samples.push_back(s);
 	s.ReSet();
 
 	s.SetParameters("Single t", MCSelection, kBlue);
+	if (usePostfitSFOthers && channel == "ele") s.weight = eleSF[3];
+        else if (usePostfitSFOthers && channel == "mu") s.weight = muSF[3];
         s.SetFileNames(prefix + "tW-ch-top_" + channel + ".root");
         s.SetFileNames(prefix + "tW-ch-antitop_" + channel + ".root");
         s.SetFileNames(prefix + "t-ch-top_" + channel + ".root");
@@ -456,10 +470,10 @@ int main(int argc, char* argv[]){
     if(vm.count("wantToWriteHists")) wantToWriteHists = true;
     else wantToWriteHists = false;
 
-    if(withData && vm["CR"].as<std::string>() == "signal"){
+    /*if(withData && vm["CR"].as<std::string>() == "signal"){
     	std::cerr << "You are blinded, dude" << std::endl;
     	return 0;
-    }
+    }*/
 
    	draw(vm["channel"].as<std::string>(), vm["CR"].as<std::string>(), vm["output"].as<std::string>(), vm["input"].as<std::string>(), withData, withMC, withSystematics, withSignal, wantToWriteHists);
 }

@@ -11,10 +11,10 @@ Usage:
 
 """
 
+from __future__ import print_function
 import ROOT
 import sys
 import os
-from __future__ import print_function
 
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 ROOT.gROOT.SetBatch(1)
@@ -33,22 +33,23 @@ def make_eff_plots(filename):
     stem = os.path.splitext(os.path.abspath(filename))[0]
     name = os.path.basename(filename)
     name = name.replace("eff_", "").replace("sum_", "")
+    name = name.replace("ttbar", "t#bar{t}").replace("WJets", "W+jets").replace("SingleTop", "t")
     name = name.replace(".root", "")
     name = name.replace("_udsg", "").replace("_c", "").replace("_b", "")
-    name = name.replace("_mu", " (mu channel)").replace("_ele", " (e channel)")
+    name = name.replace("_mu", " (#mu channel)").replace("_ele", " (e channel)")
     name = name.replace("-", " ")
 
     c = ROOT.TCanvas("c", "", 800, 600)
-    eff_b.SetTitle(name +", b efficiency;p_{T} [GeV];#eta")
+    eff_b.SetTitle(name +", b efficiency;p_{T} (GeV);#eta")
     eff_b.Draw("COLZ TEXT89E")
     c.SetLogx()
     c.SaveAs(stem+"_eff_b.pdf")
 
-    eff_c.SetTitle(name +", c efficiency;p_{T} [GeV];#eta")
+    eff_c.SetTitle(name +", c efficiency;p_{T} (GeV);#eta")
     eff_c.Draw("COLZ TEXT89E")
     c.SaveAs(stem+"_eff_c.pdf")
 
-    eff_udsg.SetTitle(name + ", udsg efficiency;p_{T} [GeV];#eta")
+    eff_udsg.SetTitle(name + ", udsg efficiency;p_{T} (GeV);#eta")
     eff_udsg.Draw("COLZ TEXT89E")
     c.SaveAs(stem+"_eff_udsg.pdf")
     f.Close()

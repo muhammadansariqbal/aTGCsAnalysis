@@ -40,17 +40,24 @@ def make_eff_plots(filename):
     name = name.replace("-", " ")
 
     c = ROOT.TCanvas("c", "", 800, 600)
-    eff_b.SetTitle(name +", b efficiency;p_{T} (GeV);#eta")
+    #eff_b.SetTitle(name +", b efficiency;p_{T} (GeV); #eta")
+    eff_b.SetTitle(name +", b efficiency; ; ")
     eff_b.Draw("COLZ TEXT89E")
     c.SetLogx()
+    axisTitleX = ROOT.TLatex(0.7,0.03, "#bf{p_{T} (GeV)}"); axisTitleX.SetNDC(); axisTitleX.SetTextSize(0.06); axisTitleX.Draw("SAME")
+    axisTitleY = ROOT.TLatex(0.06,0.87, "#bf{#eta}"); axisTitleY.SetNDC(); axisTitleY.SetTextSize(0.06); axisTitleY.SetTextAngle(90); axisTitleY.Draw("SAME")
     c.SaveAs(stem+"_eff_b.pdf")
 
-    eff_c.SetTitle(name +", c efficiency;p_{T} (GeV);#eta")
+    eff_c.SetTitle(name +", c efficiency; ; ")
     eff_c.Draw("COLZ TEXT89E")
+    axisTitleX = ROOT.TLatex(0.7,0.03, "#bf{p_{T} (GeV)}"); axisTitleX.SetNDC(); axisTitleX.SetTextSize(0.06); axisTitleX.Draw("SAME")
+    axisTitleY = ROOT.TLatex(0.06,0.87, "#bf{#eta}"); axisTitleY.SetNDC(); axisTitleY.SetTextSize(0.06); axisTitleY.SetTextAngle(90); axisTitleY.Draw("SAME")
     c.SaveAs(stem+"_eff_c.pdf")
 
-    eff_udsg.SetTitle(name + ", udsg efficiency;p_{T} (GeV);#eta")
+    eff_udsg.SetTitle(name + ", udsg efficiency; ; ")
     eff_udsg.Draw("COLZ TEXT89E")
+    axisTitleX = ROOT.TLatex(0.7,0.03, "#bf{p_{T} (GeV)}"); axisTitleX.SetNDC(); axisTitleX.SetTextSize(0.06); axisTitleX.Draw("SAME")
+    axisTitleY = ROOT.TLatex(0.06,0.87, "#bf{#eta}"); axisTitleY.SetNDC(); axisTitleY.SetTextSize(0.06); axisTitleY.SetTextAngle(90); axisTitleY.Draw("SAME")
     c.SaveAs(stem+"_eff_udsg.pdf")
     f.Close()
 

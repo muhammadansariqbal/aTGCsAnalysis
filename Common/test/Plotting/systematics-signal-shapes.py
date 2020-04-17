@@ -272,21 +272,23 @@ def main(options):
 	else : 
 		print table.to_latex()
 	tdrstyle.setTDRStyle()
-	canvas = TCanvas("canvas","canvas",1200,800)
+
+	pads = []
+	canvas = TCanvas("canvas","canvas",800,640)
 	canvas.SetLogy()
 
 	low = 900.
 	high = 4500.
 	step = (high - low)/100
 	for iATGC in POI:
-		legend = TLegend(0.65,0.6,0.9,0.75)
+		legend = TLegend(0.6,0.7,0.89,0.9)
 		legend.SetFillColor(kWhite)
-		if options.ch == "ele":
-			legend.SetHeader(options.cat + " , electron channel")
-		elif options.ch == "mu" :
-			legend.SetHeader(options.cat + " , muon channel")
-		else :
-			raise RuntimeError('channel not supported!')
+		#if options.ch == "ele":
+		#	legend.SetHeader(options.cat + " , electron channel")
+		#elif options.ch == "mu" :
+		#	legend.SetHeader(options.cat + " , muon channel")
+		#else :
+		#	raise RuntimeError('channel not supported!')
 		integral = (math.exp(high*NominalValues["a_quad_" + iATGC + "_" + options.cat + "_" + options.ch ]) - math.exp(low*NominalValues["a_quad_"+ iATGC +"_"+ options.cat +"_"+ options.ch ]))/NominalValues["a_quad_" + iATGC + "_" + options.cat + "_" + options.ch ]
 
 		ValueUp = NominalValues["a_quad_"+ iATGC +"_"+ options.cat +"_"+ options.ch] + UncertaintiesUp["a_quad_"+ iATGC +"_"+ options.cat +"_"+ options.ch]
@@ -306,19 +308,16 @@ def main(options):
 			mass += step
 			sum_ += pow(integral,-1)*math.exp(NominalValues["a_quad_"+ iATGC +"_"+ options.cat +"_"+ options.ch]*mass)*step
 			iMass += 1
-		graph.SetFillStyle(3010)
-		graph.GetXaxis().SetTitle("m_{WV}")
-		graph.GetYaxis().SetTitle("arb. units")
+		graph.SetFillStyle(3002)
+		graph.GetXaxis().SetTitle("m_{WV} (GeV)")
+		graph.GetYaxis().SetTitle("Arbitrary units")
 		graph.GetYaxis().SetRangeUser(7e-5,1.5e-3)
 		graph.SetLineWidth(4)
 		graph.SetLineColor(kRed)
-		if iATGC=='cwww':
-			legend.AddEntry(graph, "#frac{c_{WWW}}{#Lambda^{2}}","l")
-		elif iATGC=='ccw':
-			legend.AddEntry(graph, "#frac{c_{W}}{#Lambda^{2}}","l")
-		elif iATGC=='cb':
-                        legend.AddEntry(graph, "#frac{c_{B}}{#Lambda^{2}}","l")
 		graph.Draw("AL3")
+		graphGhost = TGraphAsymmErrors()
+		graphGhost.SetFillStyle(3002)
+		graphGhost.Draw("SAME")
 		hist_ = fileWithHists.Get('signalPositive_%s'%iATGC)
 		hist_.Scale(0.5)
 		histNeg_ = fileWithHists.Get('signalNegative_%s'%iATGC)
@@ -333,12 +332,46 @@ def main(options):
 			if(hist_.GetBinCenter(iBin)<=3000):
 				graphMC.SetPoint(iBin, hist_.GetBinCenter(iBin),hist_.GetBinContent(iBin) )
 		graphMC.SetMarkerColor(kBlue)
-		legend.AddEntry(graphMC, "MC", "p")		
+		if iATGC=='cwww':
+			legend.AddEntry(graphMC, "MC c_{WWW}/#Lambda^{2}=3.6 TeV^{-2}", "p")
+		elif iATGC=='ccw':
+			legend.AddEntry(graphMC, "MC c_{W}/#Lambda^{2}=4.5 TeV^{-2}", "p")
+		elif iATGC=='cb':
+			legend.AddEntry(graphMC, "MC c_{B}/#Lambda^{2}=20 TeV^{-2}", "p")
+		legend.AddEntry(graph, "Nominal model","l")
+		legUncEntry=legend.AddEntry(graphGhost, "Systematic uncertainty", "f")
+		#legUncEntry.SetLineWidth(2)
+		#legUncEntry.SetFillColor(kBlack)
+		legUncEntry.ResetAttLine()
+		legUncEntry.ResetAttMarker()
 		graphMC.Draw("PSAME")
 		legend.Draw("SAME")
+
+		pt = TPaveText(0.2,0.3,0.5,0.475, "blNDC")
+		pt.SetFillStyle(0)
+		pt.SetBorderSize(0)
+		pt.SetTextAlign(13)
+		pt.SetTextSize(0.045)
+		channelText={"ele":"Electron", "mu":"Muon"}
+		pt.AddText("%s channel"%channelText[options.ch])
+		pt.AddText("%s category"%options.cat)
+		pt.Draw("SAME")
 		
 
-		CMS_lumi.CMS_lumi(canvas, 4, 33)
+		CMS_lumi.lumiTextSize = 0.0
+		CMS_lumi.writeExtraText = True
+		CMS_lumi.extraText = "               Simulation"
+		CMS_lumi.cmsTextSize = 1.1
+		CMS_lumi.relPosX    = 0.042
+		CMS_lumi.relPosY    = -0.065
+		CMS_lumi.relExtraDX = 1.0
+		CMS_lumi.relExtraDY = 0.25
+		CMS_lumi.CMS_lumi(canvas,4,11)
+		CMS_lumi.cmsTextSize=0.0
+		CMS_lumi.writeExtraText = False
+		CMS_lumi.lumiTextSize = 1.0
+		CMS_lumi.lumiTextOffset = 0.16
+		CMS_lumi.CMS_lumi(canvas,4,11)
 		canvas.SaveAs("shape-syst_"+ iATGC + "_" + options.cat + "_" + options.ch +".pdf")
 		canvas.Clear()
 

@@ -86,7 +86,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	variables.push_back(var);
 
 	var.VarName = "jet_phi";
-	var.Title = "#phi_{lepton}";
+	var.Title = "#phi_{jet}";
 	var.SetRange(-3.5, 3.5);
 	variables.push_back(var);
 
@@ -119,7 +119,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	variables.push_back(var);
 
 	var.VarName = "pfMET";
-	var.Title = "MET";
+	var.Title = "p_{T}^{miss}";
 	var.SetRange(0., 900.);
 	variables.push_back(var);
 
@@ -311,6 +311,7 @@ void draw(std::string channel, std::string region, std::string tag, string prefi
 	Sample s, dataSample, signalSample;
 	bool usePostfitSFWJets = true;
 	bool usePostfitSFOthers = true;
+	if (region == "ttbar") usePostfitSFOthers = false;
 	double eleSF[4] = {1.25, 0.76, 0.85, 0.89};
 	double muSF[4] = {1.08, 0.75, 0.84, 0.88};
 	

@@ -109,6 +109,8 @@ void Plotter::Plotting(std::string OutPrefix_)
 
     std::string vname = variables.at(var_i).VarName;
     leg[vname] = new TLegend(0.68,0.54,0.94,0.94);
+    //leg[vname] = new TLegend(0.78,0.77,0.94,0.94);// Phi variables
+    //leg[vname] = new TLegend(0.78,0.7,0.94,0.94);// Eta and WJets msd
     leg[vname] ->  SetFillColor(kWhite);
     
     if(withData){
@@ -755,8 +757,8 @@ void Plotter::Plotting(std::string OutPrefix_)
       if (var -> logscale) data[vname]-> GetYaxis() -> SetRangeUser(0.1, (data[vname] -> GetMaximum())*7.);
       else  data[vname]-> GetYaxis() -> SetRangeUser(0., (data[vname] -> GetMaximum())*1.5);
       char strBuffer[50];
-      sprintf(strBuffer,"Events / %d GeV",(int)round((var->Range.high-var->Range.low)/var->nBins));
-      //sprintf(strBuffer,"Events / %.2f GeV",(var->Range.high-var->Range.low)/var->nBins);
+      if((int)round((var->Range.high-var->Range.low)/var->nBins)>1) sprintf(strBuffer,"Events / %d GeV",(int)round((var->Range.high-var->Range.low)/var->nBins));
+      else sprintf(strBuffer,"Events per bin");
       data[vname]->GetYaxis()->SetTitle(strBuffer);
       data[vname]->GetYaxis()->SetTitleSize(0.075);
       data[vname]->GetYaxis()->SetTitleOffset(0.75);

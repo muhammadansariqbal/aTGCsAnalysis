@@ -8,9 +8,9 @@ using namespace std;
 TString cmsText     = "CMS";
 float cmsTextFont   = 61;  // default is helvetic-bold
 
-//bool writeExtraText = true;
-bool writeExtraText = false;
-TString extraText   = "Preliminary";
+bool writeExtraText = true;
+//bool writeExtraText = false;
+TString extraText   = "Private work";
 float extraTextFont = 52;  // default is helvetica-italics
 
 // text sizes and text offsets with respect to the top frame
@@ -49,7 +49,7 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
   if( iPosX/10==1 ) alignX_=1;
   if( iPosX/10==2 ) alignX_=2;
   if( iPosX/10==3 ) alignX_=3;
-  if( iPosX == 0  ) relPosX = 0.12;
+  if( iPosX == 0  ) relPosX = 0.10;
   int align_ = 10*alignX_ + alignY_;
 
   float H = pad->GetWh();

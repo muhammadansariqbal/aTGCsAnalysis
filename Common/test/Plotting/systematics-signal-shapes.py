@@ -360,12 +360,13 @@ def main(options):
 
 		CMS_lumi.lumiTextSize = 0.0
 		CMS_lumi.writeExtraText = True
-		CMS_lumi.extraText = "            Simulation, private work"
+		CMS_lumi.extraText = "                Simulation, private work"
 		CMS_lumi.cmsTextSize = 1.1
+		CMS_lumi.extraOverCmsTextSize = 0.57
 		CMS_lumi.relPosX    = 0.042
 		CMS_lumi.relPosY    = -0.065
 		CMS_lumi.relExtraDX = 1.0
-		CMS_lumi.relExtraDY = 0.25
+		CMS_lumi.relExtraDY = 0.34
 		CMS_lumi.CMS_lumi(canvas,4,11)
 		CMS_lumi.cmsTextSize=0.0
 		CMS_lumi.writeExtraText = False
